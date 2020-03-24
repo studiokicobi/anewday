@@ -33,7 +33,6 @@ navigator.serviceWorker
   .register("sw.js")
   .then(() => console.info("Service worker registered!"));
 
-// Page refresh at midnight function
 function refreshAt(hours, minutes, seconds) {
   var now = new Date();
   var then = new Date();
@@ -56,4 +55,4 @@ function refreshAt(hours, minutes, seconds) {
     window.location.reload(true);
   }, timeout);
 }
-refreshAt(0, 0, 0); // Refresh the page at midnight when the form resets
+refreshAt(0, 7, 0); //Will refresh the page at 3:35pm

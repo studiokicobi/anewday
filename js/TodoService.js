@@ -78,7 +78,6 @@ export default class TodoService {
   }
 
   static getList() {
-    // Get the date
     const isToday = someDate => {
       const today = new Date();
       return (
@@ -94,7 +93,6 @@ export default class TodoService {
         const cursor = event.target.result;
         if (cursor) {
           if (cursor.value.date && !isToday(cursor.value.date)) {
-            // Remove the checked value 'done' if it's a new day, i.e. midnight 
             cursor.value.done = false;
           }
           items.push(cursor.value);
