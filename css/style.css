@@ -64,6 +64,10 @@ input {
   box-shadow: 0 0 50px 0 rgba(222, 215, 215, 0.34);
 }
 
+form.max {
+  display: none;
+}
+
 ul {
   margin: 0;
   padding: 0;
