@@ -40,10 +40,11 @@ export default class HtmlService {
     const button = document.createElement("button");
 
     li.setAttribute("data-item-id", item.id);
+    li.setAttribute("aria-label", "trash icon");
     li.addEventListener("click", HtmlService.toggleDone);
     span.textContent = item.description;
 
-    button.textContent = "x";
+    button.textContent = "×<span class="visuallyhidden"> Remove</span>";
     button.addEventListener("click", HtmlService.buttonHandler);
 
     if (item.done) {
@@ -56,7 +57,7 @@ export default class HtmlService {
 
     if (ul.childElementCount >= 9) {
       form.querySelector("input").setAttribute("disabled", true);
-      form.querySelector("input").value = "This is enough to do for now";
+      form.querySelector("input").value = "You have enough on your list for now";
     }
   }
 
