@@ -40,11 +40,10 @@ export default class HtmlService {
     const button = document.createElement("button");
 
     li.setAttribute("data-item-id", item.id);
-    li.setAttribute("aria-label", "trash icon");
     li.addEventListener("click", HtmlService.toggleDone);
     span.textContent = item.description;
 
-    button.textContent = "×<span class="visuallyhidden"> Remove</span>";
+    button.textContent = "x";
     button.addEventListener("click", HtmlService.buttonHandler);
 
     if (item.done) {
@@ -56,14 +55,17 @@ export default class HtmlService {
     ul.appendChild(li);
 
     if (ul.childElementCount >= 9) {
+      
+      form.className = "max"; 
       form.querySelector("input").setAttribute("disabled", true);
-      form.querySelector("input").value = "You have enough on your list for now";
+      form.querySelector("input").value = "This is enough to do for now";
     }
   }
 
   static removeFromHtmlList(itemId) {
     const li = document.querySelector(`[data-item-id='${itemId}']`);
     ul.removeChild(li);
+    form.classList.remove("max");
     form.querySelector("input").removeAttribute("disabled");
     form.querySelector("input").value = "";
   }
