@@ -33,6 +33,8 @@ navigator.serviceWorker
   .register("sw.js")
   .then(() => console.info("Service worker registered!"));
 
+// Refresh the page once per day at midnight
+// @ https://stackoverflow.com/questions/1217929/how-to-automatically-reload-a-web-page-at-a-certain-time
 function refreshAt(hours, minutes, seconds) {
   var now = new Date();
   var then = new Date();
@@ -55,4 +57,5 @@ function refreshAt(hours, minutes, seconds) {
     window.location.reload(true);
   }, timeout);
 }
-refreshAt(0, 7, 0); //Will refresh the page at 3:35pm
+
+refreshAt(0, 0, 0); // Refresh the page at midnight
