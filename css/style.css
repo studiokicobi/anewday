@@ -4,8 +4,8 @@
 
 body {
   margin: 0;
-  padding: 0;
-  font-family: helvetica, sans-serif;
+  padding: 0 0 6em 0; /* space for form */
+  font-family: -apple-system, "Roboto", sans-serif;
 }
 
 h1 {
@@ -14,11 +14,16 @@ h1 {
   font-size: 2.5rem;
   border-bottom: solid 1px #ddd;
   line-height: 1em;
+  font-weight: normal;
+  font-family: "Georgia", serif;
 }
 
 form {
   padding: 20px;
-  border-bottom: solid 1px #ddd;
+  position: fixed; /* pin form to bottom */
+  bottom: 0;
+  width: 100vw;
+  height: 5.4em;
 }
 
 input {
@@ -41,7 +46,7 @@ li {
 }
 
 li > span {
-  flex: 1
+  flex: 1;
 }
 
 li > button {
