@@ -1,48 +1,100 @@
+:root {
+  --off-white: #f9f8f6;
+  --white: #ffffff;
+}
+
+.visuallyhidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: auto;
+  margin: 0;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  white-space: nowrap;
+}
+
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  padding: 0 0 6em 0; /* space for form */
-  font-family: -apple-system, "Roboto", sans-serif;
+  padding: 1em 1em 6em 1em; /* bottom-padding = space for form */
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica,
+    Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
+  /* Only supported on Chromium-based browsers and Safari */
+  font-family: system-ui;
+  color: #222;
+  background-color: var(--off-white);
+}
+
+main {
+  max-width: 36em;
+  margin: 0 auto;
+  height: calc(100vh - 7em); /* Minus the body padding top and bottom */
+  overflow-y: visible;
 }
 
 h1 {
-  padding: 18px 20px;
+  padding: 0.5em 0.5em 0.5em 0;
   margin: 0;
   font-size: 2.5rem;
-  border-bottom: solid 1px #ddd;
+  border-bottom: solid 0.1em #222;
   line-height: 1em;
-  font-weight: normal;
-  font-family: "Georgia", serif;
+  font-weight: 600;
 }
 
 form {
-  padding: 20px;
+  padding: 0.5em;
+  font-size: 1em;
   position: fixed; /* pin form to bottom */
   bottom: 0;
-  width: 100vw;
+  width: 100%;
+  max-width: 36em;
   height: 5.4em;
 }
 
 input {
   width: 100%;
-  padding: 6px;
+  padding: 0.5em;
   font-size: 1.4em;
+  border: none;
+  box-shadow: 0 0 50px 0 rgba(222, 215, 215, 0.34);
 }
 
 ul {
   margin: 0;
   padding: 0;
   list-style: none;
+  background: rgb(243, 195, 215);
+  background: linear-gradient(
+    0deg,
+    rgba(243, 195, 215, 1) 0%,
+    rgba(169, 208, 240, 1) 100%
+  );
 }
 
 li {
-  padding: 20px;
-  border-bottom: solid 1px #ddd;
+  padding: 1.5em 0.35em 1.5em 0.5em;
+  border-top: solid 0.1em rgba(0, 0, 0, 0.09);
   cursor: pointer;
   display: flex;
+  font-weight: 300;
+  background-color: var(--off-white);
+}
+
+/* Remove the border on the first list item */
+li:first-of-type {
+  border: none;
+}
+
+/* Completed task */
+li.done {
+  background-color: transparent;
+  border: none;
+  color: #5e5e5e;
 }
 
 li > span {
@@ -54,6 +106,11 @@ li > button {
   border: 0;
   outline: 0;
   cursor: pointer;
+  text-indent: -9999em;
+  height: 1.75em;
+  width: 1.75em;
+  background-image: url(../icons/icon-trash.svg);
+  background-repeat: no-repeat;
 }
 
 .done > span {
