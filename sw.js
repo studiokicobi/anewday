@@ -10,7 +10,7 @@
   if(document.cookie.search("alreadAsked") >= 0){ return false; }
 
   // Ask user to add to homescreen
-  document.getElementById("hiddenPrompt").style.display = 'inherit';
+  document.getElementById("hiddenPrompt").style.display = 'block';
 });
 
 // After clicking a button to dismiss prompt
