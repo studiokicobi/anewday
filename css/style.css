@@ -1,7 +1,6 @@
 :root {
   --off-white: #f9f8f6;
   --white: #ffffff;
-  --form: #222;
 }
 
 .visuallyhidden {
@@ -22,100 +21,102 @@
 
 body {
   margin: 0;
-  padding: 0 0 6em 0; /* bottom-padding = space for form */
+  padding: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica,
-    Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
-  /* Only supported on Chromium-based browsers and Safari */
-  font-family: sans-serif, system-ui;
-  color: #222;
-  background-color: var(--off-white);
+    Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, sans-serif, system-ui;
+  color: #000;
+  background-color: #fff;
 }
 
 header,
 form,
-ul {
+ul,
+.list-wrapper {
   max-width: 36em;
   margin: 0 auto;
 }
 
 h1 {
-0 0 0.5rem 0;
-  margin: 0 1rem;
-  font-size: 2.5rem;
-  border-bottom: solid 0.1em #222;
+  margin: 1rem 1rem 0 1rem;
+  font-size: 3.5rem;
+  padding: 1rem 0;
+  border-bottom: solid 0.2rem #000;
   line-height: 1em;
-  font-weight: 600;
+  font-weight: 800;
+  letter-spacing: -0.1rem;
 }
 
 form {
-  margin:0;
+  margin:0 auto 0.5rem auto;
   padding: 0.5em;
   font-size: 1em;
-  position: fixed;
   bottom: 0;
-  width: 36em;
+  width: 35em;
   max-width: 100vw;
   height: 4.4em;
-  background-color: var(--form);
+  color: var(--off-white);
+  background-color: transparent;
   z-index: 1;
 }
 
-/* 9 items maxes out the form. Let's hide it for now, although a better strategy could be to change the input message, etc.*/
-form.max {
-  display: none;
+form.max input {
+  text-align: center;
 }
 
 input {
   width: 100%;
   padding: 1rem;
   font-size: 1.4em;
+  font-weight: bold;
   border: none;
-  /* box-shadow: 0 0 4em 0 rgba(222, 215, 215, 0.34); */
-  color: var(--off-white);
-  background-color: var(--form);
+  /* box-shadow: 0 1rem 5rem 0rem rgba(222, 215, 215, 0.9); */
+  color: #fff;
+  background-color: #000;
 }
 
 ::-webkit-input-placeholder {
-  color: #626262;
+  color: #aaa;
 }
 ::-moz-placeholder {
-  color: #626262;
+  color: #aaa;
 }
 :-moz-placeholder {
   /* Older versions of Firefox */
-  color: #626262;
+  color: #aaa;
 }
 :-ms-input-placeholder {
-  color: #626262;
+  color: #aaa;
 }
 
 .list-wrapper {  
-  -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+  /* -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
   mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
-  height:  100vh;
+  height:  100vh; */
   width: calc(100vw - 2em);
-  overflow-y: scroll;
+  /* overflow-y: scroll; */
 }
 
 ul {
   margin: 0 1rem;
   padding: 0;
   list-style: none;
-  background: rgb(243, 195, 215);
+  background-color: #000;
+  /* background: rgb(243, 195, 215);
   background: linear-gradient(
     0deg,
     rgba(243, 195, 215, 1) 0%,
     rgba(169, 208, 240, 1) 100%
-  );
+  ); */
 }
 
 li {
-  padding: 1.5em 0.35em 1.5em 0.5em;
+  padding: 1.5em 0.35em 1.5em 1.15em;
   border-top: solid 0.1em rgba(0, 0, 0, 0.09);
   cursor: pointer;
   display: flex;
-  font-weight: 300;
-  background-color: var(--off-white);
+  font-size: 1.1rem;
+  font-weight: bold;
+  background-color: var(--white);
 }
 
 /* Remove the border on the first list item */
@@ -127,7 +128,7 @@ li:first-of-type {
 li.done {
   background-color: transparent;
   border: none;
-  color: #5e5e5e;
+  color: #999;
 }
 
 li > span {
@@ -144,6 +145,7 @@ li > button {
   width: 1.75em;
   background-image: url(../icons/icon-trash.svg);
   background-repeat: no-repeat;
+  opacity: 0.35;
 }
 
 .done > span {
