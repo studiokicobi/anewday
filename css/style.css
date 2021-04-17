@@ -150,9 +150,14 @@ li > button {
   text-decoration: line-through;
 }
 
-/* Add to home screen button */
-.add-button {
+/* Add to home screen prompt */
+#hiddenPrompt {
+  width: 100px;
+  height: 100px;
+  background: tomato;
+  display: block;
 }
 
 @media all and (display-mode: standalone) {
+  #hiddenPrompt {display: none;}
 }

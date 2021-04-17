@@ -1,15 +1,25 @@
-// Detects if device is on iOS 
-const isIos = () => {
-  const userAgent = window.navigator.userAgent.toLowerCase();
-  return /iphone|ipad|ipod/.test( userAgent );
-}
-// Detects if device is in standalone mode
-const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
+// On page load
+(function() {
+  // Check if iOS
+  if(!(/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream)){ return false; }
 
-// Checks if should display install popup notification:
-if (isIos() && !isInStandaloneMode()) {
-  this.setState({ showInstallMessage: true });
+  // Check if already in webapp
+  if(window.navigator.standalone == true){ return false; }
+
+  // Check if you already asked them to add to homescreen
+  if(document.cookie.search("alreadAsked") >= 0){ return false; }
+
+  // Ask user to add to homescreen
+  document.getElementById("hiddenPrompt").style.display = 'inherit';
+});
+
+// After clicking a button to dismiss prompt
+function hidePromptInFuture(){
+  // Do not show prompt again
+  document.cookie = "alreadAsked=true; expires=Thu, 18 Dec 2099 12:00:00 UTC";
 }
+
+
 
 self.addEventListener('install', event => {
   console.info('[Service Worker] Installing Service Worker ...', event)
