@@ -39,8 +39,13 @@
       "type": "image/png",
       "sizes": "256x256"
     },
+    // {
+    //   "src": "icons/icon_512x512.png",
+    //   "type": "image/png",
+    //   "sizes": "512x512"
+    // },
     {
-      "src": "icons/icon_512x512.png",
+      "src": "icons/icon_512x512@2x.png",
       "type": "image/png",
       "sizes": "512x512"
     },
@@ -49,6 +54,37 @@
       "sizes": "196x196",
       "type": "image/png",
       "purpose": "any maskable"
+    },
+    {
+      "src": "icons/anewday-icon-60@2x.png",
+      "sizes": "196x196",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
+    {
+      "src": "icons/anewday-icon-60@3x.png",
+      "sizes": "196x196",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+    {
+      "src": "icons/anewday-icon-76@2x~ipad.png",
+      "sizes": "196x196",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+    {
+      "src": "icons/anewday-icon-76~ipad.png",
+      "sizes": "196x196",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+    {
+      "src": "icons/anewday-icon-83.5@2x~ipad.png",
+      "sizes": "196x196",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+
   ]
 }
