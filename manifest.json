@@ -10,6 +10,16 @@
   "orientation": "portrait-primary",
   "icons": [
     {
+      "src": "icons/icons_16x16.png",
+      "type": "image/png",
+      "sizes": "16x16"
+    },
+    {
+      "src": "icons/icons_32x32.png",
+      "type": "image/png",
+      "sizes": "32x32"
+    },
+    {
       "src": "icons/icons_48x48.png",
       "type": "image/png",
       "sizes": "48x48"
@@ -30,7 +40,7 @@
       "sizes": "256x256"
     },
     {
-      "src": "icons/icons_256x256.png",
+      "src": "icons/icons_512x512.png",
       "type": "image/png",
       "sizes": "512x512"
     }
