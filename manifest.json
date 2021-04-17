@@ -1,7 +1,7 @@
 {
-  "name": "TODO List Progressive Web App",
-  "short_name": "TODO List",
-  "description": "A simple TODO List App to demonstrated progressive web apps concepts",
+  "name": "A New Day",
+  "short_name": "A New Day",
+  "description": "A simple list app designed for mental health survival.",
   "background_color": "#FFF",
   "theme_color": "#FFF",
   "start_url": "index.html",
@@ -39,13 +39,8 @@
       "type": "image/png",
       "sizes": "256x256"
     },
-    // {
-    //   "src": "icons/icon_512x512.png",
-    //   "type": "image/png",
-    //   "sizes": "512x512"
-    // },
     {
-      "src": "icons/icon_512x512@2x.png",
+      "src": "icons/icon_512x512.png",
       "type": "image/png",
       "sizes": "512x512"
     },
