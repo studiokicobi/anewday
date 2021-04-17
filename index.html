@@ -9,13 +9,17 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <main>
+  <header>
     <h1>A New Day</h1>
-    <form>
-      <input type="text" name="item" placeholder="I will do this:" autofocus required>
+  </header>
+    <form class="">
+      <label for="list-item" class="visuallyhidden">Add an item</label>
+      <input type="text" id="list-item" name="item" placeholder="I will do this:" autofocus required>
     </form>
-    <ul></ul>
-  </main>
+    <div class="list-wrapper">
+      <ul>
+      </ul>
+    </div>
   <script src="js/index.js" type="module"></script>
 </body>
 </html>
