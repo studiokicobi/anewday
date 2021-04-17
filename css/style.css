@@ -155,9 +155,8 @@ li > button {
   width: 100px;
   height: 100px;
   background: tomato;
-  display: block;
+  display: none;
 }
 
 @media all and (display-mode: standalone) {
-  #hiddenPrompt {display: none;}
 }
