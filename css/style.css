@@ -149,3 +149,13 @@ li > button {
 .done > span {
   text-decoration: line-through;
 }
+
+/* Add to home screen button */
+.add-button {
+}
+
+@media all and (display-mode: standalone) {
+  body {
+    background-color: yellow;
+  }
+}
