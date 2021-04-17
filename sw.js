@@ -1,3 +1,6 @@
+// Show add to home screen prompt
+// @ https://stackoverflow.com/questions/43646568/how-do-i-create-an-add-to-home-screen-instruction-page-for-ios-web-apps
+
 // On page load
 (function() {
   // Check if iOS
@@ -10,7 +13,7 @@
   if(document.cookie.search("alreadAsked") >= 0){ return false; }
 
   // Ask user to add to homescreen
-  document.getElementById("hiddenPrompt").style.display = 'block';
+  document.getElementById("hiddenPrompt").style.display = 'inherit';
 });
 
 // After clicking a button to dismiss prompt
