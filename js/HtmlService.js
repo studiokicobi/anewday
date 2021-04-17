@@ -2,8 +2,8 @@ const form = document.querySelector("form");
 const ul = document.querySelector("ul");
 const className = "done";
 
-let itemClickEmitter = () => {};
-let buttonClickEmitter = () => {};
+let itemClickEmitter = () => { };
+let buttonClickEmitter = () => { };
 
 export default class HtmlService {
   static createItem(li) {
@@ -55,10 +55,10 @@ export default class HtmlService {
     ul.appendChild(li);
 
     if (ul.childElementCount >= 9) {
-      
-      form.className = "max"; 
+
+      form.className = "max";
       form.querySelector("input").setAttribute("disabled", true);
-      form.querySelector("input").value = "This is enough to do for now";
+      form.querySelector("input").value = "You already have enough on your list.";
     }
   }
 
