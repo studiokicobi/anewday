@@ -44,6 +44,7 @@ export default class HtmlService {
     span.textContent = item.description;
 
     button.textContent = "x";
+    button.setAttribute("title", "Remove list item");
     button.addEventListener("click", HtmlService.buttonHandler);
 
     if (item.done) {
@@ -58,7 +59,7 @@ export default class HtmlService {
 
       form.className = "max";
       form.querySelector("input").setAttribute("disabled", true);
-      form.querySelector("input").value = "You already have enough on your list.";
+      form.querySelector("input").value = "That’s enough for now. Your list is full.";
     }
   }
 
@@ -76,7 +77,7 @@ export default class HtmlService {
   }
 
   static getClickedItem() {
-    // why I'm not using a promise here?
+    // Why not use a promise here?
     // https://stackoverflow.com/questions/33449469/promise-is-only-firing-once
     return {
       then: callback => this.bindClickedItem(callback)
@@ -88,7 +89,7 @@ export default class HtmlService {
   }
 
   static getClickedButton() {
-    // why I'm not using a promise here?
+    // Why not use a promise here?
     // https://stackoverflow.com/questions/33449469/promise-is-only-firing-once
     return {
       then: callback => this.bindClickedButton(callback)
@@ -100,7 +101,7 @@ export default class HtmlService {
   }
 
   static getInputedItem() {
-    // why I'm not using a promise here?
+    // Why not use a promise here?
     // https://stackoverflow.com/questions/33449469/promise-is-only-firing-once
     return {
       then: callback => this.bindSubmittingAction(callback)
