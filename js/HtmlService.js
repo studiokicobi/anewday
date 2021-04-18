@@ -32,7 +32,7 @@ export default class HtmlService {
 
   static addToHtmlList(item) {
     console.log(ul.childElementCount);
-    if (ul.childElementCount >= 9) {
+    if (ul.childElementCount >= 13) {
       return;
     }
     const li = document.createElement("li");
