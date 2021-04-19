@@ -18,5 +18,8 @@
   "homepage": "https://github.com/edysegura/pwa-todo#readme",
   "devDependencies": {
     "live-server": "^1.2.1"
+  },
+  "dependencies": {
+    "sortablejs": "^1.13.0"
   }
 }

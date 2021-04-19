@@ -15,7 +15,7 @@ const saveNewItem = description => {
 
 const updateItem = item => {
   item.date = new Date();
-  const action = () => console.info(`Item ${item.description} was saved!`);
+  const action = () => console.info(`Item ${item.description} was saved`);
   saveItem(item, action);
 };
 
@@ -31,7 +31,7 @@ HtmlService.getClickedButton().then(deleteItem);
 
 navigator.serviceWorker
   .register("sw.js")
-  .then(() => console.info("Service worker registered!"));
+
 
 // Refresh the page once per day at midnight
 // @ https://stackoverflow.com/questions/1217929/how-to-automatically-reload-a-web-page-at-a-certain-time
@@ -60,37 +60,12 @@ function refreshAt(hours, minutes, seconds) {
 
 refreshAt(0, 0, 0); // Refresh the page at midnight
 
-// Toggle content
 
-// Show an element
-var show = function (elem) {
-  elem.classList.add('is-visible');
-};
+// Sortable.js
+import Sortable from '../node_modules/sortablejs/modular/sortable.complete.esm.js';
 
-// Hide an element
-var hide = function (elem) {
-  elem.classList.remove('is-visible');
-};
+// new Sortable(document.getElementById('items'));
 
-// Toggle element visibility
-var toggle = function (elem) {
-  elem.classList.toggle('is-visible');
-};
-
-// Listen for click events
-document.addEventListener('click', function (event) {
-
-  // Make sure clicked element is our toggle
-  if (!event.target.classList.contains('toggle')) return;
-
-  // Prevent default link behavior
-  event.preventDefault();
-
-  // Get the content
-  var content = document.querySelector(event.target.hash);
-  if (!content) return;
-
-  // Toggle the content
-  toggle(content);
-
-}, false);
+Sortable.create(items, {
+  delay: 300
+});
