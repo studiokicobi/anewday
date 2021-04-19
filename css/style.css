@@ -1,6 +1,14 @@
 :root {
-  --off-white: #f9f8f6;
   --white: #ffffff;
+  --light-grey: #aaaaaa;
+  --mid-grey: #757575;
+  --dark-grey: #3a3e42;
+  --black: #000000;
+
+  --sortable-chosen: #e7e7e4;
+  --sortable-ghost: #d2e3fd;
+  --done-sortable-chosen: #222020;
+  --done-sortable-ghost: #2f4f80;
 }
 
 .visuallyhidden {
@@ -24,37 +32,45 @@ body {
   padding: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica,
     Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, sans-serif, system-ui;
-  color: #000;
-  background-color: #fff;
+  color: var(--black);
+  background-color: var(--white);
+    /* Prevent text selection */
+  -ms-user-select:none;
+  -moz-user-select:none;
+  -webkit-user-select:none;
+  -webkit-touch-callout: none;
+  -khtml-user-select: none;
+  user-select:none;
 }
 
-header,
-form,
-ul,
-.list-wrapper {
+.container { 
+  padding: 0 1rem 8rem 1rem;
   max-width: 36rem;
   margin: 0 auto;
 }
 
+/* Page header */
 header {
   display: flex;
-  border-bottom: 0.2rem solid #000;
+  border-bottom: 0.2rem solid var(--black);
   justify-content: space-between;
   align-items: center;
-  margin: 1rem auto 0 auto;
+  margin: 0 auto;
   padding: 1.5rem 0;
-  width: 34rem;
-  max-width: calc(100vw - 4rem);
+  width: 100%;
 }
 
+/* Main heading */
 h1 {
-  margin: 0 0 0 1rem;
+  margin: 0;
   font-size: 3.5rem;
   line-height: 1rem;
   font-weight: 700;
   letter-spacing: -0.1rem;
+  margin-left: 0.45rem;
 }
 
+/* Shrink the header to fit the smallest screens */
 @media screen and (max-width: 413px) {
   h1 { font-size: 2.8rem; }
   .info { transform: translateY(-0.1rem); }
@@ -65,11 +81,10 @@ h1 {
   .info { transform: translateY(-0.2rem); }
 }
 
+/* The info button in the header */
 .info {
   display: block; 
   background-color: none;
-  border: 0;
-  outline: 0;
   cursor: pointer;
   text-indent: -9999em;
   height: 1.75rem;
@@ -79,43 +94,50 @@ h1 {
   margin: 1rem 1rem 0 0;
 }
 
+.home {
+    background-image: url(../icons/home.svg);
+}
+
+/* The form */
 #todoForm {
   margin:0 auto;
   padding: 0.5rem;
   font-size: 1rem;
-  bottom: 0;
-  width: 34rem;
-  max-width: 100vw;
+  width: 100%
   height: 4.4em;
-  color: var(--off-white);
+  color: var(--white);
   background-color: transparent;
   z-index: 1;
   position: relative;
-  max-width: calc(100vw - 3rem);
 }
 
+/* The form when max number of entries are added */
 #todoForm.max input {
   text-align: center;
 }
 
+/* Todo input field */
 input {
-  padding: 1rem;
+  padding: 1.1rem 1rem;
   font-size: 1.4rem;
   font-weight: bold;
   border: none;
-  color: #fff;
-  background-color: #000;
+  background-color: var(--white);
   width: 4rem;
-  opacity: 0;
+  opacity: 1;
   position: absolute;
-  max-width: 34rem;
   z-index: 5;
-  transition: opacity 100ms;
-  right: 0.5rem;
+  right: 0;
+  background-image: url(../icons/plusBl.svg);
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: 3rem;
+  transform: translate(-0.4rem, -0.07rem);
 }
 
-#todoForm a {
-  background-image: url(../icons/plus.svg);
+/* Place the extra minus icon in the message div */
+#todoForm div.ui {
+  background-image: url(../icons/minus.svg);
   background-repeat: no-repeat;
   background-position: right center;
   background-size: 3rem;
@@ -123,20 +145,28 @@ input {
   height: 3rem;
   width: 3rem;
   position: absolute;
-  right: 0.95rem;
+  right: 0.4rem;
   top: 1rem;
   z-index: 4;
+  opacity: 1;
 }
 
-#todoForm.max a {
+/* Change the icon when the list is full */
+#todoForm.max div.ui {
   background-image: url(../icons/heart.svg);
 }
 
 #todoForm input:focus {
   opacity: 1;
-  width: 100%;
+  width: calc(100% - 4rem); /* Leave room for the toggle "button" – the background-image */
+  left: 0.1rem; 
+  background-image: none; /* remove the bg img and reveal the div.ui image */
+  color: var(--white);
+  background-color: var(--black);
+  transform: unset;
 }
 
+/* Hide the disabled input when the list is full and add a message via HtmlService.js in its place */
 input[disabled="true"] {
   border: 0;
   clip: rect(0 0 0 0);
@@ -149,39 +179,29 @@ input[disabled="true"] {
   white-space: nowrap;
 }
 
-.toggle-content {
-	display: none;
-}
+/* Change input placeholder color on focus when the input is revealed */
+::-webkit-input-placeholder { color: transparent; }
+::-moz-placeholder { color: transparent; }
+:-ms-input-placeholder { color: transparent; }
+:-ms-input-placeholder { color: transparent; }
 
-.toggle-content.is-visible {
-	display: block;
-}
+input:focus::-webkit-input-placeholder { color: var(--light-grey); }
+input:focus::-moz-placeholder { color: var(--light-grey); }
+input:focus:-ms-input-placeholder { color: var(--light-grey); }
+input:focus:-ms-input-placeholder { color: var(--light-grey); }
 
-::-webkit-input-placeholder { color: #aaa; }
-::-moz-placeholder { color: #aaa; }
-:-ms-input-placeholder { color: #aaa; }
-:-ms-input-placeholder { color: #aaa; }
-
-.list-wrapper {  
-  width: calc(100vw - 2rem);
-}
-
+/* The list */
 ul {
-  margin: 0 1rem;
+  margin: 0;
   padding: 0;
   list-style: none;
-  background-color: #000;
-  /* background: rgb(243, 195, 215);
-  background: linear-gradient(
-    0deg,
-    rgba(243, 195, 215, 1) 0%,
-    rgba(169, 208, 240, 1) 100%
-  ); */
+  background-color: var(--dark-grey);
 }
 
+/* The list items */
 li {
-  padding: 1.75rem 0.35rem 1.25rem 3.95rem;
-  border-top: solid 0.05rem rgba(0, 0, 0, 1);
+  padding: 1.75rem 0.35rem 1.25rem 2.9rem;
+  border-top: solid 0.05rem var(--black);
   cursor: pointer;
   display: flex;
   font-size: 1.1rem;
@@ -189,17 +209,17 @@ li {
   background-color: var(--white);
   background-image: url(../icons/checkbox.svg);
   background-repeat: no-repeat;
-  background-position: 1.5rem center;
+  background-position: 1rem center;
 }
 
-/* Completed task */
+/* Completed list item */
 li.done {
-  /* border-top: solid 0.1rem rgba(0, 0, 0, 1); */
+  padding-left: 3.3rem;
   background-color: transparent;
   font-weight: 300;
-  color: #999;
+  color: var(--light-grey);
   background-image: url(../icons/check-gradient.svg);
-  background-position: 1.2rem center;
+  background-position: 0.7rem center;
 }
 
 /* Remove the border on the first list item */
@@ -207,10 +227,12 @@ li:first-of-type {
   border: none;
 }
 
+/* List item layout */
 li > span {
   flex: 1;
 }
 
+/* List item delete button */
 li > button {
   background: none;
   border: 0;
@@ -222,13 +244,42 @@ li > button {
   background-image: url(../icons/delete-grey.svg);
   background-repeat: no-repeat;
   transform: translateX(-0.65rem);
+  opacity: 1;
 }
 
+/* Reduce the delete button opacity on completed items */
 li.done > button {
-  /* background-image: url(../icons/delete-white.svg); */
-  opacity: 0.65;
+  opacity: 0.35;
 }
 
+/* Strike the completed items */
 .done > span {
   text-decoration: line-through;
+}
+
+/* Add a message when the list is full */
+.msg {
+  background: var(--white);
+  color: var(--mid-grey);
+  padding: 1rem 0.75rem;
+  margin: -0.2rem 2.8rem 0 0;
+  font-weight: normal;
+  font-size: 95%;
+  text-align: right;
+  max-width: 11rem;
+  float: right;
+}
+
+/* Sortable classes */
+.sortable-chosen { background-color: var(--sortable-chosen); }
+.sortable-ghost { background-color: var(--sortable-ghost); }
+.done.sortable-chosen { background-color: var(--done-sortable-chosen); }
+.done.sortable-ghost { background-color: var(--done-sortable-ghost); }
+
+/* Info page */
+#info p {
+  line-height: 1.5;
+  font-size: 120%;
+  max-width: 30rem;
+  margin-bottom: 0.5rem;
 }
