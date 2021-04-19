@@ -2,7 +2,7 @@
 <svg width="50px" height="50px" viewBox="0 0 50 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <title>heart</title>
     <g id="heart" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="delete" transform="translate(25.000000, 25.000000) rotate(-360.000000) translate(-25.000000, -25.000000) " fill="#98CA3B">
+        <g id="delete" transform="translate(25.000000, 25.000000) rotate(-360.000000) translate(-25.000000, -25.000000) " fill="#5ED2FF">
             <circle id="Oval" cx="25" cy="25" r="25"></circle>
         </g>
         <path d="M30.3333333,15 C34.0152317,15 37,18.0668495 37,21.85 C37,23.9461407 36.0836862,25.8223794 34.6401823,27.0788913 L25.7141664,36.1861933 C25.3275803,36.5806165 24.6944472,36.5869698 24.300024,36.2003837 C24.2952465,36.1957012 24.2905162,36.1909708 24.2858336,36.1861933 L15.3598177,27.0788913 C13.9163138,25.8223794 13,23.9461407 13,21.85 C13,18.0668495 15.9847683,15 19.6666667,15 C21.847375,15 23.7835347,16.075831 24.999849,17.7391257 C26.2164653,16.075831 28.152625,15 30.3333333,15 Z" id="Combined-Shape" fill="#FFFFFF"></path>
