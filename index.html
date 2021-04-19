@@ -23,6 +23,10 @@
   <link href="icons/apple_splash_750.png" sizes="750x1334" rel="apple-touch-startup-image" />
   <link href="icons/apple_splash_640.png" sizes="640x1136" rel="apple-touch-startup-image" />
 
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;700&display=swap"
+    rel="stylesheet">
+
   <link rel="stylesheet" href="css/style.css">
   <meta name="theme-color" content="#fff" />
 </head>
@@ -44,8 +48,9 @@
     </main>
     <form id="todoForm">
       <label for="list-item" class="visuallyhidden">Add an item</label>
-      <input type="text" id="list-item" name="item" placeholder="I will do this:" required>
-      <div class="ui"></div>
+      <div class="ui">
+        <input type="text" id="list-item" name="item" placeholder="I will do this:" required>
+      </div>
       <p class="msg"></p>
     </form>
   </div>
