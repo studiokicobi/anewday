@@ -1,7 +1,7 @@
 {
   "name": "A New Day",
   "short_name": "A New Day",
-  "description": "A simple list app designed for mental health survival.",
+  "description": "A list app designed for mental health survival.",
   "background_color": "#FFF",
   "theme_color": "#FFF",
   "start_url": "index.html",
@@ -55,31 +55,30 @@
       "sizes": "196x196",
       "type": "image/png",
       "purpose": "any maskable"
-    }
+    },
     {
       "src": "icons/anewday-icon-60@3x.png",
       "sizes": "196x196",
       "type": "image/png",
       "purpose": "any maskable"
-    }
+    },
     {
       "src": "icons/anewday-icon-76@2x~ipad.png",
       "sizes": "196x196",
       "type": "image/png",
       "purpose": "any maskable"
-    }
+    },
     {
       "src": "icons/anewday-icon-76~ipad.png",
       "sizes": "196x196",
       "type": "image/png",
       "purpose": "any maskable"
-    }
+    },
     {
       "src": "icons/anewday-icon-83.5@2x~ipad.png",
       "sizes": "196x196",
       "type": "image/png",
       "purpose": "any maskable"
     }
-
   ]
 }
