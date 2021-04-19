@@ -64,8 +64,6 @@ refreshAt(0, 0, 0); // Refresh the page at midnight
 // Sortable.js
 import Sortable from '../node_modules/sortablejs/modular/sortable.complete.esm.js';
 
-// new Sortable(document.getElementById('items'));
-
 Sortable.create(items, {
   delay: 300
 });
