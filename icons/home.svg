@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="26px" height="26px" viewBox="0 0 26 26" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>home</title>
+    <defs>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#73ADFF" offset="0%"></stop>
+            <stop stop-color="#F782FF" stop-opacity="0.5" offset="100%"></stop>
+        </linearGradient>
+        <circle id="path-2" cx="13" cy="13" r="13"></circle>
+    </defs>
+    <g id="home" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Oval">
+            <use fill="url(#linearGradient-1)" xlink:href="#path-2"></use>
+            <use fill="#3A3E42" xlink:href="#path-2"></use>
+        </g>
+        <path d="M12.995921,4 L16.032,7.037 L16.0353247,7.03427931 L22,12.9989546 L20.5088312,14.4901234 L19.322,13.304 L19.3224145,21.3823376 L15.1047522,21.3823376 L15.1047522,15.0558441 L10.8870898,15.0558441 L10.8870898,21.3823376 L6.66942748,21.3823376 L6.669,13.312 L5.49116882,14.4901234 L4,12.9989546 L4.051,12.947 L4.04890806,12.9470129 L12.995921,4 Z" id="Combined-Shape" fill="#FFFFFF"></path>
+    </g>
+</svg>
