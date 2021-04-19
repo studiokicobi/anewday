@@ -54,7 +54,7 @@ function refreshAt(hours, minutes, seconds) {
 
   var timeout = then.getTime() - now.getTime();
   setTimeout(function () {
-    window.location.reload(true);
+    window.location.reload();
   }, timeout);
 }
 
@@ -62,7 +62,7 @@ refreshAt(0, 0, 0); // Refresh the page at midnight
 
 
 // Sortable.js
-import Sortable from '../node_modules/sortablejs/modular/sortable.complete.esm.js';
+import Sortable from '../node_modules/sortablejs/modular/sortable.core.esm.js';
 
 Sortable.create(items, {
   delay: 300
