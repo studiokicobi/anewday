@@ -8,13 +8,10 @@
   <title>A New Day</title>
   <link rel="manifest" href="manifest.json">
 
-  <!-- Apple touch icons -->
+  <!-- Apple touch -->
   <link rel="apple-touch-icon" href="icons/touch-icon.png">
-  <!-- <link rel="apple-touch-icon" sizes="152x152" href="icons/anewday-icon-76@2x~ipad.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="icons/anewday-icon-60.png">
-  <link rel="apple-touch-icon" sizes="167x167" href="icons/anewday-icon-83.5@2x~ipad.png"> -->
 
-  <!-- Apple splash images -->
+  <!-- Apple splash -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <link href="icons/apple_splash_2048.png" sizes="2048x2732" rel="apple-touch-startup-image" />
   <link href="icons/apple_splash_1668.png" sizes="1668x2224" rel="apple-touch-startup-image" />
@@ -25,37 +22,34 @@
   <link href="icons/apple_splash_640.png" sizes="640x1136" rel="apple-touch-startup-image" />
 
   <link rel="stylesheet" href="css/style.css">
-  <meta name="theme-color" content="#FFF" />
+  <meta name="theme-color" content="#fff" />
 </head>
 
 <body>
 
   <a href="#main" class="visuallyhidden">Skip to content</a>
 
-  <header>
-    <h1>A New Day</h1>
-    <a href="info.html" title="Information about this app" class="info">Information</a>
-  </header>
-
-  <main id="main">
-    <div class="list-wrapper">
-      <ul>
-      </ul>
-    </div>
-  </main>
-
-  <form id="todoForm">
-    <label for="list-item" class="visuallyhidden">Add an item</label>
-    <input type="text" id="list-item" name="item" placeholder="I will do this:" required>
-    <a href="#fullMsg" class="toggle"></a>
-    <p class="toggle-content" id="fullMsg">
-      You already have enough on your list.
-    </p>
-  </form>
-
-  <div id="hiddenPrompt"></div>
+  <div class="container">
+    <header>
+      <h1>A New Day</h1>
+      <a href="info.html" title="Information about this app" class="info">Information</a>
+    </header>
+    <main id="main">
+      <div class="list-wrapper">
+        <ul id="items">
+        </ul>
+      </div>
+    </main>
+    <form id="todoForm">
+      <label for="list-item" class="visuallyhidden">Add an item</label>
+      <input type="text" id="list-item" name="item" placeholder="I will do this:" required>
+      <div class="ui"></div>
+      <p class="msg"></p>
+    </form>
+  </div>
 
   <script src="js/index.js" type="module"></script>
+
 </body>
 
 </html>
