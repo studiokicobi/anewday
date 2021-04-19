@@ -55,11 +55,16 @@ export default class HtmlService {
     li.appendChild(button);
     ul.appendChild(li);
 
+    if (ul.childElementCount >= 1) {
+
+      form.className = "min";
+    }
+
     if (ul.childElementCount >= 12) {
 
       form.className = "max";
       form.querySelector("input").setAttribute("disabled", true);
-      form.querySelector("p").textContent = "That’s enough on your list for today.";
+      form.querySelector("input").value = "You have enough for today.";
     }
   }
 
@@ -68,7 +73,7 @@ export default class HtmlService {
     ul.removeChild(li);
     form.classList.remove("max");
     form.querySelector("input").removeAttribute("disabled");
-    form.querySelector("p").textContent = "";
+    form.querySelector("input").value = "";
   }
 
   static cleanInput(input) {
