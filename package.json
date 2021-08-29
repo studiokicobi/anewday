@@ -1,5 +1,5 @@
 {
-  "name": "pwa-todo",
+  "name": "anewday",
   "version": "1.0.0",
   "description": "A simpler webapp To-Do List to demonstrate the PWA concepts with IndexedDB and offline support.",
   "scripts": {
@@ -7,15 +7,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/edysegura/pwa-todo.git"
+    "url": "git+https://github.com/unlikelyobjects/anewday.git"
   },
   "keywords": [],
-  "author": "Edy Segura",
+  "author": "Colin Lewis",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/edysegura/pwa-todo/issues"
+    "url": "https://github.com/unlikelyobjects/anewday/issues"
   },
-  "homepage": "https://github.com/edysegura/pwa-todo#readme",
+  "homepage": "https://github.com/unlikelyobjects/anewday#readme",
   "devDependencies": {
     "live-server": "^1.2.1"
   },
