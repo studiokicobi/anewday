@@ -33,6 +33,44 @@ navigator.serviceWorker
   .register("sw.js")
 
 
+// Add install prompt to iOS
+
+// Detect if the device uses iOS 
+
+// const isIos = () => {
+//   const userAgent = window.navigator.userAgent.toLowerCase();
+//   return /iphone|ipad|ipod/.test(userAgent);
+// }
+
+function iOS() {
+  return [
+    'iPad Simulator',
+    'iPhone Simulator',
+    'iPod Simulator',
+    'iPad',
+    'iPhone',
+    'iPod'
+  ].includes(navigator.platform)
+    // iPad on iOS 13 detection
+    || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+}
+
+// Detect if the PWA is in standalone mode
+const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
+
+// If both of the conditions are true, display the install notification
+if (iOS() && !isInStandaloneMode()) {
+
+  window.addEventListener("load", function () {
+    var tooltip = document.getElementById("install");
+    tooltip.classList.toggle("visible");
+  });
+}
+
+
+
+
+
 // Refresh the page once per day at midnight
 // @ https://stackoverflow.com/questions/1217929/how-to-automatically-reload-a-web-page-at-a-certain-time
 function refreshAt(hours, minutes, seconds) {

@@ -7,7 +7,7 @@
       "uuidString" : "DCB0645E-89DC-4E42-B1AA-21502BF5570A"
     }
   ],
-  "creatorBuild" : "34016",
+  "creatorBuild" : "34127",
   "files" : {
     "\/.gitignore" : {
       "cB" : 0,
@@ -193,19 +193,6 @@
       "q" : 100,
       "rq" : 75
     },
-    "\/icons\/check-gradient.png" : {
-      "ft" : 32768,
-      "iS" : 994,
-      "oA" : 0,
-      "oAP" : "\/icons\/check-gradient.png",
-      "oF" : 0,
-      "oIPL" : 0,
-      "opt" : 0,
-      "oT" : 1,
-      "ou" : "lpckwebp-none",
-      "q" : 100,
-      "rq" : 75
-    },
     "\/icons\/check-gradient.svg" : {
       "ft" : 2097152,
       "miP" : 0,
@@ -216,18 +203,15 @@
       "plM" : 52780316221407,
       "prP" : 0
     },
-    "\/icons\/checkbox.png" : {
-      "ft" : 32768,
-      "iS" : 238,
-      "oA" : 0,
-      "oAP" : "\/icons\/checkbox.png",
+    "\/icons\/check.svg" : {
+      "ft" : 2097152,
+      "miP" : 0,
+      "oA" : 2,
+      "oAP" : "\/icons\/check.svg",
       "oF" : 0,
-      "oIPL" : 0,
       "opt" : 0,
-      "oT" : 1,
-      "ou" : "lpckwebp-none",
-      "q" : 100,
-      "rq" : 75
+      "plM" : 52780316221407,
+      "prP" : 0
     },
     "\/icons\/checkbox.svg" : {
       "ft" : 2097152,
@@ -239,19 +223,6 @@
       "plM" : 52780316221407,
       "prP" : 0
     },
-    "\/icons\/delete-grey.png" : {
-      "ft" : 32768,
-      "iS" : 849,
-      "oA" : 0,
-      "oAP" : "\/icons\/delete-grey.png",
-      "oF" : 0,
-      "oIPL" : 0,
-      "opt" : 0,
-      "oT" : 1,
-      "ou" : "lpckwebp-none",
-      "q" : 100,
-      "rq" : 75
-    },
     "\/icons\/delete-grey.svg" : {
       "ft" : 2097152,
       "miP" : 0,
@@ -262,47 +233,21 @@
       "plM" : 52780316221407,
       "prP" : 0
     },
-    "\/icons\/delete-white.png" : {
-      "ft" : 32768,
-      "iS" : 518,
-      "oA" : 0,
-      "oAP" : "\/icons\/delete-white.png",
-      "oF" : 0,
-      "oIPL" : 0,
-      "opt" : 0,
-      "oT" : 1,
-      "ou" : "lpckwebp-none",
-      "q" : 100,
-      "rq" : 75
-    },
-    "\/icons\/delete-white.svg" : {
-      "ft" : 2097152,
-      "miP" : 0,
-      "oA" : 2,
-      "oAP" : "\/icons\/delete-white.svg",
-      "oF" : 0,
-      "opt" : 0,
-      "plM" : 52780316221407,
-      "prP" : 0
-    },
-    "\/icons\/heart.png" : {
-      "ft" : 32768,
-      "iS" : 1887,
-      "oA" : 0,
-      "oAP" : "\/icons\/heart.png",
-      "oF" : 0,
-      "oIPL" : 0,
-      "opt" : 0,
-      "oT" : 1,
-      "ou" : "lpckwebp-none",
-      "q" : 100,
-      "rq" : 75
-    },
     "\/icons\/heart.svg" : {
       "ft" : 2097152,
       "miP" : 0,
       "oA" : 2,
       "oAP" : "\/icons\/heart.svg",
+      "oF" : 0,
+      "opt" : 0,
+      "plM" : 52780316221407,
+      "prP" : 0
+    },
+    "\/icons\/home.svg" : {
+      "ft" : 2097152,
+      "miP" : 0,
+      "oA" : 2,
+      "oAP" : "\/icons\/home.svg",
       "oF" : 0,
       "opt" : 0,
       "plM" : 52780316221407,
@@ -373,11 +318,37 @@
       "q" : 100,
       "rq" : 75
     },
+    "\/icons\/icon_192x192.png" : {
+      "ft" : 32768,
+      "iS" : 13733,
+      "oA" : 0,
+      "oAP" : "\/icons\/icon_192x192.png",
+      "oF" : 0,
+      "oIPL" : 0,
+      "opt" : 0,
+      "oT" : 1,
+      "ou" : "lpckwebp-none",
+      "q" : 100,
+      "rq" : 75
+    },
     "\/icons\/icon_256x256.png" : {
       "ft" : 32768,
       "iS" : 37502,
       "oA" : 0,
       "oAP" : "\/icons\/icon_256x256.png",
+      "oF" : 0,
+      "oIPL" : 0,
+      "opt" : 0,
+      "oT" : 1,
+      "ou" : "lpckwebp-none",
+      "q" : 100,
+      "rq" : 75
+    },
+    "\/icons\/icon_384x384.png" : {
+      "ft" : 32768,
+      "iS" : 54637,
+      "oA" : 0,
+      "oAP" : "\/icons\/icon_384x384.png",
       "oF" : 0,
       "oIPL" : 0,
       "opt" : 0,
@@ -404,29 +375,6 @@
       "iS" : 463154,
       "oA" : 0,
       "oAP" : "\/icons\/icon_1024x1024.png",
-      "oF" : 0,
-      "oIPL" : 0,
-      "opt" : 0,
-      "oT" : 1,
-      "ou" : "lpckwebp-none",
-      "q" : 100,
-      "rq" : 75
-    },
-    "\/icons\/icon-trash.svg" : {
-      "ft" : 2097152,
-      "miP" : 0,
-      "oA" : 2,
-      "oAP" : "\/icons\/icon-trash.svg",
-      "oF" : 0,
-      "opt" : 0,
-      "plM" : 52780316221407,
-      "prP" : 0
-    },
-    "\/icons\/info.png" : {
-      "ft" : 32768,
-      "iS" : 621,
-      "oA" : 0,
-      "oAP" : "\/icons\/info.png",
       "oF" : 0,
       "oIPL" : 0,
       "opt" : 0,
@@ -463,29 +411,6 @@
       "miP" : 0,
       "oA" : 2,
       "oAP" : "\/icons\/minus.svg",
-      "oF" : 0,
-      "opt" : 0,
-      "plM" : 52780316221407,
-      "prP" : 0
-    },
-    "\/icons\/plus.png" : {
-      "ft" : 32768,
-      "iS" : 1543,
-      "oA" : 0,
-      "oAP" : "\/icons\/plus.png",
-      "oF" : 0,
-      "oIPL" : 0,
-      "opt" : 0,
-      "oT" : 1,
-      "ou" : "lpckwebp-none",
-      "q" : 100,
-      "rq" : 75
-    },
-    "\/icons\/plus.svg" : {
-      "ft" : 2097152,
-      "miP" : 0,
-      "oA" : 2,
-      "oAP" : "\/icons\/plus.svg",
       "oF" : 0,
       "opt" : 0,
       "plM" : 52780316221407,
@@ -552,17 +477,6 @@
       "sC" : 1,
       "tS" : 0
     },
-    "\/js\/Sortable.min.js" : {
-      "bF" : 0,
-      "ft" : 64,
-      "ma" : 0,
-      "mi" : 1,
-      "oA" : 0,
-      "oAP" : "\/js\/Sortable.min-min.js",
-      "oF" : 0,
-      "sC" : 1,
-      "tS" : 0
-    },
     "\/js\/TodoService.js" : {
       "bF" : 0,
       "ft" : 64,
@@ -574,14 +488,6 @@
       "sC" : 1,
       "tS" : 0
     },
-    "\/LICENSE" : {
-      "cB" : 0,
-      "ft" : 8192,
-      "hM" : 0,
-      "oA" : 0,
-      "oAP" : "\/LICENSE",
-      "oF" : 0
-    },
     "\/manifest.json" : {
       "ft" : 524288,
       "oA" : 1,
@@ -589,6 +495,23 @@
       "oF" : 0,
       "oO" : 0,
       "oS" : 1
+    },
+    "\/node_modules" : {
+      "ft" : 65536,
+      "oA" : 2,
+      "oAP" : "\/node_modules",
+      "oF" : 0
+    },
+    "\/node_modules\/sortablejs\/modular\/sortable.core.esm.js" : {
+      "bF" : 0,
+      "ft" : 64,
+      "ma" : 0,
+      "mi" : 1,
+      "oA" : 1,
+      "oAP" : "\/node_modules\/sortablejs\/modular\/sortable.core.esm-min.js",
+      "oF" : 0,
+      "sC" : 1,
+      "tS" : 0
     },
     "\/package-lock.json" : {
       "ft" : 524288,
@@ -624,6 +547,136 @@
       "pME" : 1,
       "rFN" : 0,
       "uCM" : 0
+    },
+    "\/splashscreens\/ipad_splash.png" : {
+      "ft" : 32768,
+      "iS" : 17387,
+      "oA" : 0,
+      "oAP" : "\/splashscreens\/ipad_splash.png",
+      "oF" : 0,
+      "oIPL" : 0,
+      "opt" : 0,
+      "oT" : 1,
+      "ou" : "lpckwebp-none",
+      "q" : 100,
+      "rq" : 75
+    },
+    "\/splashscreens\/ipadpro1_splash.png" : {
+      "ft" : 32768,
+      "iS" : 19842,
+      "oA" : 0,
+      "oAP" : "\/splashscreens\/ipadpro1_splash.png",
+      "oF" : 0,
+      "oIPL" : 0,
+      "opt" : 0,
+      "oT" : 1,
+      "ou" : "lpckwebp-none",
+      "q" : 100,
+      "rq" : 75
+    },
+    "\/splashscreens\/ipadpro2_splash.png" : {
+      "ft" : 32768,
+      "iS" : 26208,
+      "oA" : 0,
+      "oAP" : "\/splashscreens\/ipadpro2_splash.png",
+      "oF" : 0,
+      "oIPL" : 0,
+      "opt" : 0,
+      "oT" : 1,
+      "ou" : "lpckwebp-none",
+      "q" : 100,
+      "rq" : 75
+    },
+    "\/splashscreens\/ipadpro3_splash.png" : {
+      "ft" : 32768,
+      "iS" : 20699,
+      "oA" : 0,
+      "oAP" : "\/splashscreens\/ipadpro3_splash.png",
+      "oF" : 0,
+      "oIPL" : 0,
+      "opt" : 0,
+      "oT" : 1,
+      "ou" : "lpckwebp-none",
+      "q" : 100,
+      "rq" : 75
+    },
+    "\/splashscreens\/iphone5_splash.png" : {
+      "ft" : 32768,
+      "iS" : 8308,
+      "oA" : 0,
+      "oAP" : "\/splashscreens\/iphone5_splash.png",
+      "oF" : 0,
+      "oIPL" : 0,
+      "opt" : 0,
+      "oT" : 1,
+      "ou" : "lpckwebp-none",
+      "q" : 100,
+      "rq" : 75
+    },
+    "\/splashscreens\/iphone6_splash.png" : {
+      "ft" : 32768,
+      "iS" : 9631,
+      "oA" : 0,
+      "oAP" : "\/splashscreens\/iphone6_splash.png",
+      "oF" : 0,
+      "oIPL" : 0,
+      "opt" : 0,
+      "oT" : 1,
+      "ou" : "lpckwebp-none",
+      "q" : 100,
+      "rq" : 75
+    },
+    "\/splashscreens\/iphoneplus_splash.png" : {
+      "ft" : 32768,
+      "iS" : 16088,
+      "oA" : 0,
+      "oAP" : "\/splashscreens\/iphoneplus_splash.png",
+      "oF" : 0,
+      "oIPL" : 0,
+      "opt" : 0,
+      "oT" : 1,
+      "ou" : "lpckwebp-none",
+      "q" : 100,
+      "rq" : 75
+    },
+    "\/splashscreens\/iphonex_splash.png" : {
+      "ft" : 32768,
+      "iS" : 16289,
+      "oA" : 0,
+      "oAP" : "\/splashscreens\/iphonex_splash.png",
+      "oF" : 0,
+      "oIPL" : 0,
+      "opt" : 0,
+      "oT" : 1,
+      "ou" : "lpckwebp-none",
+      "q" : 100,
+      "rq" : 75
+    },
+    "\/splashscreens\/iphonexr_splash.png" : {
+      "ft" : 32768,
+      "iS" : 11666,
+      "oA" : 0,
+      "oAP" : "\/splashscreens\/iphonexr_splash.png",
+      "oF" : 0,
+      "oIPL" : 0,
+      "opt" : 0,
+      "oT" : 1,
+      "ou" : "lpckwebp-none",
+      "q" : 100,
+      "rq" : 75
+    },
+    "\/splashscreens\/iphonexsmax_splash.png" : {
+      "ft" : 32768,
+      "iS" : 18986,
+      "oA" : 0,
+      "oAP" : "\/splashscreens\/iphonexsmax_splash.png",
+      "oF" : 0,
+      "oIPL" : 0,
+      "opt" : 0,
+      "oT" : 1,
+      "ou" : "lpckwebp-none",
+      "q" : 100,
+      "rq" : 75
     },
     "\/sw.js" : {
       "bF" : 0,
@@ -2706,27 +2759,30 @@
 
       ],
       "contentEntries" : [
-        "!(node_modules)\/**\/*.html",
-        "!(node_modules)\/**\/*.htm",
-        "!(node_modules)\/**\/*.shtml",
-        "!(node_modules)\/**\/*.xhtml",
-        "!(node_modules)\/**\/*.php",
-        "!(node_modules)\/**\/*.js",
-        "!(node_modules)\/**\/*.ts",
-        "!(node_modules)\/**\/*.coffee",
-        "!(node_modules)\/**\/*.erb",
-        "!(node_modules)\/**\/*.pug",
-        "!(node_modules)\/**\/*.jade",
-        "!(node_modules)\/**\/*.slim",
-        "!(node_modules)\/**\/*.haml",
-        "!(node_modules)\/**\/*.md",
-        "!(node_modules)\/**\/*.kit"
+        "**\/*.html",
+        "**\/*.htm",
+        "**\/*.shtml",
+        "**\/*.xhtml",
+        "**\/*.php",
+        "**\/*.js",
+        "**\/*.ts",
+        "**\/*.coffee",
+        "**\/*.erb",
+        "**\/*.pug",
+        "**\/*.jade",
+        "**\/*.slim",
+        "**\/*.haml",
+        "**\/*.md",
+        "**\/*.kit"
       ],
       "removeFontFace" : 0,
       "removeKeyframes" : 0,
       "removeVariables" : 0,
       "safelistEntries" : [
 
+      ],
+      "skippedEntries" : [
+        "node_modules\/**"
       ]
     },
     "rollupContext" : "",
@@ -2761,6 +2817,7 @@
     "tsNoImplicitThis" : 0,
     "tsNoImplicitUseStrict" : 0,
     "tsNoLib" : 0,
+    "tsNoPropertyAccessFromIndexSignature" : 0,
     "tsNoResolve" : 0,
     "tsNoStrictGenericChecks" : 0,
     "tsNoUncheckedIndexAccess" : 0,

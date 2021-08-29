@@ -252,6 +252,15 @@ li.done > button {
 .done.sortable-chosen { background-color: var(--done-sortable-chosen); }
 .done.sortable-ghost { background-color: var(--done-sortable-ghost); }
 
+/* The iOS install notification */
+#install { display: none; }
+
+#install.iPhone,
+#install.iPad { display: block; }
+
+.iPhone { background-color: orangered; }
+.iPad { background-color: greenyellow; }
+
 /* Info page */
 #info p {
   line-height: 1.5;
