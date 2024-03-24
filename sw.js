@@ -10,7 +10,7 @@ const assetsToCache = [
   './icons/plusBl.svg',
   './js/HtmlService.js',
   './js/TodoService.js',
-  './node_modules/modular/sortable.complete.esm.js',
+  './node_modules/sortablejs/modular/sortable.complete.esm.js',
   './css/style.css',
   './favicon.ico',
   './info.html',

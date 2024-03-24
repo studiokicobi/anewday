@@ -69,6 +69,11 @@ if (iOS() && !isInStandaloneMode()) {
 
 if (!iOS()) { console.log("not iOS"); }
 
+
+
+
+
+
 // Refresh the page once per day at midnight
 // @ https://stackoverflow.com/questions/1217929/how-to-automatically-reload-a-web-page-at-a-certain-time
 function refreshAt(hours, minutes, seconds) {
@@ -98,7 +103,7 @@ refreshAt(0, 0, 0); // Refresh the page at midnight
 
 
 // Sortable.js
-import Sortable from '../node_modules/modular/sortable.core.esm.js';
+import Sortable from '../node_modules/sortablejs/modular/sortable.core.esm.js';
 
 Sortable.create(items, {
   delay: 300
