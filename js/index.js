@@ -67,6 +67,9 @@ if (iOS() && !isInStandaloneMode()) {
   });
 }
 
+if (!iOS()) { console.log("not iOS"); }
+
+
 
 
 
