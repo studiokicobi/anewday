@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900 font-sans antialiased min-h-screen;
+}
+
+a {
+  @apply text-brand-600 underline underline-offset-2;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  @apply outline outline-2 outline-offset-2 outline-brand-500;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0s !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Safe area handling for mobile devices */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Ensure tab bar visibility on all devices */
+nav[aria-label='Main navigation'] {
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), 0.75rem);
+}
+
+/* Drag and drop styles */
+.sortable-ghost {
+  opacity: 0.5;
+}
+
+.sortable-chosen {
+  transform: scale(1.05);
+}
+
+.sortable-drag {
+  transform: rotate(2deg);
+}
+
+/* Drag handle styles */
+.cursor-move:hover {
+  cursor: grab;
+}
+
+.cursor-move:active {
+  cursor: grabbing;
+}

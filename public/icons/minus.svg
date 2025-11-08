@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="50px" height="50px" viewBox="0 0 50 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>minus</title>
+    <defs>
+        <circle id="path-1" cx="25" cy="25" r="25"></circle>
+    </defs>
+    <g id="minus" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <circle id="Oval" fill="#15AFE0" cx="25" cy="25" r="25"></circle>
+        <g id="Oval">
+            <use fill="#DE4B4B" xlink:href="#path-1"></use>
+            <use fill="#7A65E2" xlink:href="#path-1"></use>
+        </g>
+        <path d="M24.5,10 L25.3823529,10 C26.7630648,10 27.8823529,11.1192881 27.8823529,12.5 L27.8823529,36.9117647 C27.8823529,38.2924766 26.7630648,39.4117647 25.3823529,39.4117647 L24.5,39.4117647 C23.1192881,39.4117647 22,38.2924766 22,36.9117647 L22,12.5 C22,11.1192881 23.1192881,10 24.5,10 Z" id="Rectangle" fill="#FFFFFF" transform="translate(24.941176, 24.705882) rotate(-630.000000) translate(-24.941176, -24.705882) "></path>
+    </g>
+</svg>

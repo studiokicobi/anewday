@@ -1,0 +1,6 @@
+dist/
+.lighthouseci/
+coverage/
+test-results/
+node_modules/
+

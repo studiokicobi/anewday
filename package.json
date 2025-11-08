@@ -1,25 +1,63 @@
 {
-  "name": "pwa-todo",
-  "version": "1.0.0",
-  "description": "A simpler webapp To-Do List to demonstrate the PWA concepts with IndexedDB and offline support.",
+  "name": "anewday",
+  "version": "0.1.0-rc",
+  "private": true,
+  "description": "A New Day – privacy-first daily checklist that resets at local midnight.",
+  "type": "module",
   "scripts": {
-    "start": "live-server . --open"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/edysegura/pwa-todo.git"
-  },
-  "keywords": [],
-  "author": "Edy Segura",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/edysegura/pwa-todo/issues"
-  },
-  "homepage": "https://github.com/edysegura/pwa-todo#readme",
-  "devDependencies": {
-    "live-server": "^1.2.1"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --host",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "test:unit": "vitest run",
+    "test:unit:watch": "vitest",
+    "test:e2e": "npm run build && playwright test tests/e2e",
+    "test:a11y": "npm run build && playwright test tests/a11y",
+    "build:analyze": "vite build && vite-bundle-visualizer --open false",
+    "lhci": "lhci autorun",
+    "lighthouse": "npm run build && (npm run preview & echo $! > .preview.pid) && wait-on http://localhost:4173 && npx lighthouse http://localhost:4173 --view --chrome-flags='--headless=new' --output=json --output=html --output-path=./.lighthouse; kill $(cat .preview.pid 2>/dev/null) 2>/dev/null || true; rm -f .preview.pid",
+    "lint": "eslint \"src/**/*.{ts,svelte}\" \"tests/**/*.ts\"",
+    "format": "prettier --check .",
+    "format:fix": "prettier --write .",
+    "postinstall": "playwright install --with-deps"
   },
   "dependencies": {
-    "sortablejs": "^1.13.0"
+    "@tailwindplus/elements": "^1.0.14",
+    "sortablejs": "^1.15.6",
+    "svelte": "^4.2.18"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.9.0",
+    "@lhci/cli": "^0.13.0",
+    "@playwright/test": "^1.44.0",
+    "@sveltejs/vite-plugin-svelte": "^3.1.1",
+    "@tsconfig/svelte": "^5.0.2",
+    "@types/node": "^20.12.12",
+    "@types/sortablejs": "^1.15.8",
+    "@typescript-eslint/eslint-plugin": "^8.8.0",
+    "@typescript-eslint/parser": "^8.8.0",
+    "autoprefixer": "^10.4.17",
+    "eslint": "^9.13.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-svelte": "^2.43.0",
+    "fake-indexeddb": "^6.2.2",
+    "jq": "^1.6",
+    "jsdom": "^27.0.0",
+    "lighthouse": "^12.0.0",
+    "postcss": "^8.4.38",
+    "prettier": "^3.3.3",
+    "rollup-plugin-visualizer": "^5.12.0",
+    "svelte-check": "^4.3.2",
+    "svelte-eslint-parser": "^0.39.0",
+    "tailwindcss": "^3.4.3",
+    "tslib": "^2.6.2",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.9",
+    "vite-bundle-visualizer": "^0.6.0",
+    "vitest": "^1.5.0",
+    "wait-on": "^7.0.1"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run test:e2e:*)",
+      "Bash(npx playwright test:*)",
+      "Bash(npm run check:*)",
+      "Bash(npm run test:e2e:keyboard-navigation:*)",
+      "Bash(npm run dev:*)",
+      "Bash(pkill:*)",
+      "Bash(curl:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run:*)",
+      "Bash(playwright test:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

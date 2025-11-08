@@ -7,13 +7,15 @@
       name="description"
       content="A New Day is a privacy-first daily checklist that resets at local midnight."
     />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'strict-dynamic' 'nonce-anewday'; style-src 'self' 'nonce-anewday'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'" />
     <meta name="theme-color" content="#2563eb" />
     <title>A New Day</title>
     <link rel="manifest" href="/manifest.webmanifest" />
+    <script type="module" nonce="anewday" crossorigin src="/assets/index-BHpCT_GC.js"></script>
+    <link rel="stylesheet" nonce="anewday" crossorigin href="/assets/index-DMPHD00X.css">
   </head>
   <body class="bg-slate-50">
     <a href="#main" class="sr-only focus:not-sr-only">Skip to content</a>
     <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
