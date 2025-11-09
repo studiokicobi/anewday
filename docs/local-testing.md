@@ -38,6 +38,7 @@
 - **End-to-end tests:** `npm run test:e2e`
   - Builds the app, then runs Playwright pointing at a preview server.
 - **Accessibility (axe) suite:** `npm run test:a11y`
+- **Budgets/Lighthouse CI:** `npm run check:budgets` (runs `lhci autorun` against the freshly built `dist/` using `budgets.json`).
 - **Lighthouse CI:** `npm run lhci`
 
 All commands assume ports 5173 (dev) and 4173 (preview) are available.

@@ -11,6 +11,10 @@ import {
 } from '../lib/db';
 import { decryptExport, encryptExport } from '../lib/crypto';
 
+// Export types for components
+export type List = PersistedState['lists'][number];
+export type TodoItem = PersistedState['items'][number];
+
 const DEFAULT_LIST = { id: 'today', name: 'Today' };
 const MIGRATION_FALLBACK: MigrationResult = { changed: false };
 
@@ -22,6 +26,10 @@ const createInitialState = (): PersistedState => ({
 
 const store: Writable<PersistedState> = writable(createInitialState());
 export const appState = store;
+
+// Store for midnight reset notifications
+const resetNotification = writable<{ timestamp: number } | null>(null);
+export const onMidnightReset = resetNotification;
 
 /** Requests persistent storage so browsers avoid purging our IndexedDB data. */
 export async function requestPersistence() {
@@ -77,7 +85,7 @@ const targetList = (state: PersistedState, listId?: string) => {
 function refreshMidnightTimer() {
   cancelMidnight?.();
   cancelMidnight = scheduleMidnight(async () => {
-    await checkForReset();
+    await checkForReset('midnight');
     refreshMidnightTimer();
   });
 }
@@ -104,7 +112,7 @@ export async function initState() {
   return { migration };
 }
 
-export async function checkForReset() {
+export async function checkForReset(source: 'midnight' | 'visibility' = 'visibility') {
   const current = get(store);
   const next = resetIfNeeded(current);
   if (next === current) {
@@ -112,6 +120,12 @@ export async function checkForReset() {
   }
   store.set(next);
   await persist(next);
+
+  // Notify subscribers if this was triggered by the midnight timer
+  if (source === 'midnight') {
+    resetNotification.set({ timestamp: Date.now() });
+  }
+
   return true;
 }
 
@@ -131,18 +145,22 @@ export async function addItem(title: string, listId?: string) {
     typeof crypto !== 'undefined' && 'randomUUID' in crypto
       ? crypto.randomUUID()
       : `${Date.now()}-${Math.random()}`;
-  const next = await commit((state) => ({
-    ...state,
-    items: [
-      ...state.items,
-      {
-        id,
-        listId: targetList(state, listId),
-        title: trimmed.slice(0, 120),
-        completed: false,
-      },
-    ],
-  }));
+  const next = await commit((state) => {
+    const maxPosition = state.items.reduce((max, item) => Math.max(max, item.position), -1);
+    return {
+      ...state,
+      items: [
+        ...state.items,
+        {
+          id,
+          listId: targetList(state, listId),
+          title: trimmed.slice(0, 120),
+          completed: false,
+          position: maxPosition + 1,
+        },
+      ],
+    };
+  });
   return next.items.find((item) => item.id === id)!;
 }
 
@@ -163,6 +181,31 @@ export async function deleteItem(id: string) {
   }));
 }
 
+export async function restoreItem(item: TodoItem) {
+  await commit((state) => {
+    // Insert the item back at its original position
+    const listItems = state.items.filter((i) => i.listId === item.listId);
+    const otherItems = state.items.filter((i) => i.listId !== item.listId);
+
+    // Find the correct position to insert the item
+    const insertIndex = listItems.findIndex((i) => i.position > item.position);
+    const newListItems = [...listItems];
+
+    if (insertIndex === -1) {
+      // Insert at the end
+      newListItems.push(item);
+    } else {
+      // Insert at the correct position
+      newListItems.splice(insertIndex, 0, item);
+    }
+
+    return {
+      ...state,
+      items: [...otherItems, ...newListItems],
+    };
+  });
+}
+
 export async function reorderItems(listId: string, oldIndex: number, newIndex: number) {
   await commit((state) => {
     const listItems = state.items.filter((item) => item.listId === listId);
@@ -172,9 +215,15 @@ export async function reorderItems(listId: string, oldIndex: number, newIndex: n
     const [movedItem] = listItems.splice(oldIndex, 1);
     listItems.splice(newIndex, 0, movedItem);
 
+    // Reassign positions to maintain stable order
+    const reorderedListItems = listItems.map((item, index) => ({
+      ...item,
+      position: index,
+    }));
+
     return {
       ...state,
-      items: [...otherItems, ...listItems],
+      items: [...otherItems, ...reorderedListItems],
     };
   });
 }
@@ -196,9 +245,15 @@ export async function moveItemToList(itemId: string, newListId: string, newIndex
       targetListItems.push(updatedItem);
     }
 
+    // Reassign positions to maintain stable order
+    const reorderedTargetItems = targetListItems.map((item, index) => ({
+      ...item,
+      position: index,
+    }));
+
     return {
       ...state,
-      items: [...nonTargetItems, ...targetListItems],
+      items: [...nonTargetItems, ...reorderedTargetItems],
     };
   });
 }
@@ -229,11 +284,12 @@ export async function importState(raw: string, passphrase?: string) {
       id: String(list.id),
       name: String(list.name || '').slice(0, 60),
     })),
-    items: parsed.items.map((item) => ({
+    items: parsed.items.map((item, index) => ({
       id: String(item.id),
       listId: String(item.listId ?? parsed.lists[0]?.id ?? DEFAULT_LIST.id),
       title: String(item.title ?? '').slice(0, 120),
       completed: Boolean(item.completed),
+      position: item.position ?? index,
     })),
   });
 

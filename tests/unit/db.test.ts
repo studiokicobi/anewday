@@ -35,7 +35,7 @@ describe('lib/db', () => {
     const snapshot: PersistedState = {
       meta: { lastResetKey: dateKey(), settings: { mode: 'single' }, migrationVersion: 1 },
       lists: [{ id: 'today', name: 'Today' }],
-      items: [{ id: '1', listId: 'today', title: 'Meditate', completed: false }],
+      items: [{ id: '1', listId: 'today', title: 'Meditate', completed: false, position: 0 }],
     };
 
     await saveState(db, snapshot);

@@ -1,0 +1,101 @@
+<script lang="ts">
+  export let encryption: boolean;
+  export let passphrase: string;
+  export let importError: string;
+  export let onExport: () => Promise<void>;
+  export let onImport: (files: FileList | null) => Promise<void>;
+  export let onOpenResetConfirm: () => void;
+  export let resetButton: HTMLButtonElement | null = null;
+
+  function handleImportChange(event: Event) {
+    const input = event.currentTarget as HTMLInputElement | null;
+    if (input) {
+      void onImport(input.files);
+      input.value = '';
+    }
+  }
+</script>
+
+<div class="space-y-6">
+  <div>
+    <h3 class="settings-heading">Managing your data</h3>
+    <p class="settings-description">Manage your personal data with export, import, and reset options.</p>
+
+    <div class="space-y-6">
+      <!-- Encryption Toggle -->
+      <div class="flex items-center gap-3 my-2">
+        <button
+          type="button"
+          class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 focus:ring-offset-brand-100 dark:focus:ring-offset-brand-800"
+          class:bg-brand-900={encryption}
+          class:dark:bg-brand-300={encryption}
+          class:bg-brand-300={!encryption}
+          class:dark:bg-brand-600={!encryption}
+          role="switch"
+          aria-checked={encryption}
+          on:click={() => encryption = !encryption}
+        >
+          <span
+            class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
+            class:translate-x-5={encryption}
+            class:translate-x-0={!encryption}
+          ></span>
+        </button>
+        <div class="flex flex-col gap-1">
+          <button
+            type="button"
+            class="text-left text-sm font-medium text-brand-900 dark:text-brand-100"
+            on:click={() => (encryption = !encryption)}
+          >
+            Encrypt export with passphrase 
+          </button>
+          <span class="text-xs text-brand-600 dark:text-brand-400">Optional – uses AES-GCM for encryption</span>
+        </div>
+      </div>
+
+      {#if encryption}
+        <input
+          type="password"
+          class="w-full rounded-lg border border-brand-300 dark:border-brand-600 bg-white dark:bg-brand-700 px-3 py-2 text-base text-brand-900 dark:text-brand-100 placeholder:text-brand-500 dark:placeholder:text-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-500"
+          placeholder="Passphrase"
+          bind:value={passphrase}
+          aria-label="Export/import passphrase"
+        />
+      {/if}
+
+      <!-- Export Button -->
+      <div>
+        <button type="button" class="rounded-full bg-brand-300 dark:bg-brand-700 px-5 py-2 text-sm font-base text-brand-900 dark:text-brand-100 hover:bg-brand-300/80 dark:hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-500" on:click={onExport}>
+          Export data
+        </button>
+        <p class="text-xs text-brand-600 dark:text-brand-400 mt-2">Download tasks and settings as JSON</p>
+      </div>
+
+      <!-- Import Button -->
+      <div>
+        <label class="rounded-full px-5 py-2 bg-brand-300 dark:bg-brand-700 text-sm font-base text-brand-900 dark:text-brand-100 hover:bg-brand-300/80 dark:hover:bg-brand-600 cursor-pointer inline-flex focus-within:outline-none focus-within:ring-2 focus-within:ring-brand-500">
+          Import data
+          <input type="file" class="sr-only" accept="application/json" on:change={handleImportChange} />
+        </label>
+        <p class="text-xs text-brand-600 dark:text-brand-400 mt-2">Restore from a JSON file</p>
+      </div>
+
+      <!-- Reset Button -->
+      <div>
+        <button
+          type="button"
+          class="rounded-full border bg-red-700 dark:bg-red-800 border-red-700 dark:border-red-800 px-5 py-2 text-sm font-base text-red-100 dark:text-red-100 hover:bg-red-600 dark:hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+          on:click={onOpenResetConfirm}
+          bind:this={resetButton}
+        >
+          Reset all data
+        </button>
+        <p class="text-xs text-brand-600 dark:text-brand-400 mt-2">Permanently delete all data</p>
+      </div>
+    </div>
+
+    {#if importError}
+      <p class="mt-3 text-sm text-red-400 dark:text-red-300" role="alert">{importError}</p>
+    {/if}
+  </div>
+</div>

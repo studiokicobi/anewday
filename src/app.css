@@ -6,12 +6,12 @@
   color-scheme: light;
 }
 
-body {
-  @apply bg-slate-50 text-slate-900 font-sans antialiased min-h-screen;
+:root.dark {
+  color-scheme: dark;
 }
 
-a {
-  @apply text-brand-600 underline underline-offset-2;
+body {
+  @apply bg-brand-50 text-brand-900 font-sans antialiased min-h-screen;
 }
 
 a:focus-visible,
@@ -20,6 +20,48 @@ input:focus-visible,
 select:focus-visible {
   @apply outline outline-2 outline-offset-2 outline-brand-500;
 }
+
+/* Settings section typography */
+.settings-heading {
+  @apply text-lg font-semibold text-brand-900 dark:text-brand-100 mb-2;
+}
+
+.settings-subheading {
+  @apply text-sm font-medium text-brand-900 dark:text-brand-100 mb-1;
+}
+
+.settings-description {
+  @apply text-sm text-brand-700 dark:text-brand-300 mb-4;
+}
+
+.settings-text {
+  @apply text-sm text-brand-700 dark:text-brand-300;
+}
+
+.settings-text-container {
+  @apply text-sm text-brand-700 dark:text-brand-300 space-y-3;
+}
+
+/* Definition list styles */
+dl {
+  @apply p-4 rounded-lg bg-brand-200 dark:bg-brand-700 mt-2 mb-2 space-y-3 text-sm text-brand-700 dark:text-brand-300;
+  counter-reset: step-counter;
+}
+
+dt {
+  @apply text-sm font-medium text-brand-900 dark:text-brand-100 mb-2;
+}
+
+dd {
+  @apply pl-2 mb-1;
+  counter-increment: step-counter;
+}
+
+dd::before {
+  content: counter(step-counter) ". ";
+  @apply font-semibold mr-1;
+}
+
 
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -30,16 +72,6 @@ select:focus-visible {
     transition-duration: 0s !important;
     scroll-behavior: auto !important;
   }
-}
-
-/* Safe area handling for mobile devices */
-.pb-safe {
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-}
-
-/* Ensure tab bar visibility on all devices */
-nav[aria-label='Main navigation'] {
-  padding-bottom: max(env(safe-area-inset-bottom, 0px), 0.75rem);
 }
 
 /* Drag and drop styles */

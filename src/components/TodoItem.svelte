@@ -9,12 +9,56 @@
   const announceToggle = () => dispatch('toggle', item.id);
   const announceDelete = () => dispatch('delete', item.id);
 
+  // Swipe-to-delete state
+  let touchStartX = 0;
+  let touchCurrentX = 0;
+  let isSwiping = false;
+  let swipeDistance = 0;
+  const SWIPE_THRESHOLD = 100; // Distance in pixels to trigger delete
+
+  function handleTouchStart(event: TouchEvent) {
+    touchStartX = event.touches[0].clientX;
+    isSwiping = true;
+  }
+
+  function handleTouchMove(event: TouchEvent) {
+    if (!isSwiping) return;
+
+    touchCurrentX = event.touches[0].clientX;
+    const diff = touchStartX - touchCurrentX;
+
+    // Only allow swipe left (positive diff)
+    if (diff > 0) {
+      swipeDistance = Math.min(diff, SWIPE_THRESHOLD + 20);
+    } else {
+      swipeDistance = 0;
+    }
+  }
+
+  function handleTouchEnd() {
+    if (!isSwiping) return;
+
+    isSwiping = false;
+
+    // If swiped past threshold, delete the item
+    if (swipeDistance >= SWIPE_THRESHOLD) {
+      announceDelete();
+    }
+
+    // Reset swipe distance
+    swipeDistance = 0;
+  }
+
   function handleCheckboxKeydown(event: KeyboardEvent) {
     if (event.key === 'Enter') {
       // Allow Enter to toggle checkbox (in addition to Space which is default)
       // Space is handled automatically by the browser
       event.preventDefault();
       announceToggle();
+    } else if (event.key === 'Delete' || event.key === 'Backspace') {
+      // Delete item with keyboard shortcut
+      event.preventDefault();
+      announceDelete();
     } else if (event.key === 'Tab' && !event.shiftKey) {
       event.preventDefault();
       const deleteBtn = (event.currentTarget as HTMLElement).closest('.todo-item')?.querySelector('button') as HTMLElement;
@@ -30,7 +74,11 @@
   }
 
   function handleDeleteKeydown(event: KeyboardEvent) {
-    if (event.key === 'Tab' && !event.shiftKey) {
+    if (event.key === 'Delete' || event.key === 'Backspace') {
+      // Delete item with keyboard shortcut
+      event.preventDefault();
+      announceDelete();
+    } else if (event.key === 'Tab' && !event.shiftKey) {
       event.preventDefault();
       // Find next checkbox
       const allCheckboxes = Array.from(document.querySelectorAll('.todo-item input[type="checkbox"]'));
@@ -53,31 +101,56 @@
   }
 </script>
 
-<div class="todo-item flex items-center justify-between gap-3 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 focus-within:ring-2 focus-within:ring-brand-500">
-  <div class="flex items-start gap-3">
-    <input
-      id={checkboxId}
-      type="checkbox"
-      class="mt-1 h-5 w-5 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
-      checked={item.completed}
-      aria-label={item.title}
-      on:change={announceToggle}
-      on:keydown={handleCheckboxKeydown}
-    />
-    <label
-      for={checkboxId}
-      class={`text-base ${item.completed ? 'text-slate-400 line-through' : 'text-slate-800'}`}
-    >
-      {item.title}
-    </label>
+<div class="todo-item relative overflow-hidden">
+  <!-- Delete background (revealed on swipe) -->
+  <div class="absolute inset-0 flex items-center justify-end bg-red-500 px-4">
+    <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+    </svg>
   </div>
-  <button
-    type="button"
-    class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-transparent text-xl text-slate-500 transition hover:bg-slate-200 hover:text-slate-700"
-    aria-label={`Remove ${item.title}`}
-    on:click={announceDelete}
-    on:keydown={handleDeleteKeydown}
+
+  <!-- Main item content (slides on swipe) -->
+  <div
+    class="group relative flex items-center justify-between gap-3 border-b border-brand-200 dark:border-brand-700 px-3 py-2 transition-colors bg-brand-50 dark:bg-brand-800 hover:bg-brand-100 dark:hover:bg-brand-700 focus-within:ring-2 focus-within:ring-brand-500"
+    style="transform: translateX(-{swipeDistance}px); transition: {isSwiping ? 'none' : 'transform 0.3s ease-out'};"
+    on:touchstart={handleTouchStart}
+    on:touchmove={handleTouchMove}
+    on:touchend={handleTouchEnd}
   >
-    <span aria-hidden="true">×</span>
-  </button>
+    <div class="flex items-center gap-3">
+      <div class="group grid size-5 shrink-0 grid-cols-1">
+        <input
+          id={checkboxId}
+          type="checkbox"
+          class="col-start-1 row-start-1 appearance-none rounded border-2 border-brand-200 dark:border-brand-600 bg-brand-200 dark:bg-brand-600 checked:border-brand-800 dark:checked:border-brand-300 checked:bg-brand-800 dark:checked:bg-brand-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
+          checked={item.completed}
+          aria-label={item.title}
+          on:change={announceToggle}
+          on:keydown={handleCheckboxKeydown}
+        />
+        <svg viewBox="0 0 14 14" fill="none" class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white dark:stroke-brand-900">
+          <path d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-[:checked]:opacity-100" />
+        </svg>
+      </div>
+      <label
+        for={checkboxId}
+        class={`text-base ${item.completed ? 'text-brand-400 dark:text-brand-600 line-through' : 'text-brand-900 dark:text-brand-100'}`}
+      >
+        {item.title}
+      </label>
+    </div>
+    <button
+      type="button"
+      class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-transparent text-xl text-brand-400 dark:text-brand-500 opacity-0 transition-all duration-200 hover:text-brand-800 dark:hover:text-brand-300 group-hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-brand-500"
+      aria-label={`Remove ${item.title}`}
+      on:click={announceDelete}
+      on:keydown={handleDeleteKeydown}
+    >
+      <span aria-hidden="true">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7 4C7 2.89543 7.89543 2 9 2H15C16.1046 2 17 2.89543 17 4V6H18.9897C18.9959 5.99994 19.0021 5.99994 19.0083 6H21C21.5523 6 22 6.44772 22 7C22 7.55228 21.5523 8 21 8H19.9311L19.0638 20.1425C18.989 21.1891 18.1182 22 17.0689 22H6.93112C5.88184 22 5.01096 21.1891 4.9362 20.1425L4.06888 8H3C2.44772 8 2 7.55228 2 7C2 6.44772 2.44772 6 3 6H4.99174C4.99795 5.99994 5.00414 5.99994 5.01032 6H7V4ZM9 6H15V4H9V6ZM6.07398 8L6.93112 20H17.0689L17.926 8H6.07398ZM10 10C10.5523 10 11 10.4477 11 11V17C11 17.5523 10.5523 18 10 18C9.44772 18 9 17.5523 9 17V11C9 10.4477 9.44772 10 10 10ZM14 10C14.5523 10 15 10.4477 15 11V17C15 17.5523 14.5523 18 14 18C13.4477 18 13 17.5523 13 17V11C13 10.4477 13.4477 10 14 10Z" fill="currentColor"/>
+        </svg>
+      </span>
+    </button>
+  </div>
 </div>

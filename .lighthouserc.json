@@ -4,7 +4,7 @@
       "staticDistDir": "dist",
       "isSinglePageApplication": true,
       "budgetsPath": "budgets.json",
-      "url": ["/index.html", "/info.html"]
+      "url": ["/index.html"]
     },
     "assert": {
       "preset": "lighthouse:recommended",

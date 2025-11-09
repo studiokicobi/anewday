@@ -1,33 +1,49 @@
 import { svelte } from '@sveltejs/vite-plugin-svelte';
 import { defineConfig } from 'vite';
 import { visualizer } from 'rollup-plugin-visualizer';
+import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
   plugins: [
     svelte(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      includeAssets: ['favicon.ico', 'icons/*.png', 'robots.txt'],
+      manifest: false, // Use existing manifest.webmanifest
+      injectRegister: null,  // Disable auto-injection, we'll register manually
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,webmanifest}'],
+      },
+      devOptions: {
+        enabled: false, // Disable in dev to avoid conflicts
+      },
+    }),
     {
       name: 'html-csp-nonce',
-      transformIndexHtml(html, context) {
-        const isDev = context.server?.config.command === 'serve';
+      transformIndexHtml: {
+        order: 'post',
+        handler(html, context) {
+          const isDev = context.server?.config.command === 'serve';
 
-        // Add nonce to scripts and stylesheets
-        html = html.replace(/<script type="module"/g, '<script type="module" nonce="anewday"');
-        html = html.replace(/<link rel="stylesheet"/g, '<link rel="stylesheet" nonce="anewday"');
+          // Add nonce to scripts and stylesheets
+          html = html.replace(/<script type="module"/g, '<script type="module" nonce="anewday"');
+          html = html.replace(/<link rel="stylesheet"/g, '<link rel="stylesheet" nonce="anewday"');
 
-        // Environment-specific CSP - more permissive for dev
-        const cspContent = isDev
-          ? "default-src 'self'; script-src 'self' 'strict-dynamic' 'nonce-anewday' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'"
-          : "default-src 'self'; script-src 'self' 'strict-dynamic' 'nonce-anewday'; style-src 'self' 'nonce-anewday'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'";
+          // Environment-specific CSP - more permissive for dev
+          const cspContent = isDev
+            ? "default-src 'self'; script-src 'self' 'strict-dynamic' 'nonce-anewday' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'"
+            : "default-src 'self'; script-src 'self' 'strict-dynamic' 'nonce-anewday'; style-src 'self' 'nonce-anewday'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'";
 
-        // Inject CSP if not already present
-        if (!html.includes('Content-Security-Policy')) {
-          html = html.replace(
-            /<meta name="theme-color"/,
-            `<meta http-equiv="Content-Security-Policy" content="${cspContent}" />\n    <meta name="theme-color"`
-          );
-        }
+          // Inject CSP if not already present
+          if (!html.includes('Content-Security-Policy')) {
+            html = html.replace(
+              /<meta name="theme-color"/,
+              `<meta http-equiv="Content-Security-Policy" content="${cspContent}" />\n    <meta name="theme-color"`
+            );
+          }
 
-        return html;
+          return html;
+        },
       },
     },
     visualizer({ filename: 'dist/stats.html', gzipSize: true, brotliSize: true }),

@@ -7,7 +7,7 @@ import { dateKey } from './reset';
 export interface PersistedState {
   meta: { lastResetKey: string; settings: { mode: 'single' | 'multi' }; migrationVersion?: number };
   lists: Array<{ id: string; name: string }>;
-  items: Array<{ id: string; listId: string; title: string; completed: boolean }>;
+  items: Array<{ id: string; listId: string; title: string; completed: boolean; position: number }>;
 }
 
 export interface MigrationResult {
@@ -90,10 +90,18 @@ export async function loadState(db: IDBDatabase): Promise<PersistedState | null>
     return null;
   }
 
+  // Sort items by position, and assign positions to any items missing them
+  const sortedItems = ((items as PersistedState['items']) ?? [])
+    .map((item, index) => ({
+      ...item,
+      position: item.position ?? index,
+    }))
+    .sort((a, b) => a.position - b.position);
+
   return {
     meta: meta as PersistedState['meta'],
     lists: (lists as PersistedState['lists']) ?? [],
-    items: (items as PersistedState['items']) ?? [],
+    items: sortedItems,
   };
 }
 
@@ -171,6 +179,7 @@ export async function migrateFromLocalStorage(db: IDBDatabase): Promise<Migratio
         listId: 'today',
         title: String(entry?.description ?? entry?.title ?? '').slice(0, 120),
         completed: Boolean(entry?.done),
+        position: index,
       }))
     : [];
 

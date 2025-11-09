@@ -1,6 +1,6 @@
 {
   "name": "anewday",
-  "version": "0.1.0-rc",
+  "version": "1.0.0",
   "private": true,
   "description": "A New Day – privacy-first daily checklist that resets at local midnight.",
   "type": "module",
@@ -14,6 +14,7 @@
     "test:e2e": "npm run build && playwright test tests/e2e",
     "test:a11y": "npm run build && playwright test tests/a11y",
     "build:analyze": "vite build && vite-bundle-visualizer --open false",
+    "check:budgets": "npm run build && lhci autorun --config=.lighthouserc.json",
     "lhci": "lhci autorun",
     "lighthouse": "npm run build && (npm run preview & echo $! > .preview.pid) && wait-on http://localhost:4173 && npx lighthouse http://localhost:4173 --view --chrome-flags='--headless=new' --output=json --output=html --output-path=./.lighthouse; kill $(cat .preview.pid 2>/dev/null) 2>/dev/null || true; rm -f .preview.pid",
     "lint": "eslint \"src/**/*.{ts,svelte}\" \"tests/**/*.ts\"",
@@ -54,6 +55,7 @@
     "typescript": "^5.4.5",
     "vite": "^5.2.9",
     "vite-bundle-visualizer": "^0.6.0",
+    "vite-plugin-pwa": "^1.1.0",
     "vitest": "^1.5.0",
     "wait-on": "^7.0.1"
   },

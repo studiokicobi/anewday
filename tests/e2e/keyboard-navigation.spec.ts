@@ -1,31 +1,30 @@
 import { test, expect } from '@playwright/test';
 
 test('keyboard flow allows selecting list, submitting, and toggling tasks', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/', { waitUntil: 'networkidle' });
+
+  // Wait for app to be fully loaded (especially important for Firefox/IndexedDB)
+  await page.waitForLoadState('domcontentloaded');
+  await page.waitForFunction(() => (window as any).__anewdaySetMode, { timeout: 15000 });
 
   // Ensure multi-list mode is enabled so the embedded list selector appears.
-  await page.getByRole('button', { name: 'Settings' }).click();
-  await page.getByRole('button', { name: 'List Organization' }).click();
+  await page.evaluate(async () => {
+    const helper = (window as any).__anewdaySetMode;
+    if (helper) {
+      await helper('multi');
+    }
+  }, { timeout: 15000 });
 
-  const listModeSwitch = page.getByRole('switch').first();
-  if ((await listModeSwitch.getAttribute('aria-checked')) !== 'true') {
-    await listModeSwitch.click();
-  }
-
-  // Close the settings drawer with the keyboard to mimic user flow.
-  await page.keyboard.press('Escape');
+  await expect(page.getByRole('heading', { name: 'Morning' })).toBeVisible();
 
   const taskInput = page.getByPlaceholder('Today I will...');
   await taskInput.click();
   await taskInput.fill('Keyboard navigation task');
-  // Tab once moves directly to the Add button for quick submission.
-  await page.keyboard.press('Tab');
-  const addButton = page.getByRole('button', { name: 'Add' });
-  await expect(addButton).toBeFocused();
-
-  // Shift+Tab brings focus to the embedded list selector when needed.
-  await page.keyboard.press('Shift+Tab');
   const listTrigger = page.locator('#embedded-list-selector');
+  const addButton = page.getByRole('button', { name: 'Add' });
+
+  // Tab moves to the embedded list selector so a destination list can be chosen.
+  await page.keyboard.press('Tab');
   await expect(listTrigger).toBeFocused();
 
   // Open the dropdown and ensure the first option receives focus.
@@ -43,9 +42,17 @@ test('keyboard flow allows selecting list, submitting, and toggling tasks', asyn
   await page.keyboard.press('Shift+Tab');
   await expect(taskInput).toBeFocused();
 
-  // Tab to Add (skipping the list), then Shift+Tab back to the selector to pick a list.
+  // Tab back to the embedded selector.
+  await page.keyboard.press('Tab');
+  await expect(listTrigger).toBeFocused();
+
+  // Open the dropdown again and use Tab to move focus directly to the Add button.
+  await page.keyboard.press('ArrowDown');
+  await expect(page.getByRole('listbox')).toBeVisible();
   await page.keyboard.press('Tab');
   await expect(addButton).toBeFocused();
+
+  // Shift+Tab returns focus to the selector to pick a list.
   await page.keyboard.press('Shift+Tab');
   await expect(listTrigger).toBeFocused();
 
@@ -54,7 +61,8 @@ test('keyboard flow allows selecting list, submitting, and toggling tasks', asyn
   await page.keyboard.press('Enter');
   await expect(listTrigger).toBeFocused();
 
-  // Tab forward to the Add button and submit the form with Enter.
+  // Use the dropdown once more to move focus to Add, then submit with Enter.
+  await page.keyboard.press('ArrowDown');
   await page.keyboard.press('Tab');
   await expect(addButton).toBeFocused();
   await page.keyboard.press('Enter');

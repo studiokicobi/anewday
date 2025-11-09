@@ -22,7 +22,11 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('completes items and auto-resets after simulated midnight', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/', { waitUntil: 'networkidle' });
+
+  // Wait for app to be fully loaded (especially important for Firefox/IndexedDB)
+  await page.waitForLoadState('domcontentloaded');
+  await page.waitForSelector('[aria-label="Add an item"]', { timeout: 15000 });
 
   await page.getByLabel('Add an item').fill('Stretch');
   await page.getByRole('button', { name: 'Add' }).click();

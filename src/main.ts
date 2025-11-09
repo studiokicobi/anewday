@@ -7,10 +7,11 @@ const app = new App({
   props: {},
 });
 
-if ('serviceWorker' in navigator) {
+// Register service worker for PWA offline support
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/service-worker.js').catch(() => {
-      // Swallow registration errors to avoid leaking information in logs
+    navigator.serviceWorker.register('/sw.js').catch(() => {
+      // Swallow registration errors
     });
   });
 }
