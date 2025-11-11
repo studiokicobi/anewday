@@ -10,7 +10,7 @@
     class="breadcrumb-back flex items-center gap-1 text-brand-600 dark:text-brand-400 hover:text-brand-800 dark:hover:text-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded px-2 py-1"
     on:click={onBack}
   >
-    <span class="text-sm font-medium">← Settings</span>
+    <span class="text-sm font-medium">← Info & settings</span>
   </button>
   <h2 class="text-lg font-semibold text-brand-900 dark:text-brand-100 absolute left-1/2 -translate-x-1/2">
     {title}

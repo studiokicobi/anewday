@@ -399,12 +399,22 @@
 >
 
   <div class="flex-grow flex flex-col gap-6">
-    <header class="flex items-start justify-between gap-4">
-      <div class="flex flex-col gap-1">
-        <h1 class="text-3xl font-medium tracking-tight text-brand-900 dark:text-brand-100">A New Day</h1>
+    <header class="flex flex-col gap-1 border-b border-brand-300 pb-2">
+      <h1 class="text-3xl font-medium tracking-tight text-brand-900 dark:text-brand-100">A New Day</h1>
+      <div class="flex items-baseline justify-between gap-4">
         <p class="text-xs uppercase text-brand-500 dark:text-brand-400 tracking-wide">{getCurrentDate()}</p>
-        <p class="hidden text-base text-brand-900 dark:text-brand-100">Daily checklist designed for rebuilding routines. Tasks reset automatically at local midnight.</p>
+        <button
+          type="button"
+          class="text-xs text-brand-500 dark:text-brand-400 tracking-wide hover:text-brand-700 dark:hover:text-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded whitespace-nowrap"
+          on:click={openSettingsDrawer}
+          bind:this={settingsButton}
+          aria-haspopup="dialog"
+          aria-expanded={showSettingsDrawer}
+        >
+          → Info & settings
+        </button>
       </div>
+      <p class="hidden text-base text-brand-900 dark:text-brand-100">Daily checklist designed for rebuilding routines. Tasks reset automatically at local midnight.</p>
     </header>
 
     <AddTaskForm
@@ -425,20 +435,6 @@
       on:delete={onDelete}
     />
   {/each}
-  </div>
-
-  <!-- Settings button -->
-  <div class="mt-auto pt-8 pb-12 flex justify-center" style="padding-bottom: max(3rem, env(safe-area-inset-bottom, 3rem));">
-    <button
-      type="button"
-      class="flex items-center gap-2 rounded-full px-4 py-2 text-sm font-base text-brand-800 dark:text-brand-200 bg-brand-200 dark:bg-brand-800 hover:bg-brand-300 dark:hover:bg-brand-700 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500"
-      on:click={openSettingsDrawer}
-      bind:this={settingsButton}
-      aria-haspopup="dialog"
-      aria-expanded={showSettingsDrawer}
-    >
-      Settings
-    </button>
   </div>
 
 </main>

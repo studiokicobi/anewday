@@ -86,7 +86,6 @@
       bind:this={dialogElement}
       class="w-full px-4 max-w-lg rounded-t-2xl bg-brand-100 dark:bg-brand-800 shadow-xl overflow-hidden h-[66vh] flex flex-col"
       transition:fly={{ y: 500, duration: 300 }}
-      on:click|stopPropagation
       role="dialog"
       aria-modal="true"
       aria-labelledby="settings-title"
@@ -99,7 +98,7 @@
         {#if activeView === 'menu'}
         <!-- Menu View -->
         <div class="flex items-center justify-center border-b border-brand-200 dark:border-brand-700 p-4 relative">
-          <h2 id="settings-title" class="text-lg font-semibold text-brand-900 dark:text-brand-100">Settings</h2>
+          <h2 id="settings-title" class="text-lg font-semibold text-brand-900 dark:text-brand-100">Info & settings</h2>
           <button
             type="button"
             class="settings-done-menu absolute right-4 text-brand-600 dark:text-brand-400 hover:text-brand-800 dark:hover:text-brand-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500 rounded px-2 py-1"
