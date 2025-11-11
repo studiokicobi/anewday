@@ -60,7 +60,7 @@
     }, 50);
   }
 
-  function handleOverlayClick(event: PointerEvent) {
+  function handleOverlayClick(event: MouseEvent) {
     if (event.target === event.currentTarget) {
       onClose();
     }
@@ -80,13 +80,13 @@
   <div
     class="fixed inset-0 z-50 flex items-end justify-center bg-brand-700/80 dark:bg-black/80"
     transition:fade={{ duration: 200 }}
-    on:pointerdown={handleOverlayClick}
+    on:click={handleOverlayClick}
   >
     <div
       bind:this={dialogElement}
       class="w-full px-4 max-w-lg rounded-t-2xl bg-brand-100 dark:bg-brand-800 shadow-xl overflow-hidden h-[66vh] flex flex-col"
       transition:fly={{ y: 500, duration: 300 }}
-      on:pointerdown|stopPropagation
+      on:click|stopPropagation
       role="dialog"
       aria-modal="true"
       aria-labelledby="settings-title"

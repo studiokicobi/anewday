@@ -394,7 +394,7 @@
 
 <main
   id="main"
-  class="mx-auto flex min-h-screen max-w-lg flex-col px-4 py-8"
+  class="mx-auto flex min-h-[100dvh] max-w-lg flex-col px-4 py-8"
   aria-label="Main application"
 >
 
@@ -428,7 +428,7 @@
   </div>
 
   <!-- Settings button -->
-  <div class="mt-auto pt-8 pb-6 flex justify-center">
+  <div class="mt-auto pt-8 pb-12 flex justify-center" style="padding-bottom: max(3rem, env(safe-area-inset-bottom, 3rem));">
     <button
       type="button"
       class="flex items-center gap-2 rounded-full px-4 py-2 text-sm font-base text-brand-800 dark:text-brand-200 bg-brand-200 dark:bg-brand-800 hover:bg-brand-300 dark:hover:bg-brand-700 transition-colors focus:outline-none focus:ring-2 focus:ring-brand-500"
