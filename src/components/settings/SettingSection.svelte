@@ -12,7 +12,7 @@
   >
     <span class="text-sm font-medium">← Info & settings</span>
   </button>
-  <h2 class="text-lg font-semibold text-brand-900 dark:text-brand-100 absolute left-1/2 -translate-x-1/2">
+  <h2 id="settings-title" class="text-lg font-semibold text-brand-900 dark:text-brand-100 absolute left-1/2 -translate-x-1/2">
     {title}
   </h2>
   <button

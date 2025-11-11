@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { fly, fade } from 'svelte/transition';
   import { focusTrap } from '../lib/focusTrap';
   import SettingSection from './settings/SettingSection.svelte';
   import AboutContent from './settings/AboutContent.svelte';
@@ -66,6 +65,10 @@
     }
   }
 
+  function handlePanelClick(event: MouseEvent) {
+    event.stopPropagation();
+  }
+
   const sectionTitles = {
     about: 'About',
     usage: 'Usage',
@@ -78,17 +81,16 @@
 
 {#if showSettings}
   <div
-    class="fixed inset-0 z-50 flex items-end justify-center bg-brand-700/80 dark:bg-black/80"
-    transition:fade={{ duration: 200 }}
+    class="settings-overlay fixed inset-0 z-50 flex items-end justify-center bg-brand-700/80 dark:bg-black/80"
     on:click={handleOverlayClick}
   >
     <div
       bind:this={dialogElement}
-      class="w-full px-4 max-w-lg rounded-t-2xl bg-brand-100 dark:bg-brand-800 shadow-xl overflow-hidden h-[66vh] flex flex-col"
-      transition:fly={{ y: 500, duration: 300 }}
+      class="settings-panel w-full px-4 max-w-lg rounded-t-2xl bg-brand-100 dark:bg-brand-800 shadow-xl overflow-hidden h-[66vh] flex flex-col"
       role="dialog"
       aria-modal="true"
       aria-labelledby="settings-title"
+      on:click={handlePanelClick}
       use:focusTrap={{
         returnFocus: () => returnFocusElement,
         onEscape: onClose

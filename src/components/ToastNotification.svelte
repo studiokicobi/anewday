@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { fly } from 'svelte/transition';
-
   export let message: string;
   export let onUndo: (() => void) | null = null;
 </script>
@@ -8,8 +6,7 @@
 {#if message}
   <div aria-live="polite" role="status" class="pointer-events-none fixed bottom-6 left-1/2 w-[90vw] max-w-md -translate-x-1/2 transform">
     <div
-      class="pointer-events-auto flex items-center justify-between gap-3 rounded-lg bg-brand-900/90 px-4 py-3 text-sm font-medium text-white shadow-lg backdrop-blur-sm"
-      transition:fly={{ y: 20, duration: 300 }}
+      class="toast-card pointer-events-auto flex items-center justify-between gap-3 rounded-lg bg-brand-900/90 px-4 py-3 text-sm font-medium text-white shadow-lg backdrop-blur-sm"
     >
       <span>{message}</span>
       {#if onUndo}
