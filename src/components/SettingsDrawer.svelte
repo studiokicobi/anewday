@@ -99,15 +99,17 @@
       <div class="flex flex-col h-full">
         {#if activeView === 'menu'}
         <!-- Menu View -->
-        <div class="flex items-center justify-center border-b border-brand-200 dark:border-brand-700 p-4 relative">
-          <h2 id="settings-title" class="text-lg font-semibold text-brand-900 dark:text-brand-100">Info & settings</h2>
-          <button
-            type="button"
-            class="settings-done-menu absolute right-4 text-brand-600 dark:text-brand-400 hover:text-brand-800 dark:hover:text-brand-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500 rounded px-2 py-1"
-            on:click={onClose}
-          >
-            Done
-          </button>
+        <div class="flex flex-col border-b border-brand-200 dark:border-brand-700 px-6 py-4 gap-2">
+          <div class="flex items-center justify-end">
+            <button
+              type="button"
+              class="settings-done-menu text-brand-600 dark:text-brand-400 hover:text-brand-800 dark:hover:text-brand-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-brand-500 rounded px-2 py-1"
+              on:click={onClose}
+            >
+              Done
+            </button>
+          </div>
+          <h2 id="settings-title" class="text-lg font-semibold text-brand-900 dark:text-brand-100 text-center">Info & settings</h2>
         </div>
 
         <nav class="overflow-y-auto flex-1 pb-12" aria-label="Settings sections">
