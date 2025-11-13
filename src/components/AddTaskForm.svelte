@@ -7,9 +7,9 @@
   export let lists: List[];
   export let selectedList: string;
   export let onSubmit: () => Promise<void>;
+  export let taskInput: HTMLInputElement | null = null;
 
   let showDropdown = false;
-  let taskInput: HTMLInputElement | null = null;
   let embeddedListTrigger: HTMLButtonElement | null = null;
   let addButton: HTMLButtonElement | null = null;
   let focusedListIndex = -1;

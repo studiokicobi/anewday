@@ -34,6 +34,7 @@
   let showSettingsDrawer = false;
   let settingsButton: HTMLButtonElement | null = null;
   let resetButton: HTMLButtonElement | null = null;
+  let taskInput: HTMLInputElement | null = null;
   let previousBodyOverflow: string | null = null;
   let bodyScrollLockCount = 0;
 
@@ -83,6 +84,12 @@
         if (migration?.error) {
           importError = migration.error;
         }
+        // Focus the task input after initialization
+        setTimeout(() => {
+          if (taskInput) {
+            taskInput.focus();
+          }
+        }, 100);
       })
       .catch(error => {
         if (mounted) {
@@ -401,19 +408,7 @@
   <div class="flex-grow flex flex-col gap-6">
     <header class="flex flex-col gap-1 border-b border-brand-300 pb-2">
       <h1 class="text-3xl font-medium tracking-tight text-brand-900 dark:text-brand-100">A New Day</h1>
-      <div class="flex items-baseline justify-between gap-4">
-        <p class="text-xs uppercase text-brand-500 dark:text-brand-400 tracking-wide">{getCurrentDate()}</p>
-        <button
-          type="button"
-          class="text-xs text-brand-500 dark:text-brand-400 tracking-wide hover:text-brand-700 dark:hover:text-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded whitespace-nowrap"
-          on:click={openSettingsDrawer}
-          bind:this={settingsButton}
-          aria-haspopup="dialog"
-          aria-expanded={showSettingsDrawer}
-        >
-          → Info & settings
-        </button>
-      </div>
+      <p class="text-xs uppercase text-brand-500 dark:text-brand-400 tracking-wide">{getCurrentDate()}</p>
       <p class="hidden text-base text-brand-900 dark:text-brand-100">Daily checklist designed for rebuilding routines. Tasks reset automatically at local midnight.</p>
     </header>
 
@@ -421,6 +416,7 @@
       bind:description
       {lists}
       bind:selectedList
+      bind:taskInput
       onSubmit={handleSubmit}
     />
 
@@ -435,6 +431,19 @@
       on:delete={onDelete}
     />
   {/each}
+
+  <div class="mt-auto pt-2 border-t border-brand-300">
+    <button
+      type="button"
+      class="text-xs text-brand-500 dark:text-brand-400 tracking-wide hover:text-brand-700 dark:hover:text-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded"
+      on:click={openSettingsDrawer}
+      bind:this={settingsButton}
+      aria-haspopup="dialog"
+      aria-expanded={showSettingsDrawer}
+    >
+      Info & settings
+    </button>
+  </div>
   </div>
 
 </main>

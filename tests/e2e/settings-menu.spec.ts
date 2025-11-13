@@ -19,7 +19,7 @@ test('Info & settings menu navigates to detail views', async ({ page }) => {
   const aboutDialog = page.getByRole('dialog', { name: 'About' });
   await expect(aboutDialog.getByRole('heading', { name: 'What is A New Day?' })).toBeVisible();
 
-  // Navigate back to menu
-  await aboutDialog.getByRole('button', { name: '← Info & settings' }).click();
+  // Navigate back to menu using breadcrumb
+  await aboutDialog.getByRole('button', { name: 'Info & settings' }).click();
   await expect(dialog.getByRole('button', { name: 'About' })).toBeVisible();
 });
