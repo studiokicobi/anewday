@@ -6,12 +6,12 @@
 
 <div class="flex flex-col border-b border-brand-200 dark:border-brand-700 px-6 py-4 gap-2">
   <div class="flex items-center justify-between">
-    <h2 id="settings-title" class="text-lg font-semibold text-brand-900 dark:text-brand-100">
+    <h2 id="settings-title" class="text-2xl font-semibold text-brand-900 dark:text-brand-100">
       {title}
     </h2>
     <button
       type="button"
-      class="settings-done-detail text-brand-600 dark:text-brand-400 hover:text-brand-800 dark:hover:text-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded p-1"
+      class="settings-done-detail text-brand-600 dark:text-brand-400 hover:text-brand-800 dark:hover:text-brand-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded p-1"
       on:click={onClose}
       aria-label="Close"
     >
@@ -23,10 +23,10 @@
   <div class="flex items-center gap-2 text-sm text-brand-600 dark:text-brand-400">
     <button
       type="button"
-      class="breadcrumb-back hover:text-brand-800 dark:hover:text-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded px-1"
+      class="breadcrumb-back hover:text-brand-800 dark:hover:text-brand-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded px-1"
       on:click={onBack}
     >
-      Info & settings
+      Settings
     </button>
     <span>›</span>
     <span class="text-brand-900 dark:text-brand-100">{title}</span>

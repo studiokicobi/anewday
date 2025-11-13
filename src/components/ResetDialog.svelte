@@ -51,14 +51,14 @@
       <button
         type="button"
         id="reset-dialog-cancel"
-        class="rounded-full bg-brand-300 dark:bg-brand-700 px-4 py-2 text-sm font-semibold text-brand-900 dark:text-brand-100 hover:bg-brand-300/90 dark:hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-500"
+        class="rounded-full bg-brand-300 dark:bg-brand-700 px-4 py-2 text-sm font-semibold text-brand-900 dark:text-brand-100 hover:bg-brand-300/90 dark:hover:bg-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
         on:click={onCancel}
       >
         Cancel
       </button>
       <button
         type="button"
-        class="rounded-full border bg-red-200 dark:bg-red-900 border-red-600 dark:border-red-400 px-4 py-2 text-sm font-semibold text-red-950 dark:text-red-100 hover:bg-red-50 dark:hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-500"
+        class="rounded-full border bg-red-200 dark:bg-red-900 border-red-600 dark:border-red-400 px-4 py-2 text-sm font-semibold text-red-950 dark:text-red-100 hover:bg-red-50 dark:hover:bg-red-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
         on:click={onConfirm}
       >
         Reset All Data

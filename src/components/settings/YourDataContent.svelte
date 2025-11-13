@@ -26,7 +26,7 @@
       <div class="flex items-center gap-3 my-2">
         <button
           type="button"
-          class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 focus:ring-offset-brand-100 dark:focus:ring-offset-brand-800"
+          class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-100 dark:focus-visible:ring-offset-brand-800"
           class:bg-brand-900={encryption}
           class:dark:bg-brand-300={encryption}
           class:bg-brand-300={!encryption}
@@ -56,7 +56,7 @@
       {#if encryption}
         <input
           type="password"
-          class="w-full rounded-lg border border-brand-300 dark:border-brand-600 bg-white dark:bg-brand-700 px-3 py-2 text-base text-brand-900 dark:text-brand-100 placeholder:text-brand-500 dark:placeholder:text-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-500"
+          class="w-full rounded-lg border border-brand-300 dark:border-brand-600 bg-white dark:bg-brand-700 px-3 py-2 text-base text-brand-900 dark:text-brand-100 placeholder:text-brand-500 dark:placeholder:text-brand-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
           placeholder="Passphrase"
           bind:value={passphrase}
           aria-label="Export/import passphrase"
@@ -65,7 +65,7 @@
 
       <!-- Export Button -->
       <div>
-        <button type="button" class="rounded-full bg-brand-300 dark:bg-brand-700 px-5 py-2 text-sm font-base text-brand-900 dark:text-brand-100 hover:bg-brand-300/80 dark:hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-500" on:click={onExport}>
+        <button type="button" class="rounded-full bg-brand-300 dark:bg-brand-700 px-5 py-2 text-sm font-base text-brand-900 dark:text-brand-100 hover:bg-brand-300/80 dark:hover:bg-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500" on:click={onExport}>
           Export data
         </button>
         <p class="text-xs text-brand-600 dark:text-brand-400 mt-2">Download tasks and settings as JSON</p>
@@ -84,7 +84,7 @@
       <div>
         <button
           type="button"
-          class="rounded-full border bg-red-700 dark:bg-red-800 border-red-700 dark:border-red-800 px-5 py-2 text-sm font-base text-red-100 dark:text-red-100 hover:bg-red-600 dark:hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+          class="rounded-full border bg-red-700 dark:bg-red-800 border-red-700 dark:border-red-800 px-5 py-2 text-sm font-base text-red-100 dark:text-red-100 hover:bg-red-600 dark:hover:bg-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
           on:click={onOpenResetConfirm}
           bind:this={resetButton}
         >
@@ -97,5 +97,19 @@
     {#if importError}
       <p class="mt-3 text-sm text-red-400 dark:text-red-300" role="alert">{importError}</p>
     {/if}
+  </div>
+
+  <div class="pt-6 border-t border-brand-300 dark:border-brand-700">
+    <h3 class="settings-heading">Your privacy</h3>
+    <div class="settings-text space-y-2">
+      <p>A New Day is designed with privacy-first principles.</p>
+      <ul class="list-disc list-inside space-y-1 pl-4">
+        <li>No account is required to use the app.</li>
+        <li>No tracking. The app collects no analytics, usage data, or personal information.</li>
+        <li>The app uses local storage, not external servers, and your data stays on your device.</li>
+        <li>If you do choose to export your data, you can optionally encrypt the export.</li>
+        <li>The code is open source and auditable on <a class="underline" href="https://github.com/studiokicobi/anewday">the Github repository.</a></li>
+      </ul>
+    </div>
   </div>
 </div>

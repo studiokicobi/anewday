@@ -5,6 +5,7 @@
   import ResetDialog from './components/ResetDialog.svelte';
   import ToastNotification from './components/ToastNotification.svelte';
   import SettingsDrawer from './components/SettingsDrawer.svelte';
+  import AboutDrawer from './components/AboutDrawer.svelte';
   import {
     appState,
     onMidnightReset,
@@ -32,7 +33,9 @@
   let showResetConfirm = false;
   let themeMode: 'light' | 'dark' | 'system' = 'system';
   let showSettingsDrawer = false;
+  let showAboutDrawer = false;
   let settingsButton: HTMLButtonElement | null = null;
+  let aboutButton: HTMLButtonElement | null = null;
   let resetButton: HTMLButtonElement | null = null;
   let taskInput: HTMLInputElement | null = null;
   let previousBodyOverflow: string | null = null;
@@ -373,6 +376,16 @@
     unlockBodyScroll();
   }
 
+  function openAboutDrawer() {
+    showAboutDrawer = true;
+    lockBodyScroll();
+  }
+
+  function closeAboutDrawer() {
+    showAboutDrawer = false;
+    unlockBodyScroll();
+  }
+
   function setThemeMode(mode: 'light' | 'dark' | 'system') {
     themeMode = mode;
     // Apply theme to document
@@ -401,7 +414,7 @@
 
 <main
   id="main"
-  class="mx-auto flex min-h-[100dvh] max-w-lg flex-col px-4 py-8"
+  class="mx-auto flex min-h-[100dvh] max-w-lg flex-col px-4 pt-4 pb-8"
   aria-label="Main application"
 >
 
@@ -433,20 +446,41 @@
   {/each}
 
   <div class="mt-auto pt-2 border-t border-brand-300">
-    <button
-      type="button"
-      class="text-xs text-brand-500 dark:text-brand-400 tracking-wide hover:text-brand-700 dark:hover:text-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-500 rounded"
-      on:click={openSettingsDrawer}
-      bind:this={settingsButton}
-      aria-haspopup="dialog"
-      aria-expanded={showSettingsDrawer}
-    >
-      Info & settings
-    </button>
+    <div class="flex items-center gap-2 text-xs text-brand-500 dark:text-brand-400 tracking-wide">
+      <button
+        type="button"
+        class="hover:text-brand-700 dark:hover:text-brand-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded"
+        on:click={openAboutDrawer}
+        bind:this={aboutButton}
+        aria-haspopup="dialog"
+        aria-expanded={showAboutDrawer}
+      >
+        About
+      </button>
+      <span aria-hidden="true">·</span>
+      <button
+        type="button"
+        class="hover:text-brand-700 dark:hover:text-brand-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded"
+        on:click={openSettingsDrawer}
+        bind:this={settingsButton}
+        aria-haspopup="dialog"
+        aria-expanded={showSettingsDrawer}
+        data-settings-trigger
+      >
+        Settings
+      </button>
+    </div>
   </div>
   </div>
 
 </main>
+
+<!-- About drawer -->
+<AboutDrawer
+  showAbout={showAboutDrawer}
+  onClose={closeAboutDrawer}
+  returnFocusElement={aboutButton}
+/>
 
 <!-- Settings drawer -->
 <SettingsDrawer

@@ -26,9 +26,10 @@ test('completes items and auto-resets after simulated midnight', async ({ page }
 
   // Wait for app to be fully loaded (especially important for Firefox/IndexedDB)
   await page.waitForLoadState('domcontentloaded');
-  await page.waitForSelector('[aria-label="Add an item"]', { timeout: 15000 });
+  const taskLabel = 'Add an item to your daily checklist';
+  await page.waitForSelector(`[aria-label="${taskLabel}"]`, { timeout: 15000 });
 
-  await page.getByLabel('Add an item').fill('Stretch');
+  await page.getByLabel(taskLabel).fill('Stretch');
   await page.getByRole('button', { name: 'Add' }).click();
   const checkbox = page.getByRole('checkbox', { name: 'Stretch' });
   await checkbox.check();
@@ -38,5 +39,5 @@ test('completes items and auto-resets after simulated midnight', async ({ page }
   await page.evaluate(() => document.dispatchEvent(new Event('visibilitychange')));
 
   await expect(checkbox).not.toBeChecked();
-  await expect(page.getByRole('status')).toContainText('New day detected');
+  await expect(page.getByRole('status')).toContainText('It’s a new day. The list has been reset.');
 });

@@ -90,7 +90,7 @@
         (allCheckboxes[currentIndex + 1] as HTMLElement).focus();
       } else {
         // Last item - go to Settings button
-        const settingsBtn = document.querySelector('button[aria-haspopup="dialog"]') as HTMLElement;
+        const settingsBtn = document.querySelector('button[data-settings-trigger]') as HTMLElement;
         settingsBtn?.focus();
       }
     } else if (event.key === 'Tab' && event.shiftKey) {
@@ -111,8 +111,9 @@
 
   <!-- Main item content (slides on swipe) -->
   <div
-    class="group relative flex items-center justify-between gap-3 border-b border-brand-200 dark:border-brand-700 px-3 py-2 transition-colors bg-brand-50 dark:bg-brand-800 hover:bg-brand-100 dark:hover:bg-brand-700 focus-within:ring-2 focus-within:ring-brand-500"
-    style="transform: translateX(-{swipeDistance}px); transition: {isSwiping ? 'none' : 'transform 0.3s ease-out'};"
+    class="swipe-content group relative flex items-center justify-between gap-3 border-b border-brand-200 dark:border-brand-700 px-3 py-2 transition-colors bg-brand-50 dark:bg-brand-800 hover:bg-brand-100 dark:hover:bg-brand-700 focus-within:ring-2 focus-within:ring-brand-500"
+    class:swiping={isSwiping}
+    style:--swipe-distance={swipeDistance}
     on:touchstart={handleTouchStart}
     on:touchmove={handleTouchMove}
     on:touchend={handleTouchEnd}
@@ -141,7 +142,7 @@
     </div>
     <button
       type="button"
-      class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-transparent text-xl text-brand-400 dark:text-brand-500 opacity-0 transition-all duration-200 hover:text-brand-800 dark:hover:text-brand-300 group-hover:opacity-100 focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-brand-500"
+      class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-transparent text-xl text-brand-400 dark:text-brand-500 opacity-0 transition-all duration-200 hover:text-brand-800 dark:hover:text-brand-300 group-hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
       aria-label={`Remove ${item.title}`}
       on:click={announceDelete}
       on:keydown={handleDeleteKeydown}

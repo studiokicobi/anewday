@@ -127,7 +127,7 @@
       event.preventDefault();
       // Query for next focusable element (first checkbox or settings button)
       const firstCheckbox = document.querySelector('input[type="checkbox"]') as HTMLElement;
-      const settingsButton = document.querySelector('button[aria-haspopup="dialog"]') as HTMLElement;
+      const settingsButton = document.querySelector('button[data-settings-trigger]') as HTMLElement;
       const nextElement = firstCheckbox || settingsButton;
       if (nextElement) {
         nextElement.focus();
@@ -253,7 +253,7 @@
 </script>
 
 <section class="">
-  <form class="flex flex-col gap-4" on:submit|preventDefault={handleFormSubmit} aria-describedby="disclaimer">
+  <form class="flex flex-col gap-4" on:submit|preventDefault={handleFormSubmit}>
     <fieldset class="border-0 p-0 m-0">
       <legend class="sr-only">Add new task</legend>
       <div class="flex flex-col gap-2">
@@ -266,7 +266,7 @@
           <input
             id="task"
             name="task"
-            class="w-full rounded-lg bg-brand-200 dark:bg-brand-700 hover:bg-brand-200 dark:hover:bg-brand-700 px-3 py-2 text-base text-brand-900 dark:text-brand-100 placeholder:text-brand-700 dark:placeholder:text-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-500"
+            class="w-full rounded-lg bg-brand-200 dark:bg-brand-700 hover:bg-brand-200 dark:hover:bg-brand-700 px-3 py-2 text-base text-brand-900 dark:text-brand-100 placeholder:text-brand-700 dark:placeholder:text-brand-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
             class:pr-24={lists.length > 1 && description.trim()}
             type="text"
             bind:value={description}
@@ -282,16 +282,15 @@
 
           <!-- Embedded list selector (only shown when typing and multiple lists exist) -->
           {#if lists.length > 1 && description.trim()}
-            <div class="absolute inset-y-0 right-0 flex items-center" style="pointer-events: none;">
-              <div class="relative h-full" style="pointer-events: auto;" use:clickOutside on:outclick={handleOutclick}>
+            <div class="absolute inset-y-0 right-0 flex items-center pointer-events-none">
+              <div class="relative h-full pointer-events-auto" use:clickOutside on:outclick={handleOutclick}>
                 <label for="embedded-list-selector" class="sr-only">Choose list</label>
                 <button
                   id="embedded-list-selector"
                   type="button"
                   role="combobox"
                   tabindex="0"
-                  style="pointer-events: auto;"
-                  class="flex items-center justify-center gap-1 rounded-e-lg bg-transparent px-3 h-full text-xs font-medium text-brand-800 dark:text-brand-200 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-inset"
+                  class="flex items-center justify-center gap-1 rounded-e-lg bg-transparent px-3 h-full text-xs font-medium text-brand-800 dark:text-brand-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-inset pointer-events-auto"
                   aria-haspopup="listbox"
                   aria-expanded={showDropdown}
                   aria-controls="embedded-dropdown-listbox"
@@ -324,7 +323,7 @@
                       <button
                         type="button"
                         id="option-{list.id}"
-                        class="flex w-full items-center px-3 py-2 text-left text-sm text-brand-900 dark:text-brand-100 hover:bg-brand-200 dark:hover:bg-brand-700 focus:bg-brand-100 dark:focus:bg-brand-700 focus:outline-none"
+                        class="flex w-full items-center px-3 py-2 text-left text-sm text-brand-900 dark:text-brand-100 hover:bg-brand-200 dark:hover:bg-brand-700 focus-visible:bg-brand-100 dark:focus-visible:bg-brand-700 focus-visible:outline-none"
                         class:bg-brand-50={list.id === selectedList}
                         class:dark:bg-brand-900={list.id === selectedList}
                         class:text-brand-700={list.id === selectedList}
@@ -357,7 +356,7 @@
 
         <!-- Add button -->
         <button
-          class="inline-flex items-center justify-center rounded-lg bg-brand-800 dark:bg-brand-200 px-4 py-2 text-base font-semibold text-white dark:text-brand-900 transition hover:bg-brand-600 dark:hover:bg-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 dark:focus:ring-offset-brand-900"
+          class="inline-flex items-center justify-center rounded-lg bg-brand-800 dark:bg-brand-200 px-4 py-2 text-base font-semibold text-white dark:text-brand-900 transition hover:bg-brand-600 dark:hover:bg-brand-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-brand-900"
           type="submit"
           bind:this={addButton}
           on:keydown={handleAddButtonKeydown}

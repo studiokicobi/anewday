@@ -42,6 +42,28 @@ select:focus-visible {
   @apply text-sm text-brand-700 dark:text-brand-300 space-y-3;
 }
 
+/* Pointer events utilities for CSP compliance */
+.pointer-events-none {
+  pointer-events: none;
+}
+
+.pointer-events-auto {
+  pointer-events: auto;
+}
+
+/* Swipe-to-delete utilities for CSP compliance */
+.swipe-content {
+  transform: translateX(calc(-1px * var(--swipe-distance, 0)));
+}
+
+.swipe-content.swiping {
+  transition: none;
+}
+
+.swipe-content:not(.swiping) {
+  transition: transform 0.3s ease-out;
+}
+
 /* Definition list styles */
 dl {
   @apply p-4 rounded-lg bg-brand-200 dark:bg-brand-700 mt-2 mb-2 space-y-3 text-sm text-brand-700 dark:text-brand-300;
