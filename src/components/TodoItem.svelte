@@ -123,13 +123,13 @@
         <input
           id={checkboxId}
           type="checkbox"
-          class="col-start-1 row-start-1 appearance-none rounded border-2 border-brand-200 dark:border-brand-600 bg-brand-200 dark:bg-brand-600 checked:border-brand-800 dark:checked:border-brand-300 checked:bg-brand-800 dark:checked:bg-brand-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-500"
+          class="col-start-1 row-start-1 appearance-none rounded border-2 border-brand-200 dark:border-brand-600 bg-brand-200 dark:bg-brand-600 checked:border-accent-2 checked:bg-accent-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-2"
           checked={item.completed}
           aria-label={item.title}
           on:change={announceToggle}
           on:keydown={handleCheckboxKeydown}
         />
-        <svg viewBox="0 0 14 14" fill="none" class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white dark:stroke-brand-900">
+        <svg viewBox="0 0 14 14" fill="none" class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white">
           <path d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-[:checked]:opacity-100" />
         </svg>
       </div>

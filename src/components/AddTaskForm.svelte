@@ -356,7 +356,7 @@
 
         <!-- Add button -->
         <button
-          class="inline-flex items-center justify-center rounded-lg bg-brand-800 dark:bg-brand-200 px-4 py-2 text-base font-semibold text-white dark:text-brand-900 transition hover:bg-brand-600 dark:hover:bg-brand-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-brand-900"
+          class="inline-flex items-center justify-center rounded-lg bg-accent-1 px-4 py-2 text-base font-semibold text-white transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-1 focus-visible:ring-offset-2"
           type="submit"
           bind:this={addButton}
           on:keydown={handleAddButtonKeydown}
