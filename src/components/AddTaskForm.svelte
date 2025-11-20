@@ -13,6 +13,7 @@
   let embeddedListTrigger: HTMLButtonElement | null = null;
   let addButton: HTMLButtonElement | null = null;
   let focusedListIndex = -1;
+  let showError = false;
 
   function isEmbeddedListVisible() {
     return lists.length > 1 && description.trim().length > 0;
@@ -242,10 +243,25 @@
   }
 
   async function handleFormSubmit() {
+    // Validate that description is not empty
+    if (!description.trim()) {
+      showError = true;
+      taskInput?.focus();
+      return;
+    }
+
+    showError = false;
     await onSubmit();
     // Restore focus to Add button for better keyboard navigation flow
     await tick();
     addButton?.focus();
+  }
+
+  function handleInputChange() {
+    // Clear error when user starts typing
+    if (showError && description.trim()) {
+      showError = false;
+    }
   }
 
   // Get the selected list name for display
@@ -258,7 +274,8 @@
       <legend class="sr-only">Add new task</legend>
       <div class="flex flex-col gap-0">
         <label class="sr-only" for="task">Add an item</label>
-      <div class="flex gap-2" use:clickOutside on:outclick={handleOutclick}>
+      <div class="flex flex-col gap-2">
+        <div class="flex gap-2" use:clickOutside on:outclick={handleOutclick}>
         <!-- Input group container -->
         <div class="relative flex-1">
 
@@ -268,16 +285,21 @@
             name="task"
             class="w-full rounded-lg bg-white dark:bg-brand-700 hover:bg-white dark:hover:bg-brand-700 px-3 py-2 text-base text-brand-900 dark:text-brand-100 placeholder:text-brand-700 dark:placeholder:text-brand-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 shadow-[0_0_50px_0_#F2EFED] dark:shadow-none"
             class:pr-24={lists.length > 1 && description.trim()}
+            class:ring-2={showError}
+            class:ring-red-500={showError}
+            class:dark:ring-red-400={showError}
             type="text"
             bind:value={description}
             bind:this={taskInput}
+            on:input={handleInputChange}
             on:keydown={handleTaskInputKeydown}
             on:focus={handleTaskInputFocus}
-            required
             maxlength="80"
             autocomplete="off"
             placeholder="Today I will..."
             aria-label="Add an item to your daily checklist"
+            aria-invalid={showError}
+            aria-describedby={showError ? 'task-error' : undefined}
           />
 
           <!-- Embedded list selector (only shown when typing and multiple lists exist) -->
@@ -364,6 +386,18 @@
         >
           Add
         </button>
+        </div>
+
+        <!-- Error message -->
+        {#if showError}
+          <div
+            id="task-error"
+            class="text-sm text-red-600 dark:text-red-400 px-1"
+            role="alert"
+          >
+            Please add a task to continue.
+          </div>
+        {/if}
       </div>
       </div>
     </fieldset>

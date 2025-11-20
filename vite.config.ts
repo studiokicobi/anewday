@@ -13,6 +13,8 @@ export default defineConfig({
       injectRegister: null,  // Disable auto-injection, we'll register manually
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,webmanifest}'],
+        skipWaiting: true,
+        clientsClaim: true,
       },
       devOptions: {
         enabled: false, // Disable in dev to avoid conflicts
