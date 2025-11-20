@@ -256,7 +256,7 @@
   <form class="flex flex-col gap-4" on:submit|preventDefault={handleFormSubmit}>
     <fieldset class="border-0 p-0 m-0">
       <legend class="sr-only">Add new task</legend>
-      <div class="flex flex-col gap-2">
+      <div class="flex flex-col gap-0">
         <label class="sr-only" for="task">Add an item</label>
       <div class="flex gap-2" use:clickOutside on:outclick={handleOutclick}>
         <!-- Input group container -->
@@ -266,7 +266,7 @@
           <input
             id="task"
             name="task"
-            class="w-full rounded-lg bg-brand-200 dark:bg-brand-700 hover:bg-brand-200 dark:hover:bg-brand-700 px-3 py-2 text-base text-brand-900 dark:text-brand-100 placeholder:text-brand-700 dark:placeholder:text-brand-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+            class="w-full rounded-lg bg-white dark:bg-brand-700 hover:bg-white dark:hover:bg-brand-700 px-3 py-2 text-base text-brand-900 dark:text-brand-100 placeholder:text-brand-700 dark:placeholder:text-brand-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 shadow-[0_0_50px_0_#F2EFED] dark:shadow-none"
             class:pr-24={lists.length > 1 && description.trim()}
             type="text"
             bind:value={description}
@@ -290,7 +290,7 @@
                   type="button"
                   role="combobox"
                   tabindex="0"
-                  class="flex items-center justify-center gap-1 rounded-e-lg bg-transparent px-3 h-full text-xs font-medium text-brand-800 dark:text-brand-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-inset pointer-events-auto"
+                  class="flex items-center justify-center gap-1 rounded-e-lg bg-transparent px-3 h-full text-xs text-brand-800 dark:text-brand-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-inset pointer-events-auto"
                   aria-haspopup="listbox"
                   aria-expanded={showDropdown}
                   aria-controls="embedded-dropdown-listbox"
@@ -356,7 +356,7 @@
 
         <!-- Add button -->
         <button
-          class="inline-flex items-center justify-center rounded-lg bg-accent-1 px-4 py-2 text-base font-semibold text-white transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-1 focus-visible:ring-offset-2"
+          class="inline-flex items-center justify-center rounded-lg bg-accent-1 dark:bg-accent-3 px-4 py-2 text-base font-medium text-white transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-1 dark:focus-visible:ring-accent-3 focus-visible:ring-offset-2"
           type="submit"
           bind:this={addButton}
           on:keydown={handleAddButtonKeydown}

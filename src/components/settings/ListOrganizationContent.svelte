@@ -34,7 +34,7 @@
       <div class="flex flex-col gap-1">
         <button
           type="button"
-          class="text-left text-sm font-medium text-brand-900 dark:text-brand-100"
+          class="text-left text-sm text-brand-900 dark:text-brand-100"
           on:click={toggleMode}
         >
           Enable Morning / Anytime / Evening lists

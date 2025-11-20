@@ -24,16 +24,16 @@ test('Settings menu navigates to detail views', async ({ page }) => {
   await expect(dialog.getByRole('button', { name: 'Appearance' })).toBeVisible();
 });
 
-test('About drawer displays content', async ({ page }) => {
+test('Settings drawer displays About content', async ({ page }) => {
   await page.goto('/', { waitUntil: 'networkidle' });
 
-  const aboutTrigger = page.getByRole('button', { name: 'About' });
-  await aboutTrigger.click();
+  const settingsTrigger = page.getByRole('button', { name: 'Settings' });
+  await settingsTrigger.click();
 
-  const dialog = page.getByRole('dialog', { name: 'About' });
+  const dialog = page.getByRole('dialog', { name: 'Settings' });
   await expect(dialog).toBeVisible();
 
-  // Verify About content appears
+  // Verify About content appears below settings menu
   await expect(dialog.getByRole('heading', { name: 'What is A New Day?' })).toBeVisible();
   await expect(dialog.getByRole('heading', { name: 'Using A New Day' })).toBeVisible();
 });

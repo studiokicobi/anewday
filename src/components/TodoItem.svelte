@@ -111,7 +111,7 @@
 
   <!-- Main item content (slides on swipe) -->
   <div
-    class="swipe-content group relative flex items-center justify-between gap-3 border-b border-brand-200 dark:border-brand-700 px-3 py-2 transition-colors bg-brand-50 dark:bg-brand-800 hover:bg-brand-100 dark:hover:bg-brand-700 focus-within:ring-2 focus-within:ring-brand-500"
+    class="swipe-content group relative flex items-center justify-between gap-3 border-b border-brand-200 dark:border-brand-700 px-3 py-2 transition-colors bg-brand-50 dark:bg-brand-900 hover:bg-brand-100 dark:hover:bg-brand-800 focus-within:ring-2 focus-within:ring-brand-500"
     class:swiping={isSwiping}
     style:--swipe-distance={swipeDistance}
     on:touchstart={handleTouchStart}
@@ -123,7 +123,7 @@
         <input
           id={checkboxId}
           type="checkbox"
-          class="col-start-1 row-start-1 appearance-none rounded border-2 border-brand-200 dark:border-brand-600 bg-brand-200 dark:bg-brand-600 checked:border-accent-2 checked:bg-accent-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-2"
+          class="col-start-1 row-start-1 appearance-none rounded border-2 border-brand-100 dark:border-brand-600 bg-white dark:bg-brand-600 checked:border-accent-2 checked:bg-accent-2 dark:checked:border-accent-4 dark:checked:bg-accent-4 shadow-[0_0_50px_0_#F2EFED] dark:shadow-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-2 dark:focus-visible:outline-accent-4"
           checked={item.completed}
           aria-label={item.title}
           on:change={announceToggle}

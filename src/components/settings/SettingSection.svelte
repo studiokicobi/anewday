@@ -6,7 +6,7 @@
 
 <div class="flex flex-col border-b border-brand-200 dark:border-brand-700 px-6 py-4 gap-2">
   <div class="flex items-center justify-between">
-    <h2 id="settings-title" class="text-2xl font-semibold text-brand-900 dark:text-brand-100">
+    <h2 id="settings-title" class="text-2xl font-medium text-brand-900 dark:text-brand-100">
       {title}
     </h2>
     <button

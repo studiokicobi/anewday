@@ -23,7 +23,7 @@
 <section class="pt-4" aria-labelledby={`list-${list.id}`}>
   <div class="mb-3">
     <!-- List title -->
-    <h2 class="text-lg font-semibold text-brand-800 dark:text-brand-200" id={`list-${list.id}`}>{list.name}</h2>
+    <h2 class="text-lg text-brand-800 dark:text-brand-200" id={`list-${list.id}`}>{list.name}</h2>
   </div>
   {#if items.length === 0}
   <!-- Empty state -->
@@ -39,7 +39,7 @@
     </div>
   {:else}
     <ul
-      class="flex flex-col gap-2"
+      class="flex flex-col gap-0"
       aria-live="polite"
       data-list-id={list.id}
       use:sortable={{

@@ -1,3 +1,21 @@
+@font-face {
+  font-family: 'Work Sans';
+  src: url('/fonts/WorkSans-Regular.woff2') format('woff2'),
+       url('/fonts/WorkSans-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Work Sans';
+  src: url('/fonts/WorkSans-Medium.woff2') format('woff2'),
+       url('/fonts/WorkSans-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -11,7 +29,11 @@
 }
 
 body {
-  @apply bg-brand-50 text-brand-900 font-sans antialiased min-h-[100dvh];
+  @apply bg-brand-50 dark:bg-brand-950 text-brand-950 dark:text-brand-100 font-sans antialiased min-h-[100dvh];
+}
+
+strong {
+  @apply font-medium;
 }
 
 a:focus-visible,
@@ -23,7 +45,7 @@ select:focus-visible {
 
 /* Settings section typography */
 .settings-heading {
-  @apply text-lg font-semibold text-brand-900 dark:text-brand-100 mb-2;
+  @apply text-lg font-medium text-brand-900 dark:text-brand-100 mb-2;
 }
 
 .settings-subheading {
@@ -71,7 +93,7 @@ dl {
 }
 
 dt {
-  @apply text-sm font-medium text-brand-900 dark:text-brand-100 mb-2;
+  @apply text-sm text-brand-900 dark:text-brand-100 mb-2;
 }
 
 dd {
@@ -81,7 +103,7 @@ dd {
 
 dd::before {
   content: counter(step-counter) ". ";
-  @apply font-semibold mr-1;
+  @apply mr-1;
 }
 
 
