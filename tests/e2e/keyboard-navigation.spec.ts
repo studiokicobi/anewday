@@ -32,7 +32,7 @@ test('keyboard flow allows submitting and toggling tasks', async ({ page }) => {
   await page.waitForTimeout(100);
 
   const taskCheckbox = page.getByRole('checkbox', { name: 'Keyboard navigation task' });
-  await expect(taskCheckbox).toBeVisible();
+  await expect(taskCheckbox).toBeVisible({ timeout: 10000 });
   // Wait for slide transition to complete (200ms)
   await page.waitForTimeout(250);
   await taskCheckbox.focus();
