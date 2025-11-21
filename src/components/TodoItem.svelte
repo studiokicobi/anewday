@@ -31,6 +31,7 @@
 
   function handleTouchStart(event: TouchEvent) {
     if (isInteractiveTarget(event.target)) {
+      event.stopPropagation();
       isSwiping = false;
       swipeDistance = 0;
       return;
@@ -41,6 +42,7 @@
 
   function handleTouchMove(event: TouchEvent) {
     if (isInteractiveTarget(event.target)) {
+      event.stopPropagation();
       return;
     }
     if (!isSwiping) return;
@@ -58,6 +60,7 @@
 
   function handleTouchEnd(event: TouchEvent) {
     if (isInteractiveTarget(event.target)) {
+      event.stopPropagation();
       isSwiping = false;
       swipeDistance = 0;
       return;
