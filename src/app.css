@@ -124,7 +124,7 @@ dd::before {
 }
 
 .sortable-chosen {
-  transform: scale(1.05);
+  /* Removed scale(1.05) to prevent awkward checkbox interaction on mobile */
 }
 
 .sortable-drag {
