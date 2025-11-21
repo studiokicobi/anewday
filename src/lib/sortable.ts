@@ -21,7 +21,7 @@ export function sortable(node: HTMLElement, options: SortableOptions = {}) {
     chosenClass: 'sortable-chosen',
     dragClass: 'sortable-drag',
     filter: options.filter ?? INTERACTIVE_FILTER,
-    preventOnFilter: options.preventOnFilter ?? false,
+    preventOnFilter: options.preventOnFilter ?? true,
     touchStartThreshold: 10, // Require a small movement before initiating drag
     ...options,
   });
