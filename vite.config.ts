@@ -66,4 +66,18 @@ export default defineConfig({
     },
     exclude: ['tests/e2e/**', 'tests/a11y/**', 'node_modules/**'],
   },
+  build: {
+    // Optimize chunk size and tree-shaking
+    minify: 'esbuild',
+    target: 'es2020',
+    cssMinify: 'esbuild',
+    modulePreload: {
+      polyfill: false, // Modern browsers only, saves bytes
+    },
+    rollupOptions: {
+      output: {
+        manualChunks: undefined, // Disable code-splitting for better initial load
+      },
+    },
+  },
 });
