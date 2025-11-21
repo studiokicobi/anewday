@@ -71,23 +71,70 @@ src/
 
 ## Performance Optimizations
 
-- **Lighthouse Score**: 97/100
+- **Lighthouse Score**: 97/100 (see docs/performance.md for detailed metrics)
 - **Bundle Size**: 222 KB (71 KB gzipped)
 - **Critical Path**: Inline CSS for hero content
 - **Font Loading**: Preload Work Sans with priority hints
 - **No Code Splitting**: Single bundle for faster initial load
 
+**Key Metrics:**
+- FCP: 1.4-2.1s (score: 0.81-0.98)
+- LCP: 2.3s (score: 0.94)
+- TBT: 0ms (score: 1.00)
+- CLS: 0 (score: 1.00)
+- Speed Index: 1.4-2.1s (score: 0.99-1.00)
+
+For detailed performance analysis, bundle composition, and optimization decisions, see `docs/performance.md`.
+
 ## Development
 
+### Quick Start
 ```bash
-npm install          # Install dependencies
-npm run dev         # Development server (http://localhost:5173)
-npm run build       # Production build
-npm run preview     # Preview production build
-npm test:unit       # Run unit tests
-npm run test:e2e    # Run e2e tests (all browsers)
-npm run test:a11y   # Run accessibility tests
+npm install          # Install dependencies (~30s)
+npm run dev         # Development server at http://localhost:5173
+npm run build       # Production build (~1s)
+npm run preview     # Preview production build at http://localhost:4173
 ```
+
+### Testing Commands
+```bash
+npm run test:unit                    # Run unit tests (8 tests, <1s)
+npm run test:e2e                     # Run e2e tests across all browsers (~30s)
+npm run test:e2e:chromium            # Run e2e tests in Chromium only (~10s)
+npm run test:e2e:keyboard-navigation # Specific keyboard navigation tests
+npm run test:a11y                    # Run accessibility tests with axe-core (~15s)
+```
+
+### Performance & Analysis
+```bash
+npm run build                        # Generates dist/stats.html for bundle analysis
+npx lighthouse http://localhost:4173 # Run Lighthouse (requires preview server)
+```
+
+### Common Workflows
+
+**Before committing:**
+```bash
+npm run test:unit && npm run build
+```
+
+**Full test suite:**
+```bash
+npm run test:unit && npm run test:e2e && npm run test:a11y
+```
+
+**Performance check:**
+```bash
+npm run build && npm run preview
+# Then run Lighthouse in another terminal
+```
+
+### Expected Behaviors
+- Unit tests: Always pass, fast (<1s)
+- E2E tests: ~30s for all browsers, ~10s for Chromium only
+- Build: Consistently produces 222KB bundle (71KB gzipped)
+- Lighthouse: Expect 95-99 performance score (97 typical)
+- Dev server: Hot module replacement works for all Svelte components
 
 ## Security & Privacy
 
@@ -127,15 +174,74 @@ npm run test:a11y   # Run accessibility tests
 - Drag-and-drop uses SortableJS for cross-browser compatibility
 - Custom validation for form inputs (no HTML5 validation messages)
 
-## Version History
+## Recent Changes (Changelog)
 
-- **v2.0.0** (Current): Svelte 5 upgrade, security fixes, performance optimizations
-- **v1.1.0**: UI/UX redesign, Work Sans font, improved accessibility
-- **v1.0.0**: Initial release
+### v2.0.0 (November 2025) - Current Version
+
+**Major Framework Upgrade:**
+- Upgraded from Svelte 4 → Svelte 5 (new `mount()` API, runes system)
+- Upgraded Vite 5 → Vite 7 and Vitest 1 → Vitest 4
+- Migrated to new Svelte 5 state management ($state, $derived, $effect)
+
+**Security Fixes:**
+- Fixed all Dependabot vulnerabilities (glob, js-yaml, esbuild, tmp)
+- Now 0 security vulnerabilities in dependencies
+- Maintained strict CSP and encryption features
+
+**Performance Optimizations:**
+- Added inline critical CSS for LCP (eliminates render-blocking)
+- Added `fetchpriority="high"` to font preloads
+- Configured build with esbuild minification and ES2020 target
+- Disabled modulePreload polyfill for modern browsers
+- Lighthouse score maintained at 97/100
+
+**Accessibility Improvements:**
+- Fixed switch controls with proper `aria-labelledby` attributes
+- Fixed keyboard navigation test reliability across browsers
+- All Svelte compiler a11y warnings resolved
+
+**Testing:**
+- All 48 tests passing (8 unit, 30 e2e, 10 a11y)
+- Improved keyboard navigation test stability
+- Service worker test environment detection
+
+### v1.1.0 (Earlier 2025)
+
+**UI/UX Redesign:**
+- Switched to Work Sans font family
+- Standardized typography across components
+- Updated brand color palette
+- Improved dark mode contrast
+
+**Accessibility:**
+- Enhanced keyboard navigation
+- Screen reader improvements
+- WCAG AA compliance verified
+
+**Service Worker:**
+- Improved auto-update mechanism
+- Better offline support
+- Fixed test environment conflicts
+
+### v1.0.0 (Initial Release)
+
+- Core daily checklist functionality
+- Midnight reset mechanism
+- IndexedDB storage
+- Single list mode
+- Basic PWA support
 
 ## Contributing
 
 This is a personal project focused on simplicity and privacy. The codebase is intentionally minimal and well-documented for easy understanding.
+
+## Additional Documentation
+
+- **Performance Details:** `docs/performance.md` - Bundle analysis, Lighthouse metrics, optimization decisions
+- **API Reference:** `docs/api-reference.md` - IndexedDB schema, state management, data structures
+- **Security Checklist:** `docs/security-checklist.md` - Threat model, CSP configuration, intentional security decisions
+- **Accessibility:** `docs/a11y-report.md` - WCAG compliance testing results
+- **Deployment:** `docs/deployment-netlify.md` - Netlify configuration and deployment process
 
 ## Links
 
