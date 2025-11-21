@@ -1,3 +1,28 @@
+## [Unreleased]
+
+### Added
+
+- **Smooth Animations**: Integrated svelte/transition for polished interactions
+  - Slide transition (200ms) for item deletion
+  - Flip animation (200ms) for smooth drag-and-drop reordering
+  - Fly transition (300ms) for toast notifications
+
+### Changed
+
+- **Mobile Touch Interactions**: Significantly improved checkbox UX on mobile
+  - Added 200ms touch delay to prevent drag interference with taps
+  - Removed scale animation on tap for cleaner interaction
+  - Disabled tap highlight and text selection during item interaction
+  - Improved touch target detection for text nodes in labels
+  - Better centered checkmark with optimized SVG viewBox
+- **Dark Mode Contrast**: Lightened completed item text (brand-600 → brand-500)
+
+### Fixed
+
+- **CSP Compliance**: Added nonce attribute to inline critical CSS
+- **Lighthouse CI**: Updated audit configuration for newer Lighthouse scoring modes
+- **Keyboard Navigation Tests**: Fixed timing issue with slide transitions in CI
+
 ## [1.0.0] - 2025-11-09
 
 ### Added

@@ -70,7 +70,7 @@
         <button type="button" class="rounded-full bg-brand-300 dark:bg-brand-700 px-5 py-2 text-sm font-base text-brand-900 dark:text-brand-100 hover:bg-brand-300/80 dark:hover:bg-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500" on:click={onExport}>
           Export data
         </button>
-        <p class="text-xs text-brand-600 dark:text-brand-400 mt-2">Download tasks and settings as JSON</p>
+        <p class="text-xs text-brand-600 dark:text-brand-400 mt-2">Download tasks and settings as a JSON file</p>
       </div>
 
       <!-- Import Button -->
