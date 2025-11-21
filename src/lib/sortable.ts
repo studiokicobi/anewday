@@ -22,6 +22,8 @@ export function sortable(node: HTMLElement, options: SortableOptions = {}) {
     dragClass: 'sortable-drag',
     filter: options.filter ?? INTERACTIVE_FILTER,
     preventOnFilter: options.preventOnFilter ?? false,
+    delay: 200, // Delay before drag starts (ms)
+    delayOnTouchOnly: true, // Only apply delay on touch devices
     ...options,
   });
 
