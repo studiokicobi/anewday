@@ -23,6 +23,7 @@
         class:dark:bg-brand-600={settingsMode !== 'multi'}
         role="switch"
         aria-checked={settingsMode === 'multi'}
+        aria-label="Enable Morning / Anytime / Evening lists"
         on:click={toggleMode}
       >
         <span

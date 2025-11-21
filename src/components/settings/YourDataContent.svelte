@@ -33,6 +33,7 @@
           class:dark:bg-brand-600={!encryption}
           role="switch"
           aria-checked={encryption}
+          aria-label="Encrypt export with passphrase"
           on:click={() => encryption = !encryption}
         >
           <span
