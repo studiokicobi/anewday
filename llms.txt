@@ -1,0 +1,150 @@
+# A New Day
+
+> A privacy-first daily checklist PWA designed for people rebuilding routines
+
+## Overview
+
+A New Day is a progressive web app (PWA) that provides a simple daily to-do list with one unique feature: automatic midnight reset. All tasks uncheck at local midnight, encouraging users to focus on today rather than accumulating incomplete tasks.
+
+## Purpose
+
+Built for people in recovery or rebuilding life routines. The app intentionally avoids:
+- Progress tracking or streaks
+- Social sharing features
+- Gamification or judgment
+- Analytics or user tracking
+
+## Technical Stack
+
+- **Framework**: Svelte 5 (latest version with new `mount()` API)
+- **Build Tool**: Vite 7
+- **Storage**: IndexedDB (via native browser API)
+- **Styling**: TailwindCSS with custom brand colors
+- **Testing**: Vitest (unit), Playwright (e2e, a11y)
+- **Type Safety**: TypeScript
+- **PWA**: vite-plugin-pwa with Workbox
+
+## Key Features
+
+1. **Midnight Reset**: Tasks automatically uncheck at local midnight
+2. **Multiple List Modes**: Single list or Morning/Anytime/Evening organization
+3. **Drag & Drop**: Reorder tasks with SortableJS
+4. **Offline Support**: Full PWA with service worker
+5. **Data Privacy**: All data stored locally, optional encrypted export
+6. **Accessibility**: WCAG AA compliant, keyboard navigation, screen reader support
+7. **Dark Mode**: Automatic theme detection with manual toggle
+
+## Architecture
+
+### Frontend Structure
+```
+src/
+├── components/        # Svelte components
+│   ├── settings/     # Settings panel content
+│   ├── AddTaskForm.svelte
+│   ├── SettingsDrawer.svelte
+│   ├── TodoItem.svelte
+│   └── TodoList.svelte
+├── lib/
+│   ├── db.ts         # IndexedDB operations
+│   ├── reset.ts      # Midnight reset logic
+│   └── state.svelte.ts  # Svelte 5 state management
+├── App.svelte        # Main app component
+└── main.ts           # Entry point
+```
+
+### State Management
+- Uses Svelte 5's new runes system ($state, $derived, $effect)
+- Global state in `state.svelte.ts`
+- No external state management library needed
+
+### Data Storage
+- IndexedDB stores: `tasks`, `settings`, `appState`
+- No backend or cloud sync
+- Export/import via encrypted or plain JSON
+
+### Build Configuration
+- Critical CSS inlined for LCP optimization
+- Font preloading with `fetchpriority="high"`
+- esbuild minification targeting ES2020
+- Service worker auto-generation via vite-plugin-pwa
+
+## Performance Optimizations
+
+- **Lighthouse Score**: 97/100
+- **Bundle Size**: 222 KB (71 KB gzipped)
+- **Critical Path**: Inline CSS for hero content
+- **Font Loading**: Preload Work Sans with priority hints
+- **No Code Splitting**: Single bundle for faster initial load
+
+## Development
+
+```bash
+npm install          # Install dependencies
+npm run dev         # Development server (http://localhost:5173)
+npm run build       # Production build
+npm run preview     # Preview production build
+npm test:unit       # Run unit tests
+npm run test:e2e    # Run e2e tests (all browsers)
+npm run test:a11y   # Run accessibility tests
+```
+
+## Security & Privacy
+
+1. **Content Security Policy**: Strict CSP with nonces
+2. **No External Requests**: All resources served locally
+3. **No Analytics**: Zero tracking or telemetry
+4. **Optional Encryption**: AES-GCM for data export
+5. **No Account Required**: Fully functional without authentication
+
+## Browser Compatibility
+
+- Modern browsers with ES2020 support
+- Service worker support for offline functionality
+- IndexedDB for local storage
+- Prefers-color-scheme for dark mode
+
+## Testing Strategy
+
+- **Unit Tests**: Vitest with fake-indexeddb
+- **E2E Tests**: Playwright across Chromium, Firefox, WebKit, mobile
+- **A11y Tests**: @axe-core/playwright for WCAG compliance
+- **Performance**: Lighthouse CI in pipeline
+
+## Design Philosophy
+
+1. **Simplicity**: No feature bloat, focused on core task management
+2. **Privacy**: Local-first, no external dependencies
+3. **Accessibility**: Keyboard navigation, screen reader support, WCAG AA
+4. **Performance**: Fast initial load, smooth interactions
+5. **Recovery-Focused**: Non-judgmental, present-focused tool
+
+## Notable Implementation Details
+
+- Midnight reset uses `setTimeout` with precise calculation to next midnight
+- Tasks persist even when app is closed (IndexedDB survives browser restart)
+- Service worker handles offline mode and auto-updates
+- Drag-and-drop uses SortableJS for cross-browser compatibility
+- Custom validation for form inputs (no HTML5 validation messages)
+
+## Version History
+
+- **v2.0.0** (Current): Svelte 5 upgrade, security fixes, performance optimizations
+- **v1.1.0**: UI/UX redesign, Work Sans font, improved accessibility
+- **v1.0.0**: Initial release
+
+## Contributing
+
+This is a personal project focused on simplicity and privacy. The codebase is intentionally minimal and well-documented for easy understanding.
+
+## Links
+
+- GitHub: https://github.com/studiokicobi/anewday
+- Live App: https://anewday.app
+- License: [Check repository]
+
+---
+
+Last updated: 2025-11-21
+Svelte Version: 5.0.0
+Node Version: >=18
