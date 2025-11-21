@@ -14,7 +14,17 @@ interface SortableOptions {
 
 const INTERACTIVE_FILTER = 'input, button, textarea, select, label, a, [role="button"], [role="link"], [data-prevent-drag]';
 
+function cancelSortableTouch(event: Event) {
+  if (event instanceof TouchEvent && event.target instanceof HTMLElement) {
+    if (event.target.closest(INTERACTIVE_FILTER)) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }
+}
+
 export function sortable(node: HTMLElement, options: SortableOptions = {}) {
+  node.addEventListener('touchstart', cancelSortableTouch, { passive: false });
   const sortableInstance = Sortable.create(node, {
     animation: 150,
     ghostClass: 'sortable-ghost',
@@ -43,6 +53,7 @@ export function sortable(node: HTMLElement, options: SortableOptions = {}) {
       }
     },
     destroy() {
+      node.removeEventListener('touchstart', cancelSortableTouch);
       sortableInstance.destroy();
     },
   };
