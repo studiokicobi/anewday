@@ -20,10 +20,13 @@
   const INTERACTIVE_SELECTOR = 'input,button,label,a,[role="button"],[role="link"]';
 
   function isInteractiveTarget(target: EventTarget | null) {
-    if (!(target instanceof HTMLElement)) {
-      return false;
+    let node: HTMLElement | null = null;
+    if (target instanceof HTMLElement) {
+      node = target;
+    } else if (target instanceof Node) {
+      node = target.parentElement;
     }
-    return Boolean(target.closest(INTERACTIVE_SELECTOR));
+    return node ? Boolean(node.closest(INTERACTIVE_SELECTOR)) : false;
   }
 
   function handleTouchStart(event: TouchEvent) {
