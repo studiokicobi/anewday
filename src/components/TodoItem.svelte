@@ -148,9 +148,6 @@
       <div
         class="group grid size-8 shrink-0 grid-cols-1 touch-manipulation cursor-pointer p-1.5"
         data-prevent-drag
-        on:touchstart|stopPropagation
-        on:touchmove|stopPropagation
-        on:touchend|stopPropagation
       >
         <input
           id={checkboxId}
