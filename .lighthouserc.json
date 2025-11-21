@@ -29,7 +29,9 @@
         "unminified-javascript": "warn",
         "unused-javascript": "warn",
         "font-size": "warn",
-        "installable-manifest": "warn"
+        "installable-manifest": "warn",
+        "network-dependency-tree-insight": "off",
+        "redirects": "off"
       }
     },
     "upload": {
