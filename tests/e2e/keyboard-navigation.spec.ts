@@ -31,6 +31,6 @@ test('keyboard flow allows submitting and toggling tasks', async ({ page }) => {
   const taskCheckbox = page.getByRole('checkbox', { name: 'Keyboard navigation task' });
   await expect(taskCheckbox).toBeVisible();
   await taskCheckbox.focus();
-  await page.keyboard.press(' ');
+  await taskCheckbox.press('Space');
   await expect(taskCheckbox).toBeChecked();
 });

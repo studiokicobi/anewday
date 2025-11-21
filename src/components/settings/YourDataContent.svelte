@@ -33,7 +33,7 @@
           class:dark:bg-brand-600={!encryption}
           role="switch"
           aria-checked={encryption}
-          aria-label="Encrypt export with passphrase"
+          aria-labelledby="encryption-label"
           on:click={() => encryption = !encryption}
         >
           <span
@@ -45,10 +45,11 @@
         <div class="flex flex-col gap-1">
           <button
             type="button"
+            id="encryption-label"
             class="text-left text-sm text-brand-900 dark:text-brand-100"
             on:click={() => (encryption = !encryption)}
           >
-            Encrypt export with passphrase 
+            Encrypt export with passphrase
           </button>
           <span class="text-xs text-brand-600 dark:text-brand-400">Optional – uses AES-GCM for encryption</span>
         </div>

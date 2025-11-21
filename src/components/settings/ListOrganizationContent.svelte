@@ -23,7 +23,7 @@
         class:dark:bg-brand-600={settingsMode !== 'multi'}
         role="switch"
         aria-checked={settingsMode === 'multi'}
-        aria-label="Enable Morning / Anytime / Evening lists"
+        aria-labelledby="multi-list-label"
         on:click={toggleMode}
       >
         <span
@@ -35,6 +35,7 @@
       <div class="flex flex-col gap-1">
         <button
           type="button"
+          id="multi-list-label"
           class="text-left text-sm text-brand-900 dark:text-brand-100"
           on:click={toggleMode}
         >
