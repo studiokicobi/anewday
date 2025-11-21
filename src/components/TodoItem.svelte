@@ -120,18 +120,18 @@
     on:touchend={handleTouchEnd}
   >
     <div class="flex items-center gap-3">
-      <div class="group grid size-5 shrink-0 grid-cols-1">
+      <div class="group grid size-5 shrink-0 grid-cols-1 touch-manipulation">
         <input
           id={checkboxId}
           type="checkbox"
-          class="col-start-1 row-start-1 appearance-none rounded border-2 border-brand-100 dark:border-brand-600 bg-white dark:bg-brand-600 checked:border-accent-2 checked:bg-accent-2 dark:checked:border-accent-4 dark:checked:bg-accent-4 shadow-[0_0_50px_0_#F2EFED] dark:shadow-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-2 dark:focus-visible:outline-accent-4"
+          class="col-start-1 row-start-1 appearance-none rounded border-2 border-brand-100 dark:border-brand-600 bg-white dark:bg-brand-600 checked:border-accent-2 checked:bg-accent-2 dark:checked:border-accent-4 dark:checked:bg-accent-4 shadow-[0_0_50px_0_#F2EFED] dark:shadow-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-2 dark:focus-visible:outline-accent-4 cursor-pointer"
           checked={item.completed}
           aria-label={item.title}
           on:change={announceToggle}
           on:keydown={handleCheckboxKeydown}
         />
-        <svg viewBox="0 0 14 14" fill="none" class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white">
-          <path d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-[:checked]:opacity-100" />
+        <svg viewBox="0 0 16 16" fill="none" class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white">
+          <path d="M4 8.5L7 11.5L12 4.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-[:checked]:opacity-100" />
         </svg>
       </div>
       <label
