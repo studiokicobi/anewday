@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
+  import { slide } from 'svelte/transition';
 
   export let item: { id: string; title: string; completed: boolean };
 
@@ -101,7 +102,7 @@
   }
 </script>
 
-<div class="todo-item relative overflow-hidden">
+<div class="todo-item relative overflow-hidden" transition:slide={{ duration: 200 }}>
   <!-- Delete background (revealed on swipe) -->
   <div class="absolute inset-0 flex items-center justify-end bg-red-500 px-4">
     <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
+  import { flip } from 'svelte/animate';
   import TodoItem from './TodoItem.svelte';
   import { sortable } from '../lib/sortable';
   import type { List, TodoItem as TodoItemType } from '../stores/state';
@@ -51,6 +52,7 @@
         <li
           data-item-id={item.id}
           class="cursor-move"
+          animate:flip={{ duration: 200 }}
         >
           <TodoItem
             {item}
