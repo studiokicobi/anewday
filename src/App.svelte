@@ -16,7 +16,10 @@
     importState as importSnapshot,
     checkForReset,
     updateSettings,
-    resetAllData
+    resetAllData,
+    updateItemsOrder,
+    moveItemBetweenLists,
+    type TodoItem
   } from './stores/state';
 
   let description = '';
@@ -134,6 +137,115 @@
 
   function onDelete(event: CustomEvent<string>) {
     void handleDelete(event.detail);
+  }
+
+  // Track items per list for drag-and-drop
+  let listItems: Record<string, TodoItem[]> = {};
+  let isDragging = false;
+  let pendingUpdates: Record<string, TodoItem[]> = {};
+  let updateTimeout: ReturnType<typeof setTimeout> | null = null;
+
+  // Only sync from store when items actually change
+  // This prevents constant re-rendering that breaks drag-and-drop
+  let lastItemsHash = '';
+  $: {
+    // Create a hash of the items to detect actual changes
+    const itemsHash = items.map(i => `${i.id}-${i.completed}-${i.listId}-${i.position}`).join('|');
+
+    if (itemsHash !== lastItemsHash && !isDragging) {
+      const newListItems: Record<string, TodoItem[]> = {};
+      for (const list of lists) {
+        newListItems[list.id] = items.filter(item => item.listId === list.id);
+      }
+      listItems = newListItems;
+      lastItemsHash = itemsHash;
+    }
+  }
+
+  function handleDndConsider(listId: string, event: CustomEvent) {
+    isDragging = true;
+    // Direct assignment like the test
+    listItems = { ...listItems, [listId]: event.detail.items };
+  }
+
+  async function handleDndFinalize(listId: string, event: CustomEvent) {
+    const updatedItems = event.detail.items;
+    const trigger = event.detail.info?.trigger;
+
+    // Ignore duplicate finalize events for the same list
+    if (pendingUpdates[listId]) {
+      return;
+    }
+
+    // Check if this is a cross-zone drag
+    const hasWrongListId = updatedItems.some((item: TodoItem) => item.listId !== listId);
+    const isCrossZone = hasWrongListId || trigger === 'droppedIntoAnother';
+
+    if (isCrossZone) {
+      // Buffer this update - either source or target in a cross-zone drag
+      pendingUpdates[listId] = updatedItems;
+
+      // Clear any existing timeout
+      if (updateTimeout) clearTimeout(updateTimeout);
+
+      // Wait for both lists to report
+      updateTimeout = setTimeout(async () => {
+        try {
+          await processPendingUpdates();
+        } catch (error) {
+          console.error('Error processing pending updates:', error);
+          pendingUpdates = {};
+        } finally {
+          isDragging = false;
+        }
+      }, 50);
+    } else if (trigger === 'droppedOutsideOfAny') {
+      // Cancelled drag - just reset
+      pendingUpdates = {};
+      isDragging = false;
+    } else {
+      // Same-zone reorder
+      try {
+        await updateItemsOrder(listId, updatedItems);
+      } catch (error) {
+        console.error('Error updating items order:', error);
+      } finally {
+        isDragging = false;
+      }
+    }
+  }
+
+  async function processPendingUpdates() {
+    if (Object.keys(pendingUpdates).length === 0) return;
+
+    // Find the target list (has items with wrong listId)
+    const targetListId = Object.keys(pendingUpdates).find(id =>
+      pendingUpdates[id].some(item => item.listId !== id)
+    );
+
+    if (!targetListId) {
+      pendingUpdates = {};
+      isDragging = false;
+      return;
+    }
+
+    const targetItems = pendingUpdates[targetListId];
+
+    // Find the moved item and its original list
+    const movedItem = targetItems.find(item => item.listId !== targetListId);
+    if (!movedItem) {
+      pendingUpdates = {};
+      isDragging = false;
+      return;
+    }
+
+    const sourceListId = movedItem.listId;
+    const sourceItems = pendingUpdates[sourceListId] || [];
+
+    await moveItemBetweenLists(sourceListId, targetListId, sourceItems, targetItems);
+
+    pendingUpdates = {};
+    isDragging = false;
   }
 
   async function handleExport() {
@@ -308,12 +420,13 @@
     />
 
   {#each lists as list (list.id)}
-    {@const listItems = items.filter(item => item.listId === list.id)}
     <TodoList
       {list}
-      items={listItems}
+      items={listItems[list.id] || []}
       on:toggle={onToggle}
       on:delete={onDelete}
+      on:consider={(e) => handleDndConsider(list.id, e)}
+      on:finalize={(e) => handleDndFinalize(list.id, e)}
     />
   {/each}
 
@@ -321,7 +434,7 @@
     <div class="flex items-center gap-2 text-sm ">
       <button
         type="button"
-        class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-brand-600 dark:text-brand-200 bg-white dark:bg-brand-700 hover:bg-brand-200/50 dark:hover:bg-brand-600 shadow-[0_0_50px_0_#F2EFED] dark:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+        class="inline-flex items-center gap-2 px-4 py-2 rounded-full font-medium text-brand-600 dark:text-brand-300 bg-white dark:bg-brand-700 hover:bg-brand-200/50 dark:hover:bg-brand-600 shadow-[0_0_50px_0_#F2EFED] dark:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
         on:click={openSettingsDrawer}
         bind:this={settingsButton}
         aria-haspopup="dialog"

@@ -2,12 +2,23 @@
 
 ### Added
 
+- **Drag-and-Drop Reordering**: Reorder tasks within lists and move between lists
+  - Custom drag handles with visual feedback (grab/grabbing cursor)
+  - Full keyboard support: Tab to drag handle, Space/Enter to activate, Arrow keys to move, Space/Enter to drop
+  - Smooth animations during reordering (200ms flip transition)
+  - Cross-list dragging in multi-list mode (Morning, Anytime, Evening)
+  - Touch-friendly: works on mobile with touch events
+  - WCAG compliant with proper ARIA roles and labels
 - **Smooth Animations**: Integrated svelte/transition for polished interactions
   - Slide transition (200ms) for item deletion
   - Fly transition (300ms) for toast notifications
 
 ### Changed
 
+- **Task Input Length**: Doubled maximum task length from 80 to 160 characters for more detailed tasks
+- **Multi-List Selector**: List dropdown now always visible in multi-list mode (previously only appeared while typing)
+- **Checkbox Size**: Reduced checkbox size slightly for better visual balance with drag handles
+- **Icon Set**: Updated favicon and app icons with refreshed design
 - **Mobile Touch Interactions**: Significantly improved checkbox UX on mobile
   - Removed scale animation on tap for cleaner interaction
   - Disabled tap highlight and text selection during item interaction
@@ -17,6 +28,9 @@
 
 ### Fixed
 
+- **Font Preload Warnings**: Moved @font-face declarations to inline critical CSS to eliminate console warnings
+- **TypeScript Errors**: Added proper type definitions for svelte-dnd-action custom events
+- **Accessibility Compliance**: Separated aria-live regions from drag zones to avoid ARIA role conflicts
 - **CSP Compliance**: Added nonce attribute to inline critical CSS
 - **Lighthouse CI**: Updated audit configuration for newer Lighthouse scoring modes
 - **Keyboard Navigation Tests**: Fixed timing issue with slide transitions in CI

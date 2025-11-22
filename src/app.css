@@ -118,6 +118,50 @@ dd::before {
   }
 }
 
+/* Remove default svelte-dnd-action drag zone styling */
+[aria-dropeffect] {
+  outline: none !important;
+  border: none !important;
+}
+
+/* Remove any focus/active borders on draggable containers */
+section[aria-live] {
+  outline: none !important;
+}
+
+section[aria-live]:focus,
+section[aria-live]:focus-visible,
+section[aria-live]:focus-within {
+  outline: none !important;
+  border: none !important;
+}
+
+/* Custom focus color for draggable items - only show for keyboard navigation */
+section[aria-live] > div > div:focus-visible {
+  outline: 2px solid #18181B !important;
+  outline-offset: 2px;
+}
+
+@media (prefers-color-scheme: dark) {
+  section[aria-live] > div > div:focus-visible {
+    outline: 2px solid #c1b5b0 !important;
+  }
+}
+
+.dark section[aria-live] > div > div:focus-visible {
+  outline: 2px solid #c1b5b0 !important;
+}
+
+/* Ensure all content works within drag handle zones, only dragHandle initiates drag */
+section[aria-live] * {
+  pointer-events: auto !important;
+}
+
+section[aria-live] input[type="checkbox"],
+section[aria-live] label {
+  cursor: pointer !important;
+}
+
 /* Hide delete button on touch devices, show on hover for pointer devices */
 @media (hover: hover) and (pointer: fine) {
   .delete-on-hover {

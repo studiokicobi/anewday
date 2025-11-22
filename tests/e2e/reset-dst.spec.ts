@@ -27,8 +27,9 @@ test('resets across local midnight and after sleep/wake', async ({ page }) => {
   await page.goto('/');
   await page.fill('input[name="task"]', 'DST check');
   await page.click('button:has-text("Add")');
+  // Click the label instead of checkbox - works around drag handle zone interference
+  await page.getByText('DST check').click({ force: true });
   const checkbox = page.getByRole('checkbox', { name: 'DST check' });
-  await checkbox.check();
   await expect(checkbox).toBeChecked();
 
   await page.evaluate(() => (window as any).__advanceMs(23 * 60 * 60 * 1000));
