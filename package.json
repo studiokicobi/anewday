@@ -24,7 +24,8 @@
   },
   "dependencies": {
     "@tailwindplus/elements": "^1.0.14",
-    "svelte": "^5.0.0"
+    "svelte": "^5.0.0",
+    "svelte-dnd-action": "^0.9.67"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.9.0",

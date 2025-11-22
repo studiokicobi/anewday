@@ -16,7 +16,7 @@
   let showError = false;
 
   function isEmbeddedListVisible() {
-    return lists.length > 1 && description.trim().length > 0;
+    return lists.length > 1;
   }
 
   function handleTaskInputFocus() {
@@ -284,7 +284,7 @@
             id="task"
             name="task"
             class="w-full rounded-lg bg-white dark:bg-brand-700 hover:bg-white dark:hover:bg-brand-700 px-3 py-2 text-base text-brand-900 dark:text-brand-100 placeholder:text-brand-700 dark:placeholder:text-brand-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 shadow-[0_0_50px_0_#F2EFED] dark:shadow-none"
-            class:pr-24={lists.length > 1 && description.trim()}
+            class:pr-24={lists.length > 1}
             class:ring-2={showError}
             class:ring-red-500={showError}
             class:dark:ring-red-400={showError}
@@ -294,7 +294,7 @@
             on:input={handleInputChange}
             on:keydown={handleTaskInputKeydown}
             on:focus={handleTaskInputFocus}
-            maxlength="80"
+            maxlength="160"
             autocomplete="off"
             placeholder="Today I will..."
             aria-label="Add an item to your daily checklist"
@@ -302,8 +302,8 @@
             aria-describedby={showError ? 'task-error' : undefined}
           />
 
-          <!-- Embedded list selector (only shown when typing and multiple lists exist) -->
-          {#if lists.length > 1 && description.trim()}
+          <!-- Embedded list selector (shown when multiple lists exist) -->
+          {#if lists.length > 1}
             <div class="absolute inset-y-0 right-0 flex items-center pointer-events-none">
               <div class="relative h-full pointer-events-auto" use:clickOutside on:outclick={handleOutclick}>
                 <label for="embedded-list-selector" class="sr-only">Choose list</label>

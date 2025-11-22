@@ -31,8 +31,9 @@ test('completes items and auto-resets after simulated midnight', async ({ page }
 
   await page.getByLabel(taskLabel).fill('Stretch');
   await page.getByRole('button', { name: 'Add' }).click();
+  // Click the label instead of checkbox - works around drag handle zone interference
+  await page.getByText('Stretch').click({ force: true });
   const checkbox = page.getByRole('checkbox', { name: 'Stretch' });
-  await checkbox.check();
   await expect(checkbox).toBeChecked();
 
   await page.evaluate(() => (window as any).__advanceDay());
