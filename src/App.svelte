@@ -12,13 +12,11 @@
     addItem,
     toggleItem,
     deleteItem,
-    restoreItem,
     exportState as exportSnapshot,
     importState as importSnapshot,
     checkForReset,
     updateSettings,
-    resetAllData,
-    type TodoItem
+    resetAllData
   } from './stores/state';
 
   let description = '';
@@ -36,15 +34,9 @@
   let previousBodyOverflow: string | null = null;
   let bodyScrollLockCount = 0;
 
-  // Undo toast state
-  let deletedItem: TodoItem | null = null;
-  let deleteTimer: ReturnType<typeof setTimeout> | null = null;
-
   const clearToast = () => {
     toast = '';
-    deletedItem = null;
   };
-  let toastTimer: ReturnType<typeof setTimeout> | null = null;
 
   const handleVisibility = async () => {
     const didReset = await checkForReset();
@@ -55,15 +47,6 @@
 
   const announce = (message: string) => {
     toast = message;
-    if (toastTimer) {
-      clearTimeout(toastTimer);
-    }
-    if (message) {
-      toastTimer = setTimeout(() => {
-        clearToast();
-        toastTimer = null;
-      }, 4000);
-    }
   };
 
   onMount(() => {
@@ -142,63 +125,7 @@
   }
 
   async function handleDelete(id: string) {
-    // Find the item to delete
-    const item = items.find(i => i.id === id);
-    if (!item) return;
-
-    // Clear any existing delete timer
-    if (deleteTimer) {
-      clearTimeout(deleteTimer);
-      deleteTimer = null;
-    }
-
-    // Store complete item for undo (preserves ID, position, etc.)
-    deletedItem = { ...item };
-
-    // Delete immediately
     await deleteItem(id);
-
-    // Show undo toast
-    toast = `"${item.title}" deleted`;
-
-    // Clear existing toast timer
-    if (toastTimer) {
-      clearTimeout(toastTimer);
-    }
-
-    // Set timer to clear toast after 5 seconds
-    toastTimer = setTimeout(() => {
-      clearToast();
-      toastTimer = null;
-      deletedItem = null;
-    }, 5000);
-
-    // Set timer to permanently commit deletion after 5 seconds
-    deleteTimer = setTimeout(() => {
-      deletedItem = null;
-      deleteTimer = null;
-    }, 5000);
-  }
-
-  async function undoDelete() {
-    if (!deletedItem) return;
-
-    // Clear timers
-    if (deleteTimer) {
-      clearTimeout(deleteTimer);
-      deleteTimer = null;
-    }
-    if (toastTimer) {
-      clearTimeout(toastTimer);
-      toastTimer = null;
-    }
-
-    // Restore the item with its original ID and position
-    await restoreItem(deletedItem);
-
-    // Clear toast and deleted item
-    toast = '';
-    deletedItem = null;
   }
 
   function onToggle(event: CustomEvent<string>) {
@@ -440,5 +367,5 @@
 <!-- Toast notifications -->
 <ToastNotification
   message={toast}
-  onUndo={deletedItem ? undoDelete : null}
+  onDismiss={toast ? clearToast : null}
 />

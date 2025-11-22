@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { fly, fade } from 'svelte/transition';
+  import { fly } from 'svelte/transition';
 
   export let message: string;
-  export let onUndo: (() => void) | null = null;
+  export let onDismiss: (() => void) | null = null;
 </script>
 
 {#if message}
@@ -12,13 +12,16 @@
       transition:fly={{ y: 20, duration: 300 }}
     >
       <span>{message}</span>
-      {#if onUndo}
+      {#if onDismiss}
         <button
           type="button"
-          class="rounded bg-white/20 px-3 py-1 text-xs uppercase tracking-wide hover:bg-white/30 transition-colors duration-150"
-          on:click={onUndo}
+          class="shrink-0 rounded p-1 text-white/70 hover:text-white hover:bg-white/20 transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+          on:click={onDismiss}
+          aria-label="Dismiss"
         >
-          Undo
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
         </button>
       {/if}
     </div>
