@@ -182,3 +182,14 @@ dd::before {
     transform: translateY(0);
   }
 }
+
+/* Remove default svelte-dnd-action drop zone styling */
+[aria-dropeffect] {
+  outline: none !important;
+  border: none !important;
+}
+
+.dnd-zone {
+  outline: none !important;
+  border: none !important;
+}
