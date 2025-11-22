@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
+  import { slide } from 'svelte/transition';
 
   export let item: { id: string; title: string; completed: boolean };
 
@@ -16,12 +17,34 @@
   let swipeDistance = 0;
   const SWIPE_THRESHOLD = 100; // Distance in pixels to trigger delete
 
+  const INTERACTIVE_SELECTOR = 'input,button,label,a,[role="button"],[role="link"]';
+
+  function isInteractiveTarget(target: EventTarget | null) {
+    let node: HTMLElement | null = null;
+    if (target instanceof HTMLElement) {
+      node = target;
+    } else if (target instanceof Node) {
+      node = target.parentElement;
+    }
+    return node ? Boolean(node.closest(INTERACTIVE_SELECTOR)) : false;
+  }
+
   function handleTouchStart(event: TouchEvent) {
+    if (isInteractiveTarget(event.target)) {
+      event.stopPropagation();
+      isSwiping = false;
+      swipeDistance = 0;
+      return;
+    }
     touchStartX = event.touches[0].clientX;
     isSwiping = true;
   }
 
   function handleTouchMove(event: TouchEvent) {
+    if (isInteractiveTarget(event.target)) {
+      event.stopPropagation();
+      return;
+    }
     if (!isSwiping) return;
 
     touchCurrentX = event.touches[0].clientX;
@@ -35,7 +58,13 @@
     }
   }
 
-  function handleTouchEnd() {
+  function handleTouchEnd(event: TouchEvent) {
+    if (isInteractiveTarget(event.target)) {
+      event.stopPropagation();
+      isSwiping = false;
+      swipeDistance = 0;
+      return;
+    }
     if (!isSwiping) return;
 
     isSwiping = false;
@@ -101,7 +130,7 @@
   }
 </script>
 
-<div class="todo-item relative overflow-hidden">
+<div class="todo-item relative overflow-hidden" transition:slide={{ duration: 200 }}>
   <!-- Delete background (revealed on swipe) -->
   <div class="absolute inset-0 flex items-center justify-end bg-red-500 px-4">
     <svg class="h-6 w-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -119,18 +148,21 @@
     on:touchend={handleTouchEnd}
   >
     <div class="flex items-center gap-3">
-      <div class="group grid size-5 shrink-0 grid-cols-1">
+      <div
+        class="group grid size-8 shrink-0 grid-cols-1 touch-manipulation cursor-pointer p-1.5"
+        data-prevent-drag
+      >
         <input
           id={checkboxId}
           type="checkbox"
-          class="col-start-1 row-start-1 appearance-none rounded border-2 border-brand-100 dark:border-brand-600 bg-white dark:bg-brand-600 checked:border-accent-2 checked:bg-accent-2 dark:checked:border-accent-4 dark:checked:bg-accent-4 shadow-[0_0_50px_0_#F2EFED] dark:shadow-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-2 dark:focus-visible:outline-accent-4"
+          class="col-start-1 row-start-1 size-full appearance-none rounded border-2 border-brand-100 dark:border-brand-600 bg-white dark:bg-brand-600 checked:border-accent-2 checked:bg-accent-2 dark:checked:border-accent-4 dark:checked:bg-accent-4 shadow-[0_0_50px_0_#F2EFED] dark:shadow-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-2 dark:focus-visible:outline-accent-4 cursor-pointer"
           checked={item.completed}
           aria-label={item.title}
           on:change={announceToggle}
           on:keydown={handleCheckboxKeydown}
         />
-        <svg viewBox="0 0 14 14" fill="none" class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white">
-          <path d="M3 8L6 11L11 3.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-[:checked]:opacity-100" />
+        <svg viewBox="0 0 20 20" fill="none" class="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white">
+          <path d="M5 10L9 14L15 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-[:checked]:opacity-100" />
         </svg>
       </div>
       <label

@@ -61,7 +61,7 @@
         class="rounded-full border bg-red-200 dark:bg-red-900 border-red-600 dark:border-red-400 px-4 py-2 text-sm text-red-950 dark:text-red-100 hover:bg-red-50 dark:hover:bg-red-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
         on:click={onConfirm}
       >
-        Reset All Data
+        Reset all data
       </button>
     </div>
   </div>

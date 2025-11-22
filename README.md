@@ -1,8 +1,11 @@
 # A New Day
 
-A New Day is a daily checklist designed to support people rebuilding routines. It is a simple app with one defining feature: at midnight, the list resets automatically and unchecks all your items. And in the morning, you have to start the list again.
+A New Day is a simple daily to-do app with one small, unique feature: at midnight, your list resets automatically and unchecks all your items. And the next day, the only thing to do is start your list again.
 
-It is designed for those recovering from mental health challenges, when tasks others may take for granted (eating, sleeping, brushing your teeth, speaking to strangers) have become seemingly insurmountable obstacles. It can also be useful for anyone working to build or maintain habits.
+It is designed to support those recovering from mental health challenges, when tasks many may take for granted (rising from bed, brushing one’s teeth, eating regular meals) have become seemingly insurmountable obstacles.
+
+The app does not track progress or ask to share results on social media. It does not judge you. Its one function is to focus on this moment, today. A New Day is a quiet tool for people rebuilding routines.
+
 
 ## Getting started
 
@@ -67,4 +70,4 @@ See `docs/deployment-netlify.md` for complete Netlify deployment guide with cust
 
 ## Disclaimer
 
-A New Day is a self-guided aid and does not replace professional or emergency support. If you are in a crisis, please seek local support services. And remember you are loved.
+This application is a self-guided aid and does not replace professional or emergency support. If you are in a crisis, please seek local support services. You are important.

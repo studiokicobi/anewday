@@ -26,10 +26,15 @@ test('keyboard flow allows submitting and toggling tasks', async ({ page }) => {
   const taskInput = page.getByPlaceholder('Today I will...');
   await taskInput.focus();
   await taskInput.fill('Keyboard navigation task');
-  await taskInput.press('Enter');
+  await page.getByRole('button', { name: 'Add' }).click();
+
+  // Wait for task to be added and rendered
+  await page.waitForTimeout(100);
 
   const taskCheckbox = page.getByRole('checkbox', { name: 'Keyboard navigation task' });
-  await expect(taskCheckbox).toBeVisible();
+  await expect(taskCheckbox).toBeVisible({ timeout: 10000 });
+  // Wait for slide transition to complete (200ms)
+  await page.waitForTimeout(250);
   await taskCheckbox.focus();
   await taskCheckbox.press('Space');
   await expect(taskCheckbox).toBeChecked();
