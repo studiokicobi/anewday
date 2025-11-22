@@ -135,7 +135,7 @@
       </div>
       <label
         for={checkboxId}
-        class={`text-base ${item.completed ? 'text-brand-400 dark:text-brand-600 line-through' : 'text-brand-900 dark:text-brand-100'}`}
+        class={`text-base ${item.completed ? 'text-brand-400 dark:text-brand-500 line-through' : 'text-brand-900 dark:text-brand-100'}`}
       >
         {item.title}
       </label>
