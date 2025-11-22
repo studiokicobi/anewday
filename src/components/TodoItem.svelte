@@ -174,7 +174,7 @@
     </div>
     <button
       type="button"
-      class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-transparent text-xl text-brand-400 dark:text-brand-500 opacity-0 transition-all duration-200 hover:text-brand-800 dark:hover:text-brand-300 group-hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+      class="delete-on-hover inline-flex h-9 w-9 items-center justify-center rounded-full border border-transparent text-xl text-brand-400 dark:text-brand-500 transition-all duration-200 hover:text-brand-800 dark:hover:text-brand-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
       aria-label={`Remove ${item.title}`}
       on:click={announceDelete}
       on:keydown={handleDeleteKeydown}

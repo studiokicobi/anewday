@@ -118,6 +118,27 @@ dd::before {
   }
 }
 
+/* Hide delete button on touch devices, show on hover for pointer devices */
+@media (hover: hover) and (pointer: fine) {
+  .delete-on-hover {
+    opacity: 0;
+  }
+  .group:hover .delete-on-hover,
+  .delete-on-hover:focus-visible {
+    opacity: 1;
+  }
+}
+
+@media (hover: none) or (pointer: coarse) {
+  /* On touch devices, keep delete button hidden - use swipe instead */
+  .delete-on-hover {
+    opacity: 0 !important;
+  }
+  .delete-on-hover:focus-visible {
+    opacity: 1 !important;
+  }
+}
+
 /* Drawer & toast entry animations done via CSS to satisfy CSP */
 .settings-overlay {
   animation: settings-overlay-in 200ms ease-out;
