@@ -4,13 +4,11 @@
 
 - **Smooth Animations**: Integrated svelte/transition for polished interactions
   - Slide transition (200ms) for item deletion
-  - Flip animation (200ms) for smooth drag-and-drop reordering
   - Fly transition (300ms) for toast notifications
 
 ### Changed
 
 - **Mobile Touch Interactions**: Significantly improved checkbox UX on mobile
-  - Added 200ms touch delay to prevent drag interference with taps
   - Removed scale animation on tap for cleaner interaction
   - Disabled tap highlight and text selection during item interaction
   - Improved touch target detection for text nodes in labels

@@ -34,7 +34,7 @@ Additional local testing tips live in `docs/local-testing.md`.
 ## Accessibility
 
 - Full keyboard operation; visible focus; announcements via `aria-live`.
-- Respects `prefers-reduced-motion` by shortening animation durations. Drag-and-drop reordering still requires pointer/drag interaction (there's no keyboard fallback yet).
+- Respects `prefers-reduced-motion` by shortening animation durations. 
 - Manual audit log lives in `docs/a11y-report.md`.
 
 ## Testing
