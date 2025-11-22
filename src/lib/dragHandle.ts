@@ -8,6 +8,7 @@ export function dragHandleZone(node: HTMLElement, options: any) {
   const zone = dndzone(node, {
     ...currentOptions,
     dragDisabled: true,
+    dropTargetStyle: {},
   });
 
   drag.subscribe((disabled) => {
@@ -15,6 +16,7 @@ export function dragHandleZone(node: HTMLElement, options: any) {
       zone.update({
         ...currentOptions,
         dragDisabled: disabled,
+        dropTargetStyle: {},
       });
     }
   });
@@ -51,6 +53,7 @@ export function dragHandleZone(node: HTMLElement, options: any) {
         zone.update({
           ...currentOptions,
           dragDisabled: get(drag),
+          dropTargetStyle: {},
         });
       }
     },
