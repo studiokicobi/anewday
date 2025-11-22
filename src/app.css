@@ -124,7 +124,7 @@ dd::before {
 }
 
 .sortable-chosen {
-  transform: scale(1.05);
+  transform: scale(0);
 }
 
 .sortable-drag {
