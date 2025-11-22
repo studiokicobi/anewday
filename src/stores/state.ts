@@ -206,58 +206,6 @@ export async function restoreItem(item: TodoItem) {
   });
 }
 
-export async function reorderItems(listId: string, oldIndex: number, newIndex: number) {
-  await commit((state) => {
-    const listItems = state.items.filter((item) => item.listId === listId);
-    const otherItems = state.items.filter((item) => item.listId !== listId);
-
-    // Reorder the items within the list
-    const [movedItem] = listItems.splice(oldIndex, 1);
-    listItems.splice(newIndex, 0, movedItem);
-
-    // Reassign positions to maintain stable order
-    const reorderedListItems = listItems.map((item, index) => ({
-      ...item,
-      position: index,
-    }));
-
-    return {
-      ...state,
-      items: [...otherItems, ...reorderedListItems],
-    };
-  });
-}
-
-export async function moveItemToList(itemId: string, newListId: string, newIndex?: number) {
-  await commit((state) => {
-    const item = state.items.find((item) => item.id === itemId);
-    if (!item) return state;
-
-    const otherItems = state.items.filter((item) => item.id !== itemId);
-    const targetListItems = otherItems.filter((item) => item.listId === newListId);
-    const nonTargetItems = otherItems.filter((item) => item.listId !== newListId);
-
-    const updatedItem = { ...item, listId: newListId };
-
-    if (newIndex !== undefined) {
-      targetListItems.splice(newIndex, 0, updatedItem);
-    } else {
-      targetListItems.push(updatedItem);
-    }
-
-    // Reassign positions to maintain stable order
-    const reorderedTargetItems = targetListItems.map((item, index) => ({
-      ...item,
-      position: index,
-    }));
-
-    return {
-      ...state,
-      items: [...nonTargetItems, ...reorderedTargetItems],
-    };
-  });
-}
-
 export async function exportState(passphrase?: string) {
   const payload = JSON.stringify(get(store));
   if (passphrase && passphrase.trim()) {

@@ -118,28 +118,6 @@ dd::before {
   }
 }
 
-/* Drag and drop styles */
-.sortable-ghost {
-  opacity: 0.5;
-}
-
-.sortable-chosen {
-  transform: scale(0);
-}
-
-.sortable-drag {
-  transform: rotate(2deg);
-}
-
-/* Drag handle styles */
-.cursor-move:hover {
-  cursor: grab;
-}
-
-.cursor-move:active {
-  cursor: grabbing;
-}
-
 /* Drawer & toast entry animations done via CSS to satisfy CSP */
 .settings-overlay {
   animation: settings-overlay-in 200ms ease-out;

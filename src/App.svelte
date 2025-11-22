@@ -13,8 +13,6 @@
     toggleItem,
     deleteItem,
     restoreItem,
-    reorderItems,
-    moveItemToList,
     exportState as exportSnapshot,
     importState as importSnapshot,
     checkForReset,
@@ -275,44 +273,6 @@
     return formattedDate;
   }
 
-  // Handle drag-and-drop within the same list
-  function handleSortWithinList(listId: string) {
-    return async (evt: any) => {
-      if (evt.from === evt.to) {
-        // Reordering within the same list
-        try {
-          await reorderItems(listId, evt.oldIndex, evt.newIndex);
-        } catch (error) {
-          announce('Failed to reorder task.');
-          console.error('Reorder failed:', error);
-        }
-      }
-    };
-  }
-
-  // Handle drag-and-drop between different lists (and within the same list in multi-mode)
-  async function handleSortBetweenLists(evt: any) {
-    const itemId = evt.item.dataset.itemId;
-    const newListId = evt.to.dataset.listId;
-
-    if (!itemId || !newListId) {
-      return;
-    }
-
-    try {
-      if (evt.from === evt.to) {
-        // Reordering within the same list in multi-mode
-        await reorderItems(newListId, evt.oldIndex, evt.newIndex);
-      } else {
-        // Moving between different lists
-        await moveItemToList(itemId, newListId, evt.newIndex);
-      }
-    } catch (error) {
-      announce('Failed to update task order.');
-      console.error('Drag operation failed:', error);
-    }
-  }
-
   async function handleReset() {
     try {
       await resetAllData();
@@ -425,8 +385,6 @@
     <TodoList
       {list}
       items={listItems}
-      mode={settings.mode}
-      onSort={settings.mode === 'multi' ? handleSortBetweenLists : handleSortWithinList(list.id)}
       on:toggle={onToggle}
       on:delete={onDelete}
     />
