@@ -154,7 +154,7 @@ export async function addItem(title: string, listId?: string) {
         {
           id,
           listId: targetList(state, listId),
-          title: trimmed.slice(0, 120),
+          title: trimmed.slice(0, 240),
           completed: false,
           position: maxPosition + 1,
         },
@@ -206,6 +206,51 @@ export async function restoreItem(item: TodoItem) {
   });
 }
 
+export async function updateItemsOrder(listId: string, newItems: TodoItem[]) {
+  await commit((state) => {
+    const otherItems = state.items.filter((item) => item.listId !== listId);
+    const reorderedItems = newItems.map((item, index) => ({
+      ...item,
+      position: index,
+      listId,
+    }));
+    return {
+      ...state,
+      items: [...otherItems, ...reorderedItems],
+    };
+  });
+}
+
+export async function moveItemBetweenLists(
+  sourceListId: string,
+  targetListId: string,
+  sourceItems: TodoItem[],
+  targetItems: TodoItem[]
+) {
+  await commit((state) => {
+    const otherItems = state.items.filter(
+      (item) => item.listId !== sourceListId && item.listId !== targetListId
+    );
+
+    const updatedSourceItems = sourceItems.map((item, index) => ({
+      ...item,
+      position: index,
+      listId: sourceListId,
+    }));
+
+    const updatedTargetItems = targetItems.map((item, index) => ({
+      ...item,
+      position: index,
+      listId: targetListId,
+    }));
+
+    return {
+      ...state,
+      items: [...otherItems, ...updatedSourceItems, ...updatedTargetItems],
+    };
+  });
+}
+
 export async function exportState(passphrase?: string) {
   const payload = JSON.stringify(get(store));
   if (passphrase && passphrase.trim()) {
@@ -235,7 +280,7 @@ export async function importState(raw: string, passphrase?: string) {
     items: parsed.items.map((item, index) => ({
       id: String(item.id),
       listId: String(item.listId ?? parsed.lists[0]?.id ?? DEFAULT_LIST.id),
-      title: String(item.title ?? '').slice(0, 120),
+      title: String(item.title ?? '').slice(0, 240),
       completed: Boolean(item.completed),
       position: item.position ?? index,
     })),

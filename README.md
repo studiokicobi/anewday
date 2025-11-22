@@ -34,7 +34,12 @@ Additional local testing tips live in `docs/local-testing.md`.
 ## Accessibility
 
 - Full keyboard operation; visible focus; announcements via `aria-live`.
-- Respects `prefers-reduced-motion` by shortening animation durations. 
+- **Drag-and-drop keyboard controls**:
+  - Tab to focus drag handle → Space/Enter to activate drag mode
+  - Arrow keys (↑/↓) to move item position
+  - Space/Enter to drop item → Escape to cancel
+  - Works within lists and across lists (multi-list mode)
+- Respects `prefers-reduced-motion` by shortening animation durations.
 - Manual audit log lives in `docs/a11y-report.md`.
 
 ## Testing
