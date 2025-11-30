@@ -141,111 +141,98 @@
 
   // Track items per list for drag-and-drop
   let listItems: Record<string, TodoItem[]> = {};
-  let isDragging = false;
-  let pendingUpdates: Record<string, TodoItem[]> = {};
-  let updateTimeout: ReturnType<typeof setTimeout> | null = null;
 
-  // Only sync from store when items actually change
-  // This prevents constant re-rendering that breaks drag-and-drop
-  let lastItemsHash = '';
   $: {
-    // Create a hash of the items to detect actual changes
-    const itemsHash = items.map(i => `${i.id}-${i.completed}-${i.listId}-${i.position}`).join('|');
+    const newListItems: Record<string, TodoItem[]> = {};
+    for (const list of lists) {
+      newListItems[list.id] = items.filter(item => item.listId === list.id);
+    }
+    listItems = newListItems;
+  }
 
-    if (itemsHash !== lastItemsHash && !isDragging) {
-      const newListItems: Record<string, TodoItem[]> = {};
-      for (const list of lists) {
-        newListItems[list.id] = items.filter(item => item.listId === list.id);
-      }
-      listItems = newListItems;
-      lastItemsHash = itemsHash;
+  async function handleReorder(event: CustomEvent<{ listId: string; items: TodoItem[] }>) {
+    const { listId, items: reorderedItems } = event.detail;
+    try {
+      await updateItemsOrder(listId, reorderedItems);
+    } catch (error) {
+      console.error('Error updating items order:', error);
     }
   }
 
-  function handleDndConsider(listId: string, event: CustomEvent) {
-    isDragging = true;
-    // Direct assignment like the test
-    listItems = { ...listItems, [listId]: event.detail.items };
+  async function handleMove(event: CustomEvent<{
+    sourceListId: string;
+    targetListId: string;
+    item: TodoItem;
+    targetIndex: number;
+  }>) {
+    const { sourceListId, targetListId, item, targetIndex } = event.detail;
+
+    try {
+      // Get current items for both lists
+      const sourceItems = listItems[sourceListId].filter(i => i.id !== item.id);
+      const targetItems = [...listItems[targetListId]];
+      targetItems.splice(targetIndex, 0, item);
+
+      await moveItemBetweenLists(sourceListId, targetListId, sourceItems, targetItems);
+    } catch (error) {
+      console.error('Error moving item between lists:', error);
+    }
   }
 
-  async function handleDndFinalize(listId: string, event: CustomEvent) {
-    const updatedItems = event.detail.items;
-    const trigger = event.detail.info?.trigger;
+  function handleTouchDragEnd(event: CustomEvent<{
+    clientY: number;
+    item: TodoItem;
+    sourceIndex: number;
+    sourceListId: string;
+  }>) {
+    const { clientY, item, sourceIndex, sourceListId } = event.detail;
 
-    // Ignore duplicate finalize events for the same list
-    if (pendingUpdates[listId]) {
-      return;
-    }
+    // Check which list the touch ended over
+    for (const list of lists) {
+      const dropZone = document.getElementById(`list-dropzone-${list.id}`);
+      if (!dropZone) continue;
 
-    // Check if this is a cross-zone drag
-    const hasWrongListId = updatedItems.some((item: TodoItem) => item.listId !== listId);
-    const isCrossZone = hasWrongListId || trigger === 'droppedIntoAnother';
-
-    if (isCrossZone) {
-      // Buffer this update - either source or target in a cross-zone drag
-      pendingUpdates[listId] = updatedItems;
-
-      // Clear any existing timeout
-      if (updateTimeout) clearTimeout(updateTimeout);
-
-      // Wait for both lists to report
-      updateTimeout = setTimeout(async () => {
-        try {
-          await processPendingUpdates();
-        } catch (error) {
-          console.error('Error processing pending updates:', error);
-          pendingUpdates = {};
-        } finally {
-          isDragging = false;
+      const rect = dropZone.getBoundingClientRect();
+      if (clientY >= rect.top && clientY <= rect.bottom) {
+        // Touch ended over this list
+        if (sourceListId !== list.id) {
+          // Cross-list move
+          void handleMove(new CustomEvent('move', {
+            detail: {
+              sourceListId,
+              targetListId: list.id,
+              item,
+              targetIndex: listItems[list.id].length
+            }
+          }));
         }
-      }, 50);
-    } else if (trigger === 'droppedOutsideOfAny') {
-      // Cancelled drag - just reset
-      pendingUpdates = {};
-      isDragging = false;
-    } else {
-      // Same-zone reorder
-      try {
-        await updateItemsOrder(listId, updatedItems);
-      } catch (error) {
-        console.error('Error updating items order:', error);
-      } finally {
-        isDragging = false;
+        return;
       }
     }
   }
 
-  async function processPendingUpdates() {
-    if (Object.keys(pendingUpdates).length === 0) return;
+  async function handleKeyboardCancel(event: CustomEvent<{
+    currentIndex: number;
+    currentListId: string;
+    originalIndex: number;
+    originalListId: string;
+    item: TodoItem;
+  }>) {
+    const { currentIndex, currentListId, originalIndex, originalListId, item } = event.detail;
 
-    // Find the target list (has items with wrong listId)
-    const targetListId = Object.keys(pendingUpdates).find(id =>
-      pendingUpdates[id].some(item => item.listId !== id)
-    );
+    // Cross-list cancel - move item back to original list
+    try {
+      // Remove from current list
+      const currentItems = listItems[currentListId].filter(i => i.id !== item.id);
 
-    if (!targetListId) {
-      pendingUpdates = {};
-      isDragging = false;
-      return;
+      // Add back to original list at original position
+      const originalItems = [...listItems[originalListId]];
+      originalItems.splice(originalIndex, 0, item);
+
+      await moveItemBetweenLists(currentListId, originalListId, currentItems, originalItems);
+    } catch (error) {
+      console.error('Error canceling cross-list move:', error);
     }
-
-    const targetItems = pendingUpdates[targetListId];
-
-    // Find the moved item and its original list
-    const movedItem = targetItems.find(item => item.listId !== targetListId);
-    if (!movedItem) {
-      pendingUpdates = {};
-      isDragging = false;
-      return;
-    }
-
-    const sourceListId = movedItem.listId;
-    const sourceItems = pendingUpdates[sourceListId] || [];
-
-    await moveItemBetweenLists(sourceListId, targetListId, sourceItems, targetItems);
-
-    pendingUpdates = {};
-    isDragging = false;
   }
 
   async function handleExport() {
@@ -425,8 +412,10 @@
       items={listItems[list.id] || []}
       on:toggle={onToggle}
       on:delete={onDelete}
-      on:consider={(e) => handleDndConsider(list.id, e)}
-      on:finalize={(e) => handleDndFinalize(list.id, e)}
+      on:reorder={handleReorder}
+      on:move={handleMove}
+      on:touchdragend={handleTouchDragEnd}
+      on:keyboardcancel={handleKeyboardCancel}
     />
   {/each}
 

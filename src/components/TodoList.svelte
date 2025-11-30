@@ -1,21 +1,29 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
   import { flip } from 'svelte/animate';
-  import { dragHandleZone } from '../lib/dragHandle';
   import TodoItem from './TodoItem.svelte';
   import type { List, TodoItem as TodoItemType } from '../stores/state';
 
-  export let list: List;
-  export let items: TodoItemType[];
+  const {
+    list,
+    items
+  }: {
+    list: List;
+    items: TodoItemType[];
+  } = $props();
 
   const dispatch = createEventDispatcher<{
     toggle: string;
     delete: string;
-    consider: { items: TodoItemType[]; info: any };
-    finalize: { items: TodoItemType[]; info: any };
+    reorder: { listId: string; items: TodoItemType[] };
+    move: { sourceListId: string; targetListId: string; item: TodoItemType; targetIndex: number };
+    touchdragover: { clientY: number; item: any; sourceIndex: number; sourceListId: string };
+    touchdragend: { clientY: number; item: any; sourceIndex: number; sourceListId: string };
+    keyboardcancel: { currentIndex: number; currentListId: string; originalIndex: number; originalListId: string; item: any };
   }>();
 
   const flipDurationMs = 200;
+  let isDragOverList = $state(false);
 
   function onToggle(event: CustomEvent<string>) {
     dispatch('toggle', event.detail);
@@ -25,12 +33,154 @@
     dispatch('delete', event.detail);
   }
 
-  function handleDndConsider(e: CustomEvent) {
-    dispatch('consider', { items: e.detail.items, info: e.detail.info });
+  // Local optimistic state to prevent race conditions
+  let localItems = $state(items);
+
+  // Sync local state when items prop changes
+  $effect(() => {
+    localItems = items;
+  });
+
+  function onKeyboardMove(event: CustomEvent<{ direction: 'up' | 'down'; currentIndex: number; listId: string }>) {
+    const { direction, currentIndex } = event.detail;
+
+    // Use local state for immediate feedback
+    if (direction === 'up' && currentIndex > 0) {
+      const newItems = [...localItems];
+      [newItems[currentIndex - 1], newItems[currentIndex]] = [newItems[currentIndex], newItems[currentIndex - 1]];
+      localItems = newItems;
+      dispatch('reorder', { listId: list.id, items: newItems });
+    } else if (direction === 'down' && currentIndex < localItems.length - 1) {
+      const newItems = [...localItems];
+      [newItems[currentIndex], newItems[currentIndex + 1]] = [newItems[currentIndex + 1], newItems[currentIndex]];
+      localItems = newItems;
+      dispatch('reorder', { listId: list.id, items: newItems });
+    }
   }
 
-  function handleDndFinalize(e: CustomEvent) {
-    dispatch('finalize', { items: e.detail.items, info: e.detail.info });
+  function onKeyboardCancel(event: CustomEvent<{
+    currentIndex: number;
+    currentListId: string;
+    originalIndex: number;
+    originalListId: string;
+    item: any;
+  }>) {
+    const { currentIndex, currentListId, originalIndex, originalListId, item: draggedItem } = event.detail;
+
+    if (currentListId === originalListId && currentListId === list.id) {
+      // Same list - just reorder back
+      const newItems = [...localItems];
+      const [movedItem] = newItems.splice(currentIndex, 1);
+      newItems.splice(originalIndex, 0, movedItem);
+      localItems = newItems;
+      dispatch('reorder', { listId: list.id, items: newItems });
+    } else {
+      // Cross-list cancel - forward to App
+      dispatch('keyboardcancel', event.detail);
+    }
+  }
+
+  // Forward touch drag events to App for cross-list detection
+  function onTouchDragOver(event: CustomEvent<{
+    clientY: number;
+    item: any;
+    sourceIndex: number;
+    sourceListId: string;
+  }>) {
+    dispatch('touchdragover', event.detail);
+  }
+
+  function onTouchDragEnd(event: CustomEvent<{
+    clientY: number;
+    item: any;
+    sourceIndex: number;
+    sourceListId: string;
+  }>) {
+    dispatch('touchdragend', event.detail);
+  }
+
+  function handleDrop(event: CustomEvent<{
+    sourceIndex: number;
+    sourceListId: string;
+    targetIndex: number;
+    targetListId: string;
+    sourceItem: any;
+  }>) {
+    const { sourceIndex, sourceListId, targetIndex, targetListId, sourceItem } = event.detail;
+
+    // Check if this is a cross-list move or same-list reorder
+    if (sourceListId !== targetListId) {
+      // Moving between lists
+      dispatch('move', {
+        sourceListId,
+        targetListId,
+        item: sourceItem,
+        targetIndex
+      });
+    } else if (sourceListId === list.id) {
+      // Reordering within same list
+      if (sourceIndex !== targetIndex) {
+        const newItems = [...localItems];
+        const [movedItem] = newItems.splice(sourceIndex, 1);
+        newItems.splice(targetIndex, 0, movedItem);
+
+        localItems = newItems;
+        dispatch('reorder', { listId: list.id, items: newItems });
+      }
+    }
+  }
+
+  function handleListDragOver(e: DragEvent) {
+    e.preventDefault();
+    isDragOverList = true;
+    if (e.dataTransfer) {
+      e.dataTransfer.dropEffect = 'move';
+    }
+  }
+
+  function handleListDragLeave() {
+    isDragOverList = false;
+  }
+
+  function handleListDrop(e: DragEvent) {
+    e.preventDefault();
+    isDragOverList = false;
+
+    if (e.dataTransfer) {
+      try {
+        const dataStr = e.dataTransfer.getData('text/plain');
+        if (!dataStr) return;
+
+        const data = JSON.parse(dataStr);
+
+        // Validate it's our app's drag data
+        if (!data.index && data.index !== 0) return;
+        if (!data.listId || !data.item) return;
+
+        // Dropping into empty list or at the end
+        if (data.listId !== list.id) {
+          // Cross-list move to end
+          dispatch('move', {
+            sourceListId: data.listId,
+            targetListId: list.id,
+            item: data.item,
+            targetIndex: localItems.length
+          });
+        } else {
+          // Same-list move to end
+          const sourceIndex = data.index;
+          if (sourceIndex !== localItems.length - 1) {
+            const newItems = [...localItems];
+            const [movedItem] = newItems.splice(sourceIndex, 1);
+            newItems.push(movedItem);
+            localItems = newItems;
+            dispatch('reorder', { listId: list.id, items: newItems });
+          }
+        }
+      } catch (error) {
+        console.warn('Invalid drop data:', error);
+      }
+    }
   }
 </script>
 
@@ -44,14 +194,15 @@
     aria-live="polite"
     aria-labelledby={`list-${list.id}`}
   >
-    <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div
+      id={`list-dropzone-${list.id}`}
       class="min-h-[4rem]"
-      use:dragHandleZone={{ items, flipDurationMs }}
-      on:consider={handleDndConsider}
-      on:finalize={handleDndFinalize}
+      class:drag-over-list={isDragOverList}
+      ondragover={handleListDragOver}
+      ondragleave={handleListDragLeave}
+      ondrop={handleListDrop}
     >
-      {#if items.length === 0}
+      {#if localItems.length === 0}
         <!-- Empty state -->
         <div
           class="min-h-[4rem] bg-white dark:bg-brand-800 rounded-lg border-2 border-dashed border-brand-200 dark:border-brand-700 flex items-center justify-center text-sm text-brand-500 dark:text-brand-400"
@@ -59,12 +210,20 @@
           No items yet. Add one above.
         </div>
       {:else}
-        {#each items as item (item.id)}
+        {#each localItems as item, index (item.id)}
           <div animate:flip={{ duration: flipDurationMs }}>
             <TodoItem
               {item}
+              {index}
+              listId={list.id}
+              isLast={index === localItems.length - 1}
               on:toggle={onToggle}
               on:delete={onDelete}
+              on:drop={handleDrop}
+              on:keyboardmove={onKeyboardMove}
+              on:keyboardcancel={onKeyboardCancel}
+              on:touchdragover={onTouchDragOver}
+              on:touchdragend={onTouchDragEnd}
             />
           </div>
         {/each}

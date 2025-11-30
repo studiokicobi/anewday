@@ -1,24 +1,218 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import { dragHandle } from '../lib/dragHandle';
 
-  export let item: { id: string; title: string; completed: boolean };
+  const {
+    item,
+    index,
+    listId,
+    isLast = false
+  }: {
+    item: { id: string; title: string; completed: boolean };
+    index: number;
+    listId: string;
+    isLast?: boolean;
+  } = $props();
 
-  const dispatch = createEventDispatcher<{ toggle: string; delete: string }>();
+  const dispatch = createEventDispatcher<{
+    toggle: string;
+    delete: string;
+    dragstart: { index: number; listId: string; item: any };
+    dragover: { index: number; listId: string };
+    drop: { sourceIndex: number; sourceListId: string; targetIndex: number; targetListId: string; sourceItem: any };
+    keyboardmove: { direction: 'up' | 'down'; currentIndex: number; listId: string };
+    keyboardcancel: { currentIndex: number; currentListId: string; originalIndex: number; originalListId: string; item: any };
+    touchdragover: { clientY: number; item: any; sourceIndex: number; sourceListId: string };
+    touchdragend: { clientY: number; item: any; sourceIndex: number; sourceListId: string };
+  }>();
   const checkboxId = `todo-${item.id}`;
+
+  let isDragging = $state(false);
+  let isDragOver = $state(false);
+  let isDragAllowed = $state(false);
+  let isKeyboardGrabbed = $state(false);
+  let isTouchDragging = $state(false);
+  let touchDragStartY = $state(0);
+  let touchDragCurrentY = $state(0);
+  let longPressTimer: ReturnType<typeof setTimeout> | null = null;
+  let originalPosition = $state<{ index: number; listId: string } | null>(null);
+
+  function handleMouseDown(e: MouseEvent) {
+    const target = e.target as HTMLElement;
+    isDragAllowed = Boolean(target.closest('.drag-handle'));
+  }
+
+  function handleHandleKeyDown(e: KeyboardEvent) {
+    // Enter or Space to grab/drop
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      isKeyboardGrabbed = !isKeyboardGrabbed;
+
+      if (isKeyboardGrabbed) {
+        // Save original position for potential cancel
+        originalPosition = { index, listId };
+        // Grabbed - announce to screen readers
+        announceToScreenReader(`Grabbed ${item.title}. Use arrow keys to move, Enter or Space to drop, Escape to cancel.`);
+      } else {
+        // Dropped - clear original position
+        originalPosition = null;
+        announceToScreenReader(`Dropped ${item.title}.`);
+      }
+      return;
+    }
+
+    // Arrow keys to move when grabbed
+    if (isKeyboardGrabbed) {
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        moveItemUp();
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        moveItemDown();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        isKeyboardGrabbed = false;
+
+        // Restore to original position if it changed
+        if (originalPosition && (originalPosition.index !== index || originalPosition.listId !== listId)) {
+          dispatch('keyboardcancel', {
+            currentIndex: index,
+            currentListId: listId,
+            originalIndex: originalPosition.index,
+            originalListId: originalPosition.listId,
+            item
+          });
+          announceToScreenReader(`Cancelled move. Returned ${item.title} to original position.`);
+        } else {
+          announceToScreenReader(`Cancelled.`);
+        }
+        originalPosition = null;
+      }
+    }
+  }
+
+  function moveItemUp() {
+    if (index === 0) {
+      announceToScreenReader('Already at top.');
+      return;
+    }
+
+    dispatch('keyboardmove', {
+      direction: 'up',
+      currentIndex: index,
+      listId
+    });
+    announceToScreenReader(`Moved ${item.title} up.`);
+  }
+
+  function moveItemDown() {
+    if (isLast) {
+      announceToScreenReader('Already at bottom.');
+      return;
+    }
+
+    dispatch('keyboardmove', {
+      direction: 'down',
+      currentIndex: index,
+      listId
+    });
+    announceToScreenReader(`Moved ${item.title} down.`);
+  }
+
+  function announceToScreenReader(message: string) {
+    // Create or update live region for screen reader announcements
+    let liveRegion = document.getElementById('sr-live-region');
+    if (!liveRegion) {
+      liveRegion = document.createElement('div');
+      liveRegion.id = 'sr-live-region';
+      liveRegion.setAttribute('role', 'status');
+      liveRegion.setAttribute('aria-live', 'polite');
+      liveRegion.setAttribute('aria-atomic', 'true');
+      liveRegion.className = 'sr-only';
+      liveRegion.style.cssText = 'position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden;';
+      document.body.appendChild(liveRegion);
+    }
+    liveRegion.textContent = message;
+  }
+
+  function handleDragStart(e: DragEvent) {
+    // Only allow dragging if mouse was down on drag handle
+    if (!isDragAllowed) {
+      e.preventDefault();
+      return;
+    }
+
+    isDragging = true;
+    if (e.dataTransfer) {
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', JSON.stringify({
+        index,
+        listId,
+        item
+      }));
+    }
+    dispatch('dragstart', { index, listId, item });
+  }
+
+  function handleDragEnd() {
+    isDragging = false;
+    isDragAllowed = false;
+  }
+
+  function handleDragOver(e: DragEvent) {
+    e.preventDefault();
+    if (e.dataTransfer) {
+      e.dataTransfer.dropEffect = 'move';
+    }
+    isDragOver = true;
+    dispatch('dragover', { index, listId });
+  }
+
+  function handleDragLeave() {
+    isDragOver = false;
+  }
+
+  function handleDrop(e: DragEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    isDragOver = false;
+
+    if (e.dataTransfer) {
+      try {
+        const dataStr = e.dataTransfer.getData('text/plain');
+        if (!dataStr) return; // External drag with no data
+
+        const data = JSON.parse(dataStr);
+
+        // Validate it's our app's drag data
+        if (!data.index && data.index !== 0) return;
+        if (!data.listId || !data.item) return;
+
+        dispatch('drop', {
+          sourceIndex: data.index,
+          sourceListId: data.listId,
+          targetIndex: index,
+          targetListId: listId,
+          sourceItem: data.item
+        });
+      } catch (error) {
+        // External drag or malformed data - ignore
+        console.warn('Invalid drop data:', error);
+      }
+    }
+  }
 
   const announceToggle = () => dispatch('toggle', item.id);
   const announceDelete = () => dispatch('delete', item.id);
 
   // Swipe-to-delete state
-  let touchStartX = 0;
-  let touchCurrentX = 0;
-  let isSwiping = false;
-  let swipeDistance = 0;
-  let touchStartedOnInteractive = false;
+  let touchStartX = $state(0);
+  let touchCurrentX = $state(0);
+  let isSwiping = $state(false);
+  let swipeDistance = $state(0);
+  let touchStartedOnInteractive = $state(false);
   const SWIPE_THRESHOLD = 100; // Distance in pixels to trigger delete
 
-  const INTERACTIVE_SELECTOR = 'input,button,label,a,[role="button"],[role="link"],.drag-handle,[data-drag-handle]';
+  const INTERACTIVE_SELECTOR = 'input,button,label,a,[role="button"],[role="link"]';
 
   function isInteractiveTarget(target: EventTarget | null) {
     let node: HTMLElement | null = null;
@@ -30,7 +224,29 @@
     return node ? Boolean(node.closest(INTERACTIVE_SELECTOR)) : false;
   }
 
+  function isDragHandleTarget(target: EventTarget | null): boolean {
+    let node: HTMLElement | null = null;
+    if (target instanceof HTMLElement) {
+      node = target;
+    } else if (target instanceof Node) {
+      node = target.parentElement;
+    }
+    return node ? Boolean(node.closest('.drag-handle')) : false;
+  }
+
   function handleTouchStart(event: TouchEvent) {
+    const isDragHandle = isDragHandleTarget(event.target);
+
+    if (isDragHandle) {
+      // Long press to start drag on handle
+      touchDragStartY = event.touches[0].clientY;
+      longPressTimer = setTimeout(() => {
+        isTouchDragging = true;
+        navigator.vibrate?.(50); // Haptic feedback if supported
+      }, 500); // 500ms long press
+      return;
+    }
+
     touchStartedOnInteractive = isInteractiveTarget(event.target);
     if (touchStartedOnInteractive) {
       // Completely skip swipe logic for interactive elements
@@ -43,6 +259,41 @@
   }
 
   function handleTouchMove(event: TouchEvent) {
+    // Handle touch drag
+    if (isTouchDragging) {
+      event.preventDefault();
+      touchDragCurrentY = event.touches[0].clientY;
+
+      // Dispatch touch drag position for cross-list detection
+      dispatch('touchdragover', {
+        clientY: event.touches[0].clientY,
+        item,
+        sourceIndex: index,
+        sourceListId: listId
+      });
+
+      const deltaY = touchDragCurrentY - touchDragStartY;
+
+      // Threshold to trigger move
+      if (Math.abs(deltaY) > 40) {
+        if (deltaY < 0) {
+          // Dragging up
+          moveItemUp();
+        } else {
+          // Dragging down
+          moveItemDown();
+        }
+        touchDragStartY = touchDragCurrentY;
+      }
+      return;
+    }
+
+    // Cancel long press if moved before timeout
+    if (longPressTimer) {
+      clearTimeout(longPressTimer);
+      longPressTimer = null;
+    }
+
     if (touchStartedOnInteractive) {
       return;
     }
@@ -60,6 +311,29 @@
   }
 
   function handleTouchEnd(event: TouchEvent) {
+    // Clear long press timer
+    if (longPressTimer) {
+      clearTimeout(longPressTimer);
+      longPressTimer = null;
+    }
+
+    // End touch drag
+    if (isTouchDragging) {
+      // Dispatch touch drag end event with final position for cross-list detection
+      const finalY = event.changedTouches[0]?.clientY ?? touchDragCurrentY;
+      dispatch('touchdragend', {
+        clientY: finalY,
+        item,
+        sourceIndex: index,
+        sourceListId: listId
+      });
+
+      isTouchDragging = false;
+      touchDragStartY = 0;
+      touchDragCurrentY = 0;
+      return;
+    }
+
     if (touchStartedOnInteractive) {
       touchStartedOnInteractive = false;
       isSwiping = false;
@@ -141,35 +415,48 @@
 
   <!-- Main item content (slides on swipe) -->
   <div
+    role="group"
+    draggable="true"
     class="swipe-content group relative flex items-center justify-between gap-3 border-b border-brand-200 dark:border-brand-700 px-3 py-2 transition-colors bg-brand-50 dark:bg-brand-900 hover:bg-brand-100 dark:hover:bg-brand-800 focus-within:ring-2 focus-within:ring-brand-500"
     class:swiping={isSwiping}
+    class:dragging={isDragging}
+    class:drag-over={isDragOver}
     style:--swipe-distance={swipeDistance}
-    on:touchstart={handleTouchStart}
-    on:touchmove={handleTouchMove}
-    on:touchend={handleTouchEnd}
+    ontouchstart={handleTouchStart}
+    ontouchmove={handleTouchMove}
+    ontouchend={handleTouchEnd}
+    onmousedown={handleMouseDown}
+    ondragstart={handleDragStart}
+    ondragend={handleDragEnd}
+    ondragover={handleDragOver}
+    ondragleave={handleDragLeave}
+    ondrop={handleDrop}
   >
     <div class="flex items-center gap-1">
       <!-- Drag handle -->
       <div
-        use:dragHandle
         role="button"
-        aria-label="drag handle for {item.title}"
+        tabindex="0"
+        aria-label="Drag handle for {item.title}. Press Enter or Space to grab."
+        aria-grabbed={isKeyboardGrabbed}
         class="drag-handle flex items-center justify-center w-8 h-8 shrink-0 cursor-grab active:cursor-grabbing touch-manipulation text-brand-400 dark:text-brand-500 hover:text-brand-600 dark:hover:text-brand-400"
+        class:keyboard-grabbed={isKeyboardGrabbed}
         data-drag-handle
+        onkeydown={handleHandleKeyDown}
       >
         <svg width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M7.5 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0 7a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0 7a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm9-14a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0 7a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm0 7a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </div>
-      <label for={checkboxId} class="group grid size-8 shrink-0 grid-cols-1 cursor-pointer">
+      <label for={checkboxId} class="group grid size-8 shrink-0 grid-cols-1 cursor-pointer pointer-events-auto">
         <input
           id={checkboxId}
           type="checkbox"
-          class="col-start-1 row-start-1 m-auto size-4 appearance-none rounded border-2 border-brand-100 dark:border-brand-600 bg-white dark:bg-brand-600 checked:border-accent-2 checked:bg-accent-2 dark:checked:border-accent-4 dark:checked:bg-accent-4 shadow-[0_0_50px_0_#F2EFED] dark:shadow-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-2 dark:focus-visible:outline-accent-4 cursor-pointer"
+          class="col-start-1 row-start-1 m-auto size-4 appearance-none rounded border-2 border-brand-100 dark:border-brand-600 bg-white dark:bg-brand-600 checked:border-accent-2 checked:bg-accent-2 dark:checked:border-accent-4 dark:checked:bg-accent-4 shadow-[0_0_50px_0_#F2EFED] dark:shadow-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-2 dark:focus-visible:outline-accent-4 cursor-pointer pointer-events-auto"
           checked={item.completed}
           aria-label={item.title}
-          on:change={announceToggle}
-          on:keydown={handleCheckboxKeydown}
+          onchange={announceToggle}
+          onkeydown={handleCheckboxKeydown}
         />
         <svg viewBox="0 0 20 20" fill="none" class="pointer-events-none col-start-1 row-start-1 size-3 self-center justify-self-center stroke-white">
           <path d="M5 10L9 14L15 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-[:checked]:opacity-100" />
@@ -184,10 +471,10 @@
     </div>
     <button
       type="button"
-      class="delete-on-hover inline-flex h-9 w-9 items-center justify-center rounded-full border border-transparent text-xl text-brand-400 dark:text-brand-500 transition-all duration-200 hover:text-brand-800 dark:hover:text-brand-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+      class="delete-on-hover inline-flex h-9 w-9 items-center justify-center rounded-full border border-transparent text-xl text-brand-400 dark:text-brand-500 transition-all duration-200 hover:text-brand-800 dark:hover:text-brand-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 pointer-events-auto"
       aria-label={`Remove ${item.title}`}
-      on:click={announceDelete}
-      on:keydown={handleDeleteKeydown}
+      onclick={announceDelete}
+      onkeydown={handleDeleteKeydown}
     >
       <span aria-hidden="true">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -197,3 +484,11 @@
     </button>
   </div>
 </div>
+
+<style>
+  .keyboard-grabbed {
+    outline: 2px solid var(--color-accent-2, #4F46E5);
+    outline-offset: 2px;
+    background-color: rgba(79, 70, 229, 0.1);
+  }
+</style>
