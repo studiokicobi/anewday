@@ -36,9 +36,13 @@ Additional local testing tips live in `docs/local-testing.md`.
 - Full keyboard operation; visible focus; announcements via `aria-live`.
 - **Drag-and-drop keyboard controls**:
   - Tab to focus drag handle → Space/Enter to activate drag mode
-  - Arrow keys (↑/↓) to move item position
-  - Space/Enter to drop item → Escape to cancel
-  - Works within lists and across lists (multi-list mode)
+  - Arrow keys (↑/↓) to move item position within the current list
+  - Space/Enter to drop item → Escape to cancel and revert
+  - Currently supports within-list reordering only (cross-list keyboard moves planned)
+- **Touch gestures for mobile**:
+  - Long-press (500ms) on drag handle to activate drag mode
+  - Drag vertically to reorder within list or move to another list
+  - Haptic feedback confirms drag activation (when supported)
 - Respects `prefers-reduced-motion` by shortening animation durations.
 - Manual audit log lives in `docs/a11y-report.md`.
 

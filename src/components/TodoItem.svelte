@@ -21,7 +21,6 @@
     drop: { sourceIndex: number; sourceListId: string; targetIndex: number; targetListId: string; sourceItem: any };
     keyboardmove: { direction: 'up' | 'down'; currentIndex: number; listId: string };
     keyboardcancel: { currentIndex: number; currentListId: string; originalIndex: number; originalListId: string; item: any };
-    touchdragover: { clientY: number; item: any; sourceIndex: number; sourceListId: string };
     touchdragend: { clientY: number; item: any; sourceIndex: number; sourceListId: string };
   }>();
   const checkboxId = `todo-${item.id}`;
@@ -264,14 +263,6 @@
       event.preventDefault();
       touchDragCurrentY = event.touches[0].clientY;
 
-      // Dispatch touch drag position for cross-list detection
-      dispatch('touchdragover', {
-        clientY: event.touches[0].clientY,
-        item,
-        sourceIndex: index,
-        sourceListId: listId
-      });
-
       const deltaY = touchDragCurrentY - touchDragStartY;
 
       // Threshold to trigger move
@@ -414,8 +405,9 @@
   </div>
 
   <!-- Main item content (slides on swipe) -->
+  <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
   <div
-    role="group"
+    role="listitem"
     draggable="true"
     class="swipe-content group relative flex items-center justify-between gap-3 border-b border-brand-200 dark:border-brand-700 px-3 py-2 transition-colors bg-brand-50 dark:bg-brand-900 hover:bg-brand-100 dark:hover:bg-brand-800 focus-within:ring-2 focus-within:ring-brand-500"
     class:swiping={isSwiping}

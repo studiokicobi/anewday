@@ -17,7 +17,6 @@
     delete: string;
     reorder: { listId: string; items: TodoItemType[] };
     move: { sourceListId: string; targetListId: string; item: TodoItemType; targetIndex: number };
-    touchdragover: { clientY: number; item: any; sourceIndex: number; sourceListId: string };
     touchdragend: { clientY: number; item: any; sourceIndex: number; sourceListId: string };
     keyboardcancel: { currentIndex: number; currentListId: string; originalIndex: number; originalListId: string; item: any };
   }>();
@@ -80,16 +79,7 @@
     }
   }
 
-  // Forward touch drag events to App for cross-list detection
-  function onTouchDragOver(event: CustomEvent<{
-    clientY: number;
-    item: any;
-    sourceIndex: number;
-    sourceListId: string;
-  }>) {
-    dispatch('touchdragover', event.detail);
-  }
-
+  // Forward touch drag end event to App for cross-list detection
   function onTouchDragEnd(event: CustomEvent<{
     clientY: number;
     item: any;
@@ -195,6 +185,8 @@
     aria-labelledby={`list-${list.id}`}
   >
     <div
+      role="region"
+      aria-label={`${list.name} tasks drop zone`}
       id={`list-dropzone-${list.id}`}
       class="min-h-[4rem]"
       class:drag-over-list={isDragOverList}
@@ -222,7 +214,6 @@
               on:drop={handleDrop}
               on:keyboardmove={onKeyboardMove}
               on:keyboardcancel={onKeyboardCancel}
-              on:touchdragover={onTouchDragOver}
               on:touchdragend={onTouchDragEnd}
             />
           </div>
