@@ -6,135 +6,132 @@ A New Day is a client-side only application with no backend API. This document d
 
 ## IndexedDB Schema
 
-### Database: `anewday-db`
+### Database: `anewday`
 
 Version: 1
 
 ### Object Stores
 
-#### 1. `tasks` Store
+#### 1. `items` Store
 
 **Key Path:** `id`
 
 **Structure:**
 ```typescript
-interface Task {
+interface TodoItem {
   id: string;              // UUID v4
-  listId: string;          // 'default' | 'morning' | 'anytime' | 'evening'
-  text: string;            // Task description (max ~1000 chars)
+  listId: string;          // Reference to list ID
+  title: string;           // Task description
   completed: boolean;      // Checkbox state
-  order: number;           // Display order (0-based index)
-  createdAt: number;       // Unix timestamp (milliseconds)
+  position: number;        // Display order (0-based index)
 }
 ```
 
 **Indexes:** None
 
-**Operations:**
-- `getAllTasks()` → `Task[]` - Fetch all tasks, sorted by `order`
-- `addTask(task: Task)` → `void` - Add new task
-- `updateTask(id: string, updates: Partial<Task>)` → `void` - Update existing task
-- `deleteTask(id: string)` → `void` - Remove task
-- `reorderTasks(listId: string, tasks: Task[])` → `void` - Bulk update order
-
 **Example:**
 ```json
 {
   "id": "123e4567-e89b-12d3-a456-426614174000",
-  "listId": "morning",
-  "text": "Drink water",
+  "listId": "today",
+  "title": "Drink water",
   "completed": false,
-  "order": 0,
-  "createdAt": 1700000000000
+  "position": 0
 }
 ```
 
-#### 2. `settings` Store
+#### 2. `lists` Store
 
-**Key Path:** `key`
+**Key Path:** `id`
 
 **Structure:**
 ```typescript
-interface Setting {
-  key: string;             // Setting identifier
-  value: unknown;          // Setting value (any JSON-serializable type)
+interface List {
+  id: string;              // List identifier
+  name: string;            // Display name
 }
 ```
 
-**Current Settings:**
-
-| Key | Type | Default | Description |
-|-----|------|---------|-------------|
-| `mode` | `'single' \| 'multi'` | `'single'` | List organization mode |
-| `theme` | `'light' \| 'dark' \| 'auto'` | `'auto'` | Color theme preference |
-
-**Operations:**
-- `getSetting(key: string)` → `unknown` - Get setting value
-- `setSetting(key: string, value: unknown)` → `void` - Update setting
+**Default Lists:**
+- Single-list mode: `{ id: 'today', name: 'Today' }`
+- Multi-list mode: Custom user-defined lists
 
 **Example:**
 ```json
-[
-  { "key": "mode", "value": "multi" },
-  { "key": "theme", "value": "dark" }
-]
-```
-
-#### 3. `appState` Store
-
-**Key Path:** `key`
-
-**Structure:**
-```typescript
-interface AppState {
-  key: string;             // State identifier
-  value: unknown;          // State value
+{
+  "id": "today",
+  "name": "Today"
 }
 ```
 
-**Current State Keys:**
+#### 3. `meta` Store
 
-| Key | Type | Description |
-|-----|------|-------------|
-| `lastResetDate` | `string` | ISO date of last midnight reset (e.g., "2025-11-21") |
-| `activeListId` | `string` | Currently visible list in multi-list mode |
+**Key Path:** `id`
 
-**Operations:**
-- `getState(key: string)` → `unknown` - Get state value
-- `setState(key: string, value: unknown)` → `void` - Update state
+**Structure:**
+```typescript
+interface Meta {
+  id: 'singleton';         // Always 'singleton' (single record)
+  lastResetKey: string;    // Date key for midnight reset (YYYY-MM-DD)
+  settings: {
+    mode: 'single' | 'multi';
+  };
+  migrationVersion?: number;
+}
+```
+
+**Example:**
+```json
+{
+  "id": "singleton",
+  "lastResetKey": "2025-11-21",
+  "settings": {
+    "mode": "single"
+  },
+  "migrationVersion": 1
+}
+```
 
 ## Svelte State Management
 
-### Global State (`src/lib/state.svelte.ts`)
+### Global State (`src/stores/state.ts`)
 
-The application uses Svelte 5's runes system for reactive state:
+The application uses Svelte writable stores:
 
 ```typescript
-// Reactive state
-let tasks = $state<Task[]>([]);
-let settings = $state<Settings>({ mode: 'single', theme: 'auto' });
-let activeListId = $state<string>('default');
-let lastResetDate = $state<string>(getTodayDate());
+export const appState: Writable<PersistedState>;
 
-// Derived state
-let morningTasks = $derived(tasks.filter(t => t.listId === 'morning'));
-let anytimeTasks = $derived(tasks.filter(t => t.listId === 'anytime'));
-let eveningTasks = $derived(tasks.filter(t => t.listId === 'evening'));
-let defaultTasks = $derived(tasks.filter(t => t.listId === 'default'));
-
-// Effects
-$effect(() => {
-  // Sync tasks to IndexedDB when changed
-  db.saveTasks(tasks);
-});
+interface PersistedState {
+  meta: {
+    lastResetKey: string;
+    settings: { mode: 'single' | 'multi' };
+    migrationVersion?: number;
+  };
+  lists: Array<{ id: string; name: string }>;
+  items: Array<{
+    id: string;
+    listId: string;
+    title: string;
+    completed: boolean;
+    position: number;
+  }>;
+}
 ```
+
+**Exported Types:**
+- `List` - Type alias for list objects
+- `TodoItem` - Type alias for item objects
+
+**Store Subscriptions:**
+Components subscribe using Svelte's `$appState` auto-subscription syntax.
 
 ### State Initialization Flow
 
-1. **App Mount** (`main.ts`) → Initializes Svelte app
-2. **State Load** (`state.svelte.ts`) → Loads from IndexedDB
-3. **Reset Check** (`reset.ts`) → Checks if midnight reset needed
-4. **Render** → Components subscribe to state changes
+1. **App Mount** (`main.ts`) → Initializes Svelte app and calls `initState()`
+2. **State Init** (`state.ts`) → Opens IndexedDB, loads persisted state
+3. **Reset Check** (`reset.ts`) → Checks if midnight reset needed, resets completed flags if new day
+4. **Midnight Timer** (`reset.ts`) → Schedules callback for next midnight
+5. **Render** → Components subscribe to `appState` changes
 
 ## Midnight Reset Mechanism
 
@@ -201,7 +198,7 @@ Uses AES-GCM encryption:
 
 **Encryption Details:**
 - Algorithm: AES-GCM
-- Key derivation: PBKDF2 with 100,000 iterations
+- Key derivation: PBKDF2 with 150,000 iterations
 - IV: 12 bytes, randomly generated
 - Salt: 16 bytes, randomly generated
 

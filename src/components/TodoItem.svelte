@@ -21,7 +21,9 @@
     drop: { sourceIndex: number; sourceListId: string; targetIndex: number; targetListId: string; sourceItem: any };
     keyboardmove: { direction: 'up' | 'down'; currentIndex: number; listId: string };
     keyboardcancel: { currentIndex: number; currentListId: string; originalIndex: number; originalListId: string; item: any };
-    touchdragend: { clientY: number; item: any; sourceIndex: number; sourceListId: string };
+    touchdragstart: { item: any; sourceIndex: number; sourceListId: string };
+    touchdragover: { clientY: number; item: any; sourceIndex: number; sourceListId: string };
+    touchdragend: { clientY: number; item: any; sourceIndex: number; sourceListId: string; cancelled?: boolean };
   }>();
   const checkboxId = `todo-${item.id}`;
 
@@ -242,6 +244,11 @@
       longPressTimer = setTimeout(() => {
         isTouchDragging = true;
         navigator.vibrate?.(50); // Haptic feedback if supported
+        dispatch('touchdragstart', {
+          item,
+          sourceIndex: index,
+          sourceListId: listId
+        });
       }, 500); // 500ms long press
       return;
     }
@@ -262,6 +269,14 @@
     if (isTouchDragging) {
       event.preventDefault();
       touchDragCurrentY = event.touches[0].clientY;
+
+      // Dispatch touchdragover for precise insertion calculation
+      dispatch('touchdragover', {
+        clientY: touchDragCurrentY,
+        item,
+        sourceIndex: index,
+        sourceListId: listId
+      });
 
       const deltaY = touchDragCurrentY - touchDragStartY;
 
@@ -316,7 +331,8 @@
         clientY: finalY,
         item,
         sourceIndex: index,
-        sourceListId: listId
+        sourceListId: listId,
+        cancelled: false
       });
 
       isTouchDragging = false;
@@ -342,6 +358,24 @@
 
     // Reset swipe distance
     swipeDistance = 0;
+  }
+
+  function handleTouchCancel(_event: TouchEvent) {
+    // Handle touch cancellation (e.g., phone call, notification)
+    if (isTouchDragging) {
+      dispatch('touchdragend', {
+        clientY: 0,
+        item,
+        sourceIndex: index,
+        sourceListId: listId,
+        cancelled: true
+      });
+      isTouchDragging = false;
+    }
+    if (longPressTimer) {
+      clearTimeout(longPressTimer);
+      longPressTimer = null;
+    }
   }
 
   function handleCheckboxKeydown(event: KeyboardEvent) {
@@ -407,7 +441,8 @@
   <!-- Main item content (slides on swipe) -->
   <!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
   <div
-    role="listitem"
+    role="group"
+    aria-label="Task: {item.title}"
     draggable="true"
     class="swipe-content group relative flex items-center justify-between gap-3 border-b border-brand-200 dark:border-brand-700 px-3 py-2 transition-colors bg-brand-50 dark:bg-brand-900 hover:bg-brand-100 dark:hover:bg-brand-800 focus-within:ring-2 focus-within:ring-brand-500"
     class:swiping={isSwiping}
@@ -417,6 +452,7 @@
     ontouchstart={handleTouchStart}
     ontouchmove={handleTouchMove}
     ontouchend={handleTouchEnd}
+    ontouchcancel={handleTouchCancel}
     onmousedown={handleMouseDown}
     ondragstart={handleDragStart}
     ondragend={handleDragEnd}

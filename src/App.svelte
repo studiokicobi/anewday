@@ -22,20 +22,20 @@
     type TodoItem
   } from './stores/state';
 
-  let description = '';
-  let toast = '';
-  let selectedList = '';
-  let encryption = false;
-  let passphrase = '';
-  let importError = '';
-  let showResetConfirm = false;
-  let themeMode: 'light' | 'dark' | 'system' = 'system';
-  let showSettingsDrawer = false;
-  let settingsButton: HTMLButtonElement | null = null;
-  let resetButton: HTMLButtonElement | null = null;
-  let taskInput: HTMLInputElement | null = null;
-  let previousBodyOverflow: string | null = null;
-  let bodyScrollLockCount = 0;
+  let description = $state('');
+  let toast = $state('');
+  let selectedList = $state('');
+  let encryption = $state(false);
+  let passphrase = $state('');
+  let importError = $state('');
+  let showResetConfirm = $state(false);
+  let themeMode = $state<'light' | 'dark' | 'system'>('system');
+  let showSettingsDrawer = $state(false);
+  let settingsButton = $state<HTMLButtonElement | null>(null);
+  let resetButton = $state<HTMLButtonElement | null>(null);
+  let taskInput = $state<HTMLInputElement | null>(null);
+  let previousBodyOverflow = $state<string | null>(null);
+  let bodyScrollLockCount = $state(0);
 
   const clearToast = () => {
     toast = '';
@@ -109,10 +109,16 @@
     };
   });
 
-  $: lists = $appState.lists;
-  $: items = $appState.items;
-  $: settings = $appState.meta.settings;
-  $: selectedList = lists.some(list => list.id === selectedList) ? selectedList : lists[0]?.id ?? '';
+  let lists = $derived($appState.lists);
+  let items = $derived($appState.items);
+  let settings = $derived($appState.meta.settings);
+
+  // Ensure selectedList is valid whenever lists change
+  $effect(() => {
+    if (!lists.some(list => list.id === selectedList)) {
+      selectedList = lists[0]?.id ?? '';
+    }
+  });
 
   async function handleSubmit() {
     try {
@@ -140,15 +146,23 @@
   }
 
   // Track items per list for drag-and-drop
-  let listItems: Record<string, TodoItem[]> = {};
-
-  $: {
+  let listItems = $derived.by(() => {
     const newListItems: Record<string, TodoItem[]> = {};
     for (const list of lists) {
       newListItems[list.id] = items.filter(item => item.listId === list.id);
     }
-    listItems = newListItems;
-  }
+    return newListItems;
+  });
+
+  // Touch drag state for precise insertion
+  let touchDragState = $state<{
+    active: boolean;
+    sourceItem: TodoItem | null;
+    sourceListId: string | null;
+    sourceIndex: number | null;
+    targetListId: string | null;
+    targetIndex: number | null;
+  } | null>(null);
 
   async function handleReorder(event: CustomEvent<{ listId: string; items: TodoItem[] }>) {
     const { listId, items: reorderedItems } = event.detail;
@@ -179,36 +193,133 @@
     }
   }
 
-  function handleTouchDragEnd(event: CustomEvent<{
+  function calculateInsertionPoint(
+    clientY: number,
+    sourceListId: string
+  ): { listId: string; index: number } | null {
+    // Find which list the finger is over
+    for (const list of lists) {
+      const dropZone = document.getElementById(`list-dropzone-${list.id}`);
+      if (!dropZone) continue;
+
+      const listRect = dropZone.getBoundingClientRect();
+      if (clientY < listRect.top || clientY > listRect.bottom) continue;
+
+      // Finger is over this list - find insertion point
+      const items = listItems[list.id] || [];
+
+      // Empty list - insert at position 0
+      if (items.length === 0) {
+        return { listId: list.id, index: 0 };
+      }
+
+      // Find first item whose midline is below clientY
+      let targetIndex = items.length; // Default: append to end
+
+      const itemElements = dropZone.querySelectorAll('[role="listitem"]');
+      for (let i = 0; i < itemElements.length; i++) {
+        const rect = itemElements[i].getBoundingClientRect();
+        const midline = rect.top + rect.height / 2;
+
+        if (clientY < midline) {
+          targetIndex = i;
+          break;
+        }
+      }
+
+      // Same-list correction: adjust index if dragging within same list
+      if (list.id === sourceListId && touchDragState && touchDragState.sourceIndex !== null) {
+        const sourceIdx = touchDragState.sourceIndex;
+        // If dragging down, subtract 1 (item will be removed from above)
+        if (targetIndex > sourceIdx) {
+          targetIndex = targetIndex - 1;
+        }
+      }
+
+      return { listId: list.id, index: targetIndex };
+    }
+
+    return null; // Finger not over any list
+  }
+
+  function handleTouchDragStart(event: CustomEvent<{
+    item: TodoItem;
+    sourceIndex: number;
+    sourceListId: string;
+  }>) {
+    const { item, sourceIndex, sourceListId } = event.detail;
+    touchDragState = {
+      active: true,
+      sourceItem: item,
+      sourceListId,
+      sourceIndex,
+      targetListId: null,
+      targetIndex: null
+    };
+  }
+
+  function handleTouchDragOver(event: CustomEvent<{
     clientY: number;
     item: TodoItem;
     sourceIndex: number;
     sourceListId: string;
   }>) {
-    const { clientY, item, sourceIndex, sourceListId } = event.detail;
+    if (!touchDragState?.active) return;
 
-    // Check which list the touch ended over
-    for (const list of lists) {
-      const dropZone = document.getElementById(`list-dropzone-${list.id}`);
-      if (!dropZone) continue;
+    // Guard against mouse drag conflicts
+    if (document.querySelector('.dragging')) return;
 
-      const rect = dropZone.getBoundingClientRect();
-      if (clientY >= rect.top && clientY <= rect.bottom) {
-        // Touch ended over this list
-        if (sourceListId !== list.id) {
-          // Cross-list move
-          void handleMove(new CustomEvent('move', {
-            detail: {
-              sourceListId,
-              targetListId: list.id,
-              item,
-              targetIndex: listItems[list.id].length
-            }
-          }));
-        }
-        return;
-      }
+    const { clientY, sourceListId } = event.detail;
+    const target = calculateInsertionPoint(clientY, sourceListId);
+
+    if (target) {
+      touchDragState.targetListId = target.listId;
+      touchDragState.targetIndex = target.index;
     }
+  }
+
+  function handleTouchDragEnd(event: CustomEvent<{
+    clientY: number;
+    item: TodoItem;
+    sourceIndex: number;
+    sourceListId: string;
+    cancelled?: boolean;
+  }>) {
+    if (!touchDragState?.active) return;
+
+    const { cancelled } = event.detail;
+
+    if (cancelled) {
+      // User cancelled via touchcancel - reset state
+      touchDragState = null;
+      return;
+    }
+
+    const { targetListId, targetIndex, sourceListId } = touchDragState;
+
+    if (targetListId && targetIndex !== null && sourceListId && sourceListId !== targetListId) {
+      // Cross-list move - use calculated position
+      void handleMove(new CustomEvent('move', {
+        detail: {
+          sourceListId,
+          targetListId,
+          item: touchDragState.sourceItem!,
+          targetIndex // Use calculated index, not items.length
+        }
+      }));
+    } else if (targetListId && targetIndex !== null && sourceListId && targetListId === sourceListId) {
+      // Same-list reorder - use calculated position
+      const newItems = [...listItems[sourceListId]];
+      const [movedItem] = newItems.splice(touchDragState.sourceIndex!, 1);
+      newItems.splice(targetIndex, 0, movedItem);
+
+      void handleReorder(new CustomEvent('reorder', {
+        detail: { listId: sourceListId, items: newItems }
+      }));
+    }
+
+    // Reset state
+    touchDragState = null;
   }
 
   async function handleKeyboardCancel(event: CustomEvent<{
@@ -218,7 +329,7 @@
     originalListId: string;
     item: TodoItem;
   }>) {
-    const { currentIndex, currentListId, originalIndex, originalListId, item } = event.detail;
+    const { currentListId, originalIndex, originalListId, item } = event.detail;
 
     // Cross-list cancel - move item back to original list
     try {
@@ -414,6 +525,8 @@
       on:delete={onDelete}
       on:reorder={handleReorder}
       on:move={handleMove}
+      on:touchdragstart={handleTouchDragStart}
+      on:touchdragover={handleTouchDragOver}
       on:touchdragend={handleTouchDragEnd}
       on:keyboardcancel={handleKeyboardCancel}
     />
@@ -424,7 +537,7 @@
       <button
         type="button"
         class="inline-flex items-center gap-2 px-4 py-2 rounded-full font-medium text-brand-600 dark:text-brand-300 bg-white dark:bg-brand-700 hover:bg-brand-200/50 dark:hover:bg-brand-600 shadow-[0_0_50px_0_#F2EFED] dark:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
-        on:click={openSettingsDrawer}
+        onclick={openSettingsDrawer}
         bind:this={settingsButton}
         aria-haspopup="dialog"
         aria-expanded={showSettingsDrawer}

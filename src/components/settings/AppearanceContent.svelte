@@ -1,6 +1,6 @@
 <script lang="ts">
   export let themeMode: 'light' | 'dark' | 'system' = 'system';
-  export let setThemeMode: (mode: 'light' | 'dark' | 'system') => void;
+  export let setThemeMode: (_mode: 'light' | 'dark' | 'system') => void;
 </script>
 
 <div class="space-y-6">

@@ -3,7 +3,7 @@
   export let passphrase: string;
   export let importError: string;
   export let onExport: () => Promise<void>;
-  export let onImport: (files: FileList | null) => Promise<void>;
+  export let onImport: (_files: FileList | null) => Promise<void>;
   export let onOpenResetConfirm: () => void;
   export let resetButton: HTMLButtonElement | null = null;
 

@@ -17,7 +17,9 @@
     delete: string;
     reorder: { listId: string; items: TodoItemType[] };
     move: { sourceListId: string; targetListId: string; item: TodoItemType; targetIndex: number };
-    touchdragend: { clientY: number; item: any; sourceIndex: number; sourceListId: string };
+    touchdragstart: { item: any; sourceIndex: number; sourceListId: string };
+    touchdragover: { clientY: number; item: any; sourceIndex: number; sourceListId: string };
+    touchdragend: { clientY: number; item: any; sourceIndex: number; sourceListId: string; cancelled?: boolean };
     keyboardcancel: { currentIndex: number; currentListId: string; originalIndex: number; originalListId: string; item: any };
   }>();
 
@@ -64,7 +66,7 @@
     originalListId: string;
     item: any;
   }>) {
-    const { currentIndex, currentListId, originalIndex, originalListId, item: draggedItem } = event.detail;
+    const { currentIndex, currentListId, originalIndex, originalListId } = event.detail;
 
     if (currentListId === originalListId && currentListId === list.id) {
       // Same list - just reorder back
@@ -77,6 +79,25 @@
       // Cross-list cancel - forward to App
       dispatch('keyboardcancel', event.detail);
     }
+  }
+
+  // Forward touch drag start event to App
+  function onTouchDragStart(event: CustomEvent<{
+    item: any;
+    sourceIndex: number;
+    sourceListId: string;
+  }>) {
+    dispatch('touchdragstart', event.detail);
+  }
+
+  // Forward touch drag over event to App for insertion point calculation
+  function onTouchDragOver(event: CustomEvent<{
+    clientY: number;
+    item: any;
+    sourceIndex: number;
+    sourceListId: string;
+  }>) {
+    dispatch('touchdragover', event.detail);
   }
 
   // Forward touch drag end event to App for cross-list detection
@@ -185,7 +206,7 @@
     aria-labelledby={`list-${list.id}`}
   >
     <div
-      role="region"
+      role={localItems.length > 0 ? 'list' : undefined}
       aria-label={`${list.name} tasks drop zone`}
       id={`list-dropzone-${list.id}`}
       class="min-h-[4rem]"
@@ -204,18 +225,22 @@
       {:else}
         {#each localItems as item, index (item.id)}
           <div animate:flip={{ duration: flipDurationMs }}>
-            <TodoItem
-              {item}
-              {index}
-              listId={list.id}
-              isLast={index === localItems.length - 1}
-              on:toggle={onToggle}
-              on:delete={onDelete}
-              on:drop={handleDrop}
-              on:keyboardmove={onKeyboardMove}
-              on:keyboardcancel={onKeyboardCancel}
-              on:touchdragend={onTouchDragEnd}
-            />
+            <div role="listitem">
+              <TodoItem
+                {item}
+                {index}
+                listId={list.id}
+                isLast={index === localItems.length - 1}
+                on:toggle={onToggle}
+                on:delete={onDelete}
+                on:drop={handleDrop}
+                on:keyboardmove={onKeyboardMove}
+                on:keyboardcancel={onKeyboardCancel}
+                on:touchdragstart={onTouchDragStart}
+                on:touchdragover={onTouchDragOver}
+                on:touchdragend={onTouchDragEnd}
+              />
+            </div>
           </div>
         {/each}
       {/if}

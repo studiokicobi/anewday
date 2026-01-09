@@ -28,9 +28,9 @@ Built for people in recovery or rebuilding life routines. The app intentionally 
 
 1. **Midnight Reset**: Tasks automatically uncheck at local midnight
 2. **Multiple List Modes**: Single list or Morning/Anytime/Evening organization
-3. **Drag & Drop**: Reorder tasks with SortableJS
+3. **Drag & Drop**: Reorder tasks with native HTML5 drag-and-drop and touch events
 4. **Offline Support**: Full PWA with service worker
-5. **Data Privacy**: All data stored locally, optional encrypted export
+5. **Data Privacy**: All data stored locally, optional encrypted export (AES-GCM, PBKDF2 150k iterations)
 6. **Accessibility**: WCAG AA compliant, keyboard navigation, screen reader support
 7. **Dark Mode**: Automatic theme detection with manual toggle
 
@@ -46,9 +46,11 @@ src/
 │   ├── TodoItem.svelte
 │   └── TodoList.svelte
 ├── lib/
+│   ├── crypto.ts     # AES-GCM encryption utilities
 │   ├── db.ts         # IndexedDB operations
-│   ├── reset.ts      # Midnight reset logic
-│   └── state.svelte.ts  # Svelte 5 state management
+│   └── reset.ts      # Midnight reset logic
+├── stores/
+│   └── state.ts      # Svelte store management
 ├── App.svelte        # Main app component
 └── main.ts           # Entry point
 ```
@@ -171,7 +173,8 @@ npm run build && npm run preview
 - Midnight reset uses `setTimeout` with precise calculation to next midnight
 - Tasks persist even when app is closed (IndexedDB survives browser restart)
 - Service worker handles offline mode and auto-updates
-- Drag-and-drop uses SortableJS for cross-browser compatibility
+- Drag-and-drop uses native HTML5 API with custom touch event handlers
+- Keyboard reordering: Space to grab, Arrow keys to move, Space to drop, Escape to cancel
 - Custom validation for form inputs (no HTML5 validation messages)
 
 ## Recent Changes (Changelog)

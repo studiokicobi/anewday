@@ -27,16 +27,19 @@ export default defineConfig({
         handler(html, context) {
           const isDev = context.server?.config.command === 'serve';
 
-          // Add nonce to scripts and stylesheets
+          // Add nonce to scripts and stylesheets so production CSP can allow them
           html = html.replace(/<script type="module"/g, '<script type="module" nonce="anewday"');
           html = html.replace(/<link rel="stylesheet"/g, '<link rel="stylesheet" nonce="anewday"');
 
-          // Environment-specific CSP - more permissive for dev
-          const cspContent = isDev
-            ? "default-src 'self'; script-src 'self' 'strict-dynamic' 'nonce-anewday' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'"
-            : "default-src 'self'; script-src 'self' 'strict-dynamic' 'nonce-anewday'; style-src 'self' 'nonce-anewday'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'";
+          if (isDev) {
+            // Skip injecting CSP in dev so Vite's injected scripts (e.g. /@vite/client)
+            // aren't blocked. This avoids the blank page where only the skip link shows.
+            return html;
+          }
 
-          // Inject CSP if not already present
+          const cspContent =
+            "default-src 'self'; script-src 'self' 'strict-dynamic' 'nonce-anewday'; style-src 'self' 'nonce-anewday'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; base-uri 'self'; form-action 'self'";
+
           if (!html.includes('Content-Security-Policy')) {
             html = html.replace(
               /<meta name="theme-color"/,

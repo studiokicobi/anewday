@@ -120,7 +120,7 @@ grep -r "http" dist/assets/*.js
 - **IV:** 12 bytes (96 bits), randomly generated per export
 - **Salt:** 16 bytes (128 bits), randomly generated per export
 - **Key Derivation:** PBKDF2
-  - Iterations: 100,000
+  - Iterations: 150,000
   - Hash: SHA-256
 
 **Implementation:**

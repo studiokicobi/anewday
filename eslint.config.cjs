@@ -25,6 +25,13 @@ module.exports = [
       ...tsPlugin.configs.recommended.rules,
       'no-console': ['warn', { allow: ['info', 'warn', 'error'] }],
       'no-undef': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+        },
+      ],
     },
   },
   {
@@ -53,6 +60,14 @@ module.exports = [
     rules: {
       ...sveltePlugin.configs.recommended.rules,
       'no-console': ['warn', { allow: ['info', 'warn', 'error'] }],
+      'no-unused-vars': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+        },
+      ],
     },
   },
 ];

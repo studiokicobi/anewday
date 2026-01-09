@@ -43,27 +43,23 @@ The 222 KB JavaScript bundle includes:
 1. **Svelte 5 Runtime** (~25 KB)
    - Core reactive system
    - Component rendering
-   - State management ($state, $derived, $effect)
+   - Store subscriptions and reactivity
 
 2. **@tailwindplus/elements** (~84 KB)
    - UI component library
    - *Note: Tested removal (38% size reduction) but FCP regressed from 1.4s → 2.1s*
    - Decision: Keep for performance stability
 
-3. **SortableJS** (~30 KB)
-   - Drag-and-drop functionality
-   - Required for task reordering
-   - No lighter alternative available
-
-4. **Application Code** (~50 KB)
+3. **Application Code** (~80 KB)
    - Components (TodoList, TodoItem, Settings, etc.)
-   - State management (state.svelte.ts)
-   - IndexedDB operations (db.ts)
-   - Midnight reset logic (reset.ts)
+   - State management (stores/state.ts)
+   - IndexedDB operations (lib/db.ts)
+   - Midnight reset logic (lib/reset.ts)
+   - Native HTML5 drag-and-drop implementation
 
-5. **Remaining** (~33 KB)
+4. **Remaining** (~33 KB)
    - Service worker registration
-   - Encryption utilities (AES-GCM)
+   - Encryption utilities (AES-GCM, PBKDF2)
    - Vite/build overhead
 
 ### Bundle Optimization Attempts

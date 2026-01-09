@@ -9,13 +9,11 @@
   export let onClose: () => void;
   export let returnFocusElement: HTMLElement | null = null;
   export let themeMode: 'light' | 'dark' | 'system' = 'system';
-  // eslint-disable-next-line no-unused-vars
-  export let setThemeMode: (mode: 'light' | 'dark' | 'system') => void;
+  export let setThemeMode: (_mode: 'light' | 'dark' | 'system') => void;
   export let toggleMode: () => Promise<void>;
   export let settingsMode: 'single' | 'multi';
   export let onExport: () => Promise<void>;
-  // eslint-disable-next-line no-unused-vars
-  export let onImport: (files: FileList | null) => Promise<void>;
+  export let onImport: (_files: FileList | null) => Promise<void>;
   export let onOpenResetConfirm: () => void;
   export let encryption = false;
   export let passphrase = '';

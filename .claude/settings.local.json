@@ -12,7 +12,10 @@
       "Bash(npm run:*)",
       "Bash(playwright test:*)",
       "Bash(cat:*)",
-      "Bash(npx lighthouse:*)"
+      "Bash(npx lighthouse:*)",
+      "WebFetch(domain:github.com)",
+      "WebSearch",
+      "WebFetch(domain:raw.githubusercontent.com)"
     ],
     "deny": [],
     "ask": []
