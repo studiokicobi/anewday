@@ -19,11 +19,11 @@
         class:dark:text-brand-900={themeMode === 'light'}
         class:hover:bg-brand-700={themeMode === 'light'}
         class:dark:hover:bg-brand-400={themeMode === 'light'}
-        class:bg-brand-200={themeMode !== 'light'}
+        class:bg-brand-100={themeMode !== 'light'}
         class:dark:bg-brand-700={themeMode !== 'light'}
         class:text-brand-900={themeMode !== 'light'}
         class:dark:text-brand-100={themeMode !== 'light'}
-        class:hover:bg-brand-300={themeMode !== 'light'}
+        class:hover:bg-brand-200={themeMode !== 'light'}
         class:dark:hover:bg-brand-600={themeMode !== 'light'}
         on:click={() => setThemeMode('light')}
       >
@@ -41,11 +41,11 @@
         class:dark:text-brand-900={themeMode === 'dark'}
         class:hover:bg-brand-700={themeMode === 'dark'}
         class:dark:hover:bg-brand-400={themeMode === 'dark'}
-        class:bg-brand-200={themeMode !== 'dark'}
+        class:bg-brand-100={themeMode !== 'dark'}
         class:dark:bg-brand-700={themeMode !== 'dark'}
         class:text-brand-900={themeMode !== 'dark'}
         class:dark:text-brand-100={themeMode !== 'dark'}
-        class:hover:bg-brand-300={themeMode !== 'dark'}
+        class:hover:bg-brand-200={themeMode !== 'dark'}
         class:dark:hover:bg-brand-600={themeMode !== 'dark'}
         on:click={() => setThemeMode('dark')}
       >
@@ -63,11 +63,11 @@
         class:dark:text-brand-900={themeMode === 'system'}
         class:hover:bg-brand-700={themeMode === 'system'}
         class:dark:hover:bg-brand-400={themeMode === 'system'}
-        class:bg-brand-200={themeMode !== 'system'}
+        class:bg-brand-100={themeMode !== 'system'}
         class:dark:bg-brand-700={themeMode !== 'system'}
         class:text-brand-900={themeMode !== 'system'}
         class:dark:text-brand-100={themeMode !== 'system'}
-        class:hover:bg-brand-300={themeMode !== 'system'}
+        class:hover:bg-brand-200={themeMode !== 'system'}
         class:dark:hover:bg-brand-600={themeMode !== 'system'}
         on:click={() => setThemeMode('system')}
       >

@@ -29,7 +29,7 @@
           class="relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 focus-visible:ring-offset-brand-100 dark:focus-visible:ring-offset-brand-800"
           class:bg-brand-900={encryption}
           class:dark:bg-brand-300={encryption}
-          class:bg-brand-300={!encryption}
+          class:bg-brand-200={!encryption}
           class:dark:bg-brand-600={!encryption}
           role="switch"
           aria-checked={encryption}
@@ -67,7 +67,7 @@
 
       <!-- Export Button -->
       <div>
-        <button type="button" class="rounded-full bg-brand-300 dark:bg-brand-700 px-5 py-2 text-sm font-base text-brand-900 dark:text-brand-100 hover:bg-brand-300/80 dark:hover:bg-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500" on:click={onExport}>
+        <button type="button" class="rounded-full bg-brand-100 dark:bg-brand-700 px-5 py-2 text-sm font-base text-brand-900 dark:text-brand-100 hover:bg-brand-200/50 dark:hover:bg-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500" on:click={onExport}>
           Export data
         </button>
         <p class="text-xs text-brand-600 dark:text-brand-400 mt-2">Download tasks and settings as a JSON file</p>
@@ -75,7 +75,7 @@
 
       <!-- Import Button -->
       <div>
-        <label class="rounded-full px-5 py-2 bg-brand-300 dark:bg-brand-700 text-sm font-base text-brand-900 dark:text-brand-100 hover:bg-brand-300/80 dark:hover:bg-brand-600 cursor-pointer inline-flex focus-within:outline-none focus-within:ring-2 focus-within:ring-brand-500">
+        <label class="rounded-full px-5 py-2 bg-brand-100 dark:bg-brand-700 text-sm font-base text-brand-900 dark:text-brand-100 hover:bg-brand-200/50 dark:hover:bg-brand-600 cursor-pointer inline-flex focus-within:outline-none focus-within:ring-2 focus-within:ring-brand-500">
           Import data
           <input type="file" class="sr-only" accept="application/json" on:change={handleImportChange} />
         </label>

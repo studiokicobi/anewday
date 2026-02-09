@@ -198,7 +198,7 @@
 <div class="pt-4">
   <div class="mb-3">
     <!-- List title -->
-    <h2 class="text-lg text-brand-800 dark:text-brand-300" id={`list-${list.id}`}>{list.name}</h2>
+    <h2 class="text-lg font-medium text-brand-900 dark:text-brand-300" id={`list-${list.id}`}>{list.name}</h2>
   </div>
   <!-- Always have a drop zone, even when empty -->
   <section

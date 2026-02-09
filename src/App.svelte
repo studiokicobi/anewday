@@ -500,8 +500,8 @@
 
   <div class="flex-grow flex flex-col gap-6">
     <header class="flex flex-col gap-1">
-      <h1 class="text-3xl font-medium tracking-[-0.04em] text-brand-950 dark:text-brand-300">A New Day</h1>
-      <p class="text-xs uppercase text-brand-700 dark:text-brand-400 tracking-wide">{getCurrentDate()}</p>
+      <h1 class="text-3xl font-semibold tracking-[-0.04em] text-brand-900 dark:text-brand-300">A New Day</h1>
+      <p class="text-xs uppercase text-brand-400 dark:text-brand-400 tracking-wide">{getCurrentDate()}</p>
       <p class="hidden text-base text-brand-900 dark:text-brand-100">Daily checklist designed for rebuilding routines. Tasks reset automatically at local midnight.</p>
     </header>
 
@@ -532,14 +532,14 @@
     <div class="flex items-center gap-2 text-sm ">
       <button
         type="button"
-        class="inline-flex items-center gap-2 px-4 py-2 rounded-full font-medium text-brand-600 dark:text-brand-300 bg-white dark:bg-brand-700 hover:bg-brand-200/50 dark:hover:bg-brand-600 shadow-[0_0_50px_0_#F2EFED] dark:shadow-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+        class="inline-flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-brand-500 dark:text-brand-300 bg-brand-100 dark:bg-brand-700 hover:bg-brand-200/50 dark:hover:bg-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
         onclick={openSettingsDrawer}
         bind:this={settingsButton}
         aria-haspopup="dialog"
         aria-expanded={showSettingsDrawer}
         data-settings-trigger
       >
-        <svg class="text-brand-300 dark:text-brand-500" width="16" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 2a1 1 0 1 0 0 2 1 1 0 0 0 0-2zM2.17 2a3.001 3.001 0 0 1 5.66 0H15a1 1 0 1 1 0 2H7.83a3.001 3.001 0 0 1-5.66 0H1a1 1 0 0 1 0-2h1.17zM11 8a1 1 0 1 0 0 2 1 1 0 0 0 0-2zM8.17 8a3.001 3.001 0 0 1 5.66 0H15a1 1 0 1 1 0 2h-1.17a3.001 3.001 0 0 1-5.66 0H1a1 1 0 1 1 0-2h7.17zM5 14a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2.83 0a3.001 3.001 0 0 1 5.66 0H15a1 1 0 1 1 0 2H7.83a3.001 3.001 0 0 1-5.66 0H1a1 1 0 1 1 0-2h1.17z" fill="currentColor"/></svg>
+        <svg class="text-brand-500/50 dark:text-brand-500" width="16" height="18" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 2a1 1 0 1 0 0 2 1 1 0 0 0 0-2zM2.17 2a3.001 3.001 0 0 1 5.66 0H15a1 1 0 1 1 0 2H7.83a3.001 3.001 0 0 1-5.66 0H1a1 1 0 0 1 0-2h1.17zM11 8a1 1 0 1 0 0 2 1 1 0 0 0 0-2zM8.17 8a3.001 3.001 0 0 1 5.66 0H15a1 1 0 1 1 0 2h-1.17a3.001 3.001 0 0 1-5.66 0H1a1 1 0 1 1 0-2h7.17zM5 14a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2.83 0a3.001 3.001 0 0 1 5.66 0H15a1 1 0 1 1 0 2H7.83a3.001 3.001 0 0 1-5.66 0H1a1 1 0 1 1 0-2h1.17z" fill="currentColor"/></svg>
         Settings
       </button>
     </div>

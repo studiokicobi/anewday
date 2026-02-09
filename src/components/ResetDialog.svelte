@@ -51,7 +51,7 @@
       <button
         type="button"
         id="reset-dialog-cancel"
-        class="rounded-full bg-brand-300 dark:bg-brand-700 px-4 py-2 text-sm text-brand-900 dark:text-brand-100 hover:bg-brand-300/90 dark:hover:bg-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+        class="rounded-full bg-brand-100 dark:bg-brand-700 px-4 py-2 text-sm text-brand-900 dark:text-brand-100 hover:bg-brand-200/50 dark:hover:bg-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
         on:click={onCancel}
       >
         Cancel

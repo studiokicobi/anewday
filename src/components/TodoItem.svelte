@@ -481,7 +481,7 @@
         <input
           id={checkboxId}
           type="checkbox"
-          class="col-start-1 row-start-1 m-auto size-4 appearance-none rounded border-2 border-brand-100 dark:border-brand-600 bg-white dark:bg-brand-600 checked:border-accent-2 checked:bg-accent-2 dark:checked:border-accent-4 dark:checked:bg-accent-4 shadow-[0_0_50px_0_#F2EFED] dark:shadow-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-2 dark:focus-visible:outline-accent-4 cursor-pointer pointer-events-auto"
+          class="col-start-1 row-start-1 m-auto size-4 appearance-none rounded border-0 bg-brand-100 dark:bg-brand-600 checked:bg-brand-900 dark:checked:bg-brand-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-900 dark:focus-visible:outline-brand-300 cursor-pointer pointer-events-auto"
           checked={item.completed}
           aria-label={item.title}
           onchange={announceToggle}
@@ -493,14 +493,14 @@
       </label>
       <label
         for={checkboxId}
-        class={`text-base ${item.completed ? 'text-brand-400 dark:text-brand-500 line-through' : 'text-brand-900 dark:text-brand-100'}`}
+        class={`text-base ${item.completed ? 'text-brand-700 dark:text-brand-500 line-through' : 'text-brand-600 dark:text-brand-100'}`}
       >
         {item.title}
       </label>
     </div>
     <button
       type="button"
-      class="delete-on-hover inline-flex h-9 w-9 items-center justify-center rounded-full border border-transparent text-xl text-brand-400 dark:text-brand-500 transition-all duration-200 hover:text-brand-800 dark:hover:text-brand-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 pointer-events-auto"
+      class="delete-on-hover inline-flex h-9 w-9 items-center justify-center rounded-full border border-transparent text-xl text-brand-200 dark:text-brand-500 transition-all duration-200 hover:text-brand-400 dark:hover:text-brand-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 pointer-events-auto"
       aria-label={`Remove ${item.title}`}
       onclick={announceDelete}
       onkeydown={handleDeleteKeydown}
@@ -516,8 +516,8 @@
 
 <style>
   .keyboard-grabbed {
-    outline: 2px solid var(--color-accent-2, #4F46E5);
+    outline: 2px solid #2C303A;
     outline-offset: 2px;
-    background-color: rgba(79, 70, 229, 0.1);
+    background-color: rgba(44, 48, 58, 0.1);
   }
 </style>

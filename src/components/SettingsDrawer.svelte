@@ -109,7 +109,7 @@
             <button
               type="button"
               id="settings-first-item"
-              class="settings-menu-item flex w-full items-center justify-between px-6 py-4 border-b border-brand-200 dark:border-brand-700 hover:bg-brand-200 dark:hover:bg-brand-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-inset"
+              class="settings-menu-item flex w-full items-center justify-between px-6 py-4 border-b border-brand-200 dark:border-brand-700 hover:bg-brand-200/50 dark:hover:bg-brand-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-inset"
               on:click={() => navigateToView('appearance')}
             >
               <span class="flex items-center gap-3 text-base text-brand-900 dark:text-brand-100">
@@ -123,7 +123,7 @@
 
             <button
               type="button"
-              class="settings-menu-item flex w-full items-center justify-between px-6 py-4 border-b border-brand-200 dark:border-brand-700 hover:bg-brand-200 dark:hover:bg-brand-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-inset"
+              class="settings-menu-item flex w-full items-center justify-between px-6 py-4 border-b border-brand-200 dark:border-brand-700 hover:bg-brand-200/50 dark:hover:bg-brand-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-inset"
               on:click={() => navigateToView('list-organization')}
             >
               <span class="flex items-center gap-3 text-base text-brand-900 dark:text-brand-100">
@@ -137,7 +137,7 @@
 
             <button
               type="button"
-              class="settings-menu-item flex w-full items-center justify-between px-6 py-4 border-b border-brand-200 dark:border-brand-700 hover:bg-brand-200 dark:hover:bg-brand-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-inset"
+              class="settings-menu-item flex w-full items-center justify-between px-6 py-4 border-b border-brand-200 dark:border-brand-700 hover:bg-brand-200/50 dark:hover:bg-brand-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-inset"
               on:click={() => navigateToView('your-data')}
             >
               <span class="flex items-center gap-3 text-base text-brand-900 dark:text-brand-100">
@@ -174,7 +174,7 @@
               </div>
             </div>
 
-            <div class="settings-text-container space-y-4 bg-brand-200 dark:bg-brand-700 p-4 rounded-lg">
+            <div class="settings-text-container space-y-4 bg-brand-200/30 dark:bg-brand-700 p-4 rounded-lg">
                 <h4 class="font-medium">A reminder</h4>
                 <p>
                   This application is a self-guided aid and does not replace professional or emergency 
