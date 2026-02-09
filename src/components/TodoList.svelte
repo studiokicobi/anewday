@@ -17,10 +17,10 @@
     delete: string;
     reorder: { listId: string; items: TodoItemType[] };
     move: { sourceListId: string; targetListId: string; item: TodoItemType; targetIndex: number };
-    touchdragstart: { item: any; sourceIndex: number; sourceListId: string };
-    touchdragover: { clientY: number; item: any; sourceIndex: number; sourceListId: string };
-    touchdragend: { clientY: number; item: any; sourceIndex: number; sourceListId: string; cancelled?: boolean };
-    keyboardcancel: { currentIndex: number; currentListId: string; originalIndex: number; originalListId: string; item: any };
+    touchdragstart: { item: TodoItemType; sourceIndex: number; sourceListId: string };
+    touchdragover: { clientY: number; item: TodoItemType; sourceIndex: number; sourceListId: string };
+    touchdragend: { clientY: number; item: TodoItemType; sourceIndex: number; sourceListId: string; cancelled?: boolean };
+    keyboardcancel: { currentIndex: number; currentListId: string; originalIndex: number; originalListId: string; item: TodoItemType };
   }>();
 
   const flipDurationMs = 200;
@@ -64,7 +64,7 @@
     currentListId: string;
     originalIndex: number;
     originalListId: string;
-    item: any;
+    item: TodoItemType;
   }>) {
     const { currentIndex, currentListId, originalIndex, originalListId } = event.detail;
 
@@ -83,7 +83,7 @@
 
   // Forward touch drag start event to App
   function onTouchDragStart(event: CustomEvent<{
-    item: any;
+    item: TodoItemType;
     sourceIndex: number;
     sourceListId: string;
   }>) {
@@ -93,7 +93,7 @@
   // Forward touch drag over event to App for insertion point calculation
   function onTouchDragOver(event: CustomEvent<{
     clientY: number;
-    item: any;
+    item: TodoItemType;
     sourceIndex: number;
     sourceListId: string;
   }>) {
@@ -103,7 +103,7 @@
   // Forward touch drag end event to App for cross-list detection
   function onTouchDragEnd(event: CustomEvent<{
     clientY: number;
-    item: any;
+    item: TodoItemType;
     sourceIndex: number;
     sourceListId: string;
   }>) {
@@ -115,7 +115,7 @@
     sourceListId: string;
     targetIndex: number;
     targetListId: string;
-    sourceItem: any;
+    sourceItem: TodoItemType;
   }>) {
     const { sourceIndex, sourceListId, targetIndex, targetListId, sourceItem } = event.detail;
 

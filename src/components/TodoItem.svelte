@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
+  import type { TodoItem as TodoItemType } from '../stores/state';
 
   const {
     item,
@@ -7,7 +8,7 @@
     listId,
     isLast = false
   }: {
-    item: { id: string; title: string; completed: boolean };
+    item: TodoItemType;
     index: number;
     listId: string;
     isLast?: boolean;
@@ -16,14 +17,14 @@
   const dispatch = createEventDispatcher<{
     toggle: string;
     delete: string;
-    dragstart: { index: number; listId: string; item: any };
+    dragstart: { index: number; listId: string; item: TodoItemType };
     dragover: { index: number; listId: string };
-    drop: { sourceIndex: number; sourceListId: string; targetIndex: number; targetListId: string; sourceItem: any };
+    drop: { sourceIndex: number; sourceListId: string; targetIndex: number; targetListId: string; sourceItem: TodoItemType };
     keyboardmove: { direction: 'up' | 'down'; currentIndex: number; listId: string };
-    keyboardcancel: { currentIndex: number; currentListId: string; originalIndex: number; originalListId: string; item: any };
-    touchdragstart: { item: any; sourceIndex: number; sourceListId: string };
-    touchdragover: { clientY: number; item: any; sourceIndex: number; sourceListId: string };
-    touchdragend: { clientY: number; item: any; sourceIndex: number; sourceListId: string; cancelled?: boolean };
+    keyboardcancel: { currentIndex: number; currentListId: string; originalIndex: number; originalListId: string; item: TodoItemType };
+    touchdragstart: { item: TodoItemType; sourceIndex: number; sourceListId: string };
+    touchdragover: { clientY: number; item: TodoItemType; sourceIndex: number; sourceListId: string };
+    touchdragend: { clientY: number; item: TodoItemType; sourceIndex: number; sourceListId: string; cancelled?: boolean };
   }>();
   const checkboxId = `todo-${item.id}`;
 

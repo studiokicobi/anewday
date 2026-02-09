@@ -91,20 +91,32 @@
     });
 
     if (automationHelpersEnabled && typeof window !== 'undefined') {
-      (window as any).__anewdayRequestReset = handleVisibility;
-      (window as any).__anewdaySetMode = async (mode: 'single' | 'multi') => {
+      window.__anewdayRequestReset = handleVisibility;
+      window.__anewdaySetMode = async (mode: 'single' | 'multi') => {
         await initialization;
         await updateSettings({ mode });
       };
     }
 
+    // Initialize theme from localStorage
+    const savedTheme = localStorage.getItem('themeMode') as 'light' | 'dark' | 'system' | null;
+    if (savedTheme) {
+      themeMode = savedTheme;
+      setThemeMode(savedTheme);
+    }
+
+    const interval = setInterval(() => {
+      currentTime = new Date();
+    }, 60000);
+
     return () => {
       mounted = false;
       document.removeEventListener('visibilitychange', handleVisibility);
       unsubscribeReset();
+      clearInterval(interval);
       if (automationHelpersEnabled && typeof window !== 'undefined') {
-        (window as any).__anewdayRequestReset = undefined;
-        (window as any).__anewdaySetMode = undefined;
+        window.__anewdayRequestReset = undefined;
+        window.__anewdaySetMode = undefined;
       }
     };
   });
@@ -381,22 +393,6 @@
 
   // Reactive current time for date/greeting updates
   let currentTime = new Date();
-
-  // Update time every minute to refresh date/greeting
-  onMount(() => {
-    // Initialize theme from localStorage
-    const savedTheme = localStorage.getItem('themeMode') as 'light' | 'dark' | 'system' | null;
-    if (savedTheme) {
-      themeMode = savedTheme;
-      setThemeMode(savedTheme);
-    }
-
-    const interval = setInterval(() => {
-      currentTime = new Date();
-    }, 60000); // Update every minute
-
-    return () => clearInterval(interval);
-  });
 
 
   function getCurrentDate(time: Date = currentTime): string {

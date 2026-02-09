@@ -61,15 +61,28 @@ export async function encryptExport(payload: string, passphrase: string): Promis
 
 /** Decrypts a previously serialized export using the same passphrase. */
 export async function decryptExport(serialized: string, passphrase: string): Promise<string> {
-  const parsed = JSON.parse(serialized) as { s: string; i: string; d: string };
-  const salt = fromBase64(parsed.s);
-  const iv = fromBase64(parsed.i);
-  const key = await deriveKey(passphrase, salt.slice());
-  const encrypted = fromBase64(parsed.d);
-  const buffer = await crypto.subtle.decrypt(
-    { name: 'AES-GCM', iv: iv.slice() },
-    key,
-    encrypted.slice()
-  );
-  return decoder.decode(buffer);
+  try {
+    const parsed = JSON.parse(serialized);
+    if (
+      !parsed ||
+      typeof parsed !== 'object' ||
+      typeof parsed.s !== 'string' ||
+      typeof parsed.i !== 'string' ||
+      typeof parsed.d !== 'string'
+    ) {
+      throw new Error('missing fields');
+    }
+    const salt = fromBase64(parsed.s);
+    const iv = fromBase64(parsed.i);
+    const key = await deriveKey(passphrase, salt.slice());
+    const encrypted = fromBase64(parsed.d);
+    const buffer = await crypto.subtle.decrypt(
+      { name: 'AES-GCM', iv: iv.slice() },
+      key,
+      encrypted.slice()
+    );
+    return decoder.decode(buffer);
+  } catch {
+    throw new Error('Invalid file or passphrase.');
+  }
 }

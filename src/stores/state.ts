@@ -6,6 +6,9 @@ import {
   saveState,
   migrateFromLocalStorage,
   closeDbConnectionsForTests,
+  STORE_ITEMS,
+  STORE_LISTS,
+  STORE_META,
   type PersistedState,
   type MigrationResult,
 } from '../lib/db';
@@ -309,7 +312,7 @@ export async function updateSettings(settings: PersistedState['meta']['settings'
 
 function sortLists(lists: PersistedState['lists']): PersistedState['lists'] {
   const order = ['morning', 'anytime', 'evening', 'today'];
-  return lists.sort((a, b) => {
+  return [...lists].sort((a, b) => {
     const aIndex = order.indexOf(a.id);
     const bIndex = order.indexOf(b.id);
     // If both are in the order array, sort by their position
@@ -338,10 +341,10 @@ export async function resetAllData() {
   // Clear the database
   const dbInstance = await database();
   if (dbInstance) {
-    const tx = dbInstance.transaction(['items', 'lists', 'meta'], 'readwrite');
-    tx.objectStore('items').clear();
-    tx.objectStore('lists').clear();
-    tx.objectStore('meta').clear();
+    const tx = dbInstance.transaction([STORE_ITEMS, STORE_LISTS, STORE_META], 'readwrite');
+    tx.objectStore(STORE_ITEMS).clear();
+    tx.objectStore(STORE_LISTS).clear();
+    tx.objectStore(STORE_META).clear();
 
     await new Promise<void>((resolve, reject) => {
       tx.oncomplete = () => resolve();

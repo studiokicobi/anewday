@@ -32,8 +32,8 @@ if ('serviceWorker' in navigator && import.meta.env.PROD) {
           }
         });
       })
-      .catch(() => {
-        // Swallow registration errors
+      .catch((error) => {
+        console.warn('Service worker registration failed:', error);
       });
 
     // Reload page when new service worker takes control (skip in test environment)

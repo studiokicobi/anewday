@@ -18,9 +18,9 @@ export interface MigrationResult {
 
 const DB_NAME = 'anewday';
 const DB_VERSION = 1;
-const STORE_ITEMS = 'items';
-const STORE_LISTS = 'lists';
-const STORE_META = 'meta';
+export const STORE_ITEMS = 'items';
+export const STORE_LISTS = 'lists';
+export const STORE_META = 'meta';
 const META_KEY = 'singleton';
 const MIGRATION_VERSION = 1;
 const LEGACY_KEYS = ['todos', 'anewday-items', 'anewday-state'];
