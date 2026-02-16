@@ -10,6 +10,17 @@ test.describe('A New Day — Accessibility', () => {
     await runA11yAudit(page, 'after add');
   });
 
+  test('home flow is accessible (dark mode)', async ({ browser }) => {
+    const context = await browser.newContext({ colorScheme: 'dark' });
+    const page = await context.newPage();
+    await page.goto('/');
+    await runA11yAudit(page, 'home – dark');
+    await page.fill('input[name="task"]', 'Brush teeth');
+    await page.click('button:has-text("Add")');
+    await runA11yAudit(page, 'after add – dark');
+    await context.close();
+  });
+
   test('keyboard-only can add/toggle/delete', async ({ page }) => {
     await page.goto('/');
     await page.keyboard.press('Tab');

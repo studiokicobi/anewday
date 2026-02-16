@@ -283,7 +283,7 @@
           <input
             id="task"
             name="task"
-            class="w-full rounded-lg bg-brand-100 dark:bg-brand-700 hover:bg-brand-100 dark:hover:bg-brand-700 px-3 py-2 text-base text-brand-900 dark:text-brand-100 placeholder:text-brand-500 dark:placeholder:text-brand-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+            class="w-full rounded-lg bg-brand-100 dark:bg-brand-700 hover:bg-brand-100 dark:hover:bg-brand-700 px-3 py-2 text-base text-brand-900 dark:text-brand-100 placeholder:text-brand-500 dark:placeholder:text-brand-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
             class:pr-24={lists.length > 1}
             class:ring-2={showError}
             class:ring-red-500={showError}
@@ -363,7 +363,7 @@
                       >
                         <span class="flex-1">{list.name}</span>
                         {#if list.id === selectedList}
-                          <svg class="h-3 w-3 text-brand-600 dark:text-brand-400" fill="currentColor" viewBox="0 0 20 20">
+                          <svg class="h-3 w-3 text-brand-600 dark:text-brand-200" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                           </svg>
                         {/if}
@@ -378,7 +378,7 @@
 
         <!-- Add button -->
         <button
-          class="inline-flex items-center justify-center rounded-lg bg-brand-900 dark:bg-brand-300 px-4 py-2 text-base font-semibold text-white dark:text-brand-900 transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-900 dark:focus-visible:ring-brand-300 focus-visible:ring-offset-2"
+          class="inline-flex items-center justify-center rounded-lg bg-brand-900 dark:bg-brand-300 px-4 py-2 text-base font-semibold text-white dark:text-brand-950 transition hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-900 dark:focus-visible:ring-brand-300 focus-visible:ring-offset-2"
           type="submit"
           bind:this={addButton}
           on:keydown={handleAddButtonKeydown}

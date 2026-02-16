@@ -218,7 +218,7 @@
       {#if localItems.length === 0}
         <!-- Empty state -->
         <div
-          class="min-h-[4rem] bg-white dark:bg-brand-800 rounded-lg border-2 border-dashed border-brand-200 dark:border-brand-700 flex items-center justify-center text-sm text-brand-500 dark:text-brand-400"
+          class="min-h-[4rem] bg-white dark:bg-brand-800 rounded-lg border-2 border-dashed border-brand-200 dark:border-brand-700 flex items-center justify-center text-sm text-brand-500 dark:text-brand-200"
         >
           No items yet. Add one above.
         </div>

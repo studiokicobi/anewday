@@ -51,7 +51,7 @@ select:focus-visible {
 }
 
 .settings-text-container {
-  @apply text-sm text-brand-700 dark:text-brand-300 space-y-3;
+  @apply text-sm text-brand-700 dark:text-brand-200 space-y-3;
 }
 
 /* Pointer events utilities for CSP compliance */

@@ -468,7 +468,7 @@
         tabindex="0"
         aria-label="Drag handle for {item.title}. Press Enter or Space to grab."
         aria-grabbed={isKeyboardGrabbed}
-        class="drag-handle flex items-center justify-center w-8 h-8 shrink-0 cursor-grab active:cursor-grabbing touch-manipulation text-brand-400 dark:text-brand-500 hover:text-brand-600 dark:hover:text-brand-400"
+        class="drag-handle flex items-center justify-center w-8 h-8 shrink-0 cursor-grab active:cursor-grabbing touch-manipulation text-brand-400 dark:text-brand-300 hover:text-brand-600 dark:hover:text-brand-200"
         class:keyboard-grabbed={isKeyboardGrabbed}
         data-drag-handle
         onkeydown={handleHandleKeyDown}
@@ -493,14 +493,14 @@
       </label>
       <label
         for={checkboxId}
-        class={`text-base ${item.completed ? 'text-brand-700 dark:text-brand-500 line-through' : 'text-brand-600 dark:text-brand-100'}`}
+        class={`text-base ${item.completed ? 'text-brand-700 dark:text-brand-300 line-through' : 'text-brand-600 dark:text-brand-100'}`}
       >
         {item.title}
       </label>
     </div>
     <button
       type="button"
-      class="delete-on-hover inline-flex h-9 w-9 items-center justify-center rounded-full border border-transparent text-xl text-brand-200 dark:text-brand-500 transition-all duration-200 hover:text-brand-400 dark:hover:text-brand-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 pointer-events-auto"
+      class="delete-on-hover inline-flex h-9 w-9 items-center justify-center rounded-full border border-transparent text-xl text-brand-200 dark:text-brand-300 transition-all duration-200 hover:text-brand-400 dark:hover:text-brand-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 pointer-events-auto"
       aria-label={`Remove ${item.title}`}
       onclick={announceDelete}
       onkeydown={handleDeleteKeydown}
