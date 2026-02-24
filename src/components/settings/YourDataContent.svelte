@@ -67,7 +67,7 @@
 
       <!-- Export Button -->
       <div>
-        <button type="button" class="rounded-full bg-brand-100 dark:bg-brand-700 px-5 py-2 text-sm font-base text-brand-900 dark:text-brand-100 hover:bg-brand-200/50 dark:hover:bg-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500" on:click={onExport}>
+        <button type="button" class="rounded-full bg-brand-200 dark:bg-brand-700 px-5 py-2 text-sm font-base text-brand-900 dark:text-brand-100 hover:bg-brand-300 dark:hover:bg-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500" on:click={onExport}>
           Export data
         </button>
         <p class="text-xs text-brand-600 dark:text-brand-300 mt-2">Download tasks and settings as a JSON file</p>
@@ -75,7 +75,7 @@
 
       <!-- Import Button -->
       <div>
-        <label class="rounded-full px-5 py-2 bg-brand-100 dark:bg-brand-700 text-sm font-base text-brand-900 dark:text-brand-100 hover:bg-brand-200/50 dark:hover:bg-brand-600 cursor-pointer inline-flex focus-within:outline-none focus-within:ring-2 focus-within:ring-brand-500">
+        <label class="rounded-full px-5 py-2 bg-brand-200 dark:bg-brand-700 text-sm font-base text-brand-900 dark:text-brand-100 hover:bg-brand-300 dark:hover:bg-brand-600 cursor-pointer inline-flex focus-within:outline-none focus-within:ring-2 focus-within:ring-brand-500">
           Import data
           <input type="file" class="sr-only" accept="application/json" on:change={handleImportChange} />
         </label>

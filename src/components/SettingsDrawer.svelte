@@ -1,6 +1,9 @@
 <script lang="ts">
   import { focusTrap } from '../lib/focusTrap';
   import SettingSection from './settings/SettingSection.svelte';
+  import AboutContent from './settings/AboutContent.svelte';
+  import HowDoIContent from './settings/HowDoIContent.svelte';
+  import FeedbackContent from './settings/FeedbackContent.svelte';
   import AppearanceContent from './settings/AppearanceContent.svelte';
   import ListOrganizationContent from './settings/ListOrganizationContent.svelte';
   import YourDataContent from './settings/YourDataContent.svelte';
@@ -20,9 +23,8 @@
   export let importError = '';
   export let resetButton: HTMLButtonElement | null = null;
 
-  let activeView: 'menu' | 'appearance' | 'list-organization' | 'your-data' = 'menu';
+  let activeView: 'menu' | 'about' | 'how-do-i' | 'feedback' | 'appearance' | 'list-organization' | 'your-data' = 'menu';
   let dialogElement: HTMLElement;
-  let expandedFaq: number | null = null;
 
   // Reset to menu view when drawer closes
   $: if (!showSettings) {
@@ -62,14 +64,13 @@
   }
 
   const sectionTitles = {
+    about: 'About',
+    'how-do-i': 'How do I?',
+    feedback: 'Feedback',
     appearance: 'Appearance',
     'list-organization': 'List organization',
     'your-data': 'Your data & privacy',
   };
-
-  function toggleFaq(index: number) {
-    expandedFaq = expandedFaq === index ? null : index;
-  }
 </script>
 
 {#if showSettings}
@@ -106,9 +107,55 @@
         </div>
 
         <nav class="overflow-y-auto flex-1 pb-12" aria-label="Settings sections">
+            <!-- About -->
             <button
               type="button"
               id="settings-first-item"
+              class="settings-menu-item flex w-full items-center justify-between px-6 py-4 border-b border-brand-200 dark:border-brand-700 hover:bg-brand-200/50 dark:hover:bg-brand-700/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-inset"
+              on:click={() => navigateToView('about')}
+            >
+              <span class="flex items-center gap-3 text-base text-brand-900 dark:text-brand-100">
+                <svg class="h-6 w-6 shrink-0 text-brand-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 11.9999V15.9999M12 8.6249V8.62378M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                About
+              </span>
+              <svg class="h-5 w-5 text-brand-600 dark:text-brand-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </button>
+
+            <!-- How do I? -->
+            <button
+              type="button"
+              class="settings-menu-item flex w-full items-center justify-between px-6 py-4 border-b border-brand-200 dark:border-brand-700 hover:bg-brand-200/50 dark:hover:bg-brand-700/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-inset"
+              on:click={() => navigateToView('how-do-i')}
+            >
+              <span class="flex items-center gap-3 text-base text-brand-900 dark:text-brand-100">
+                <svg class="h-6 w-6 shrink-0 text-brand-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.28149 9.71853C9.28149 8.21713 10.4986 7 12 7C13.5014 7 14.7186 8.21713 14.7186 9.71853C14.7186 10.6748 14.2248 11.5157 13.4784 12.0003C12.7544 12.4704 12 13.1368 12 14M12 17H12.001M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                How do I?
+              </span>
+              <svg class="h-5 w-5 text-brand-600 dark:text-brand-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </button>
+
+            <!-- Feedback -->
+            <button
+              type="button"
+              class="settings-menu-item flex w-full items-center justify-between px-6 py-4 border-b border-brand-200 dark:border-brand-700 hover:bg-brand-200/50 dark:hover:bg-brand-700/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-inset"
+              on:click={() => navigateToView('feedback')}
+            >
+              <span class="flex items-center gap-3 text-base text-brand-900 dark:text-brand-100">
+                <svg class="h-6 w-6 shrink-0 text-brand-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21.8032 7.76159L16.295 11.2668C14.7385 12.2573 13.9602 12.7526 13.1238 12.9455C12.3843 13.1161 11.6157 13.1161 10.8762 12.9455C10.0398 12.7526 9.26153 12.2573 7.70499 11.2668L2.19678 7.76159M21.8032 7.76159C22 8.72189 22 10.006 22 12C22 14.8003 22 16.2004 21.455 17.27C20.9757 18.2108 20.2108 18.9757 19.27 19.455C18.2004 20 16.8003 20 14 20H10C7.19974 20 5.79961 20 4.73005 19.455C3.78924 18.9757 3.02433 18.2108 2.54497 17.27C2 16.2004 2 14.8003 2 12C2 10.006 2 8.72189 2.19678 7.76159M21.8032 7.76159C21.7237 7.37332 21.6119 7.03798 21.455 6.73005C20.9757 5.78924 20.2108 5.02433 19.27 4.54497C18.2004 4 16.8003 4 14 4H10C7.19974 4 5.79961 4 4.73005 4.54497C3.78924 5.02433 3.02433 5.78924 2.54497 6.73005C2.38807 7.03798 2.27634 7.37332 2.19678 7.76159" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Feedback
+              </span>
+              <svg class="h-5 w-5 text-brand-600 dark:text-brand-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </button>
+
+            <!-- Appearance -->
+            <button
+              type="button"
               class="settings-menu-item flex w-full items-center justify-between px-6 py-4 border-b border-brand-200 dark:border-brand-700 hover:bg-brand-200/50 dark:hover:bg-brand-700/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-inset"
               on:click={() => navigateToView('appearance')}
             >
@@ -121,6 +168,7 @@
               </svg>
             </button>
 
+            <!-- List organization -->
             <button
               type="button"
               class="settings-menu-item flex w-full items-center justify-between px-6 py-4 border-b border-brand-200 dark:border-brand-700 hover:bg-brand-200/50 dark:hover:bg-brand-700/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-inset"
@@ -135,6 +183,7 @@
               </svg>
             </button>
 
+            <!-- Your data & privacy -->
             <button
               type="button"
               class="settings-menu-item flex w-full items-center justify-between px-6 py-4 border-b border-brand-200 dark:border-brand-700 hover:bg-brand-200/50 dark:hover:bg-brand-700/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-inset"
@@ -148,187 +197,6 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
               </svg>
             </button>
-
-          <!-- About Section -->
-          <div class="px-6 pt-3 pb-16 space-y-8">
-          <!-- About Section -->
-          <div class="space-y-6">
-            <div>
-              <h2 class="settings-heading">What is A New Day?</h2>
-              <div class="settings-text-container">
-                <p>
-                  <strong>A New Day</strong> is a simple daily to-do app with one small, unique 
-                  feature: at midnight, your list resets automatically and unchecks all your items. 
-                  And the next day, the only thing to do is start your list again.
-                </p>
-                <p>
-                  It is designed to support those recovering from mental health challenges, when 
-                  tasks many may take for granted (rising from bed, brushing one’s teeth, eating 
-                  regular meals) have become seemingly insurmountable obstacles. 
-                </p>
-                <p>
-                  The app does not track progress or ask to share results on social media. It does not 
-                  judge you. Its one function is to focus on this moment, today. <strong>A New Day</strong> is a quiet 
-                  tool for people rebuilding routines. 
-                </p>
-              </div>
-            </div>
-
-            <div class="settings-text-container space-y-4 bg-brand-200/30 dark:bg-brand-700/20 p-4 rounded-lg">
-                <h4 class="font-medium">A reminder</h4>
-                <p>
-                  This application is a self-guided aid and does not replace professional or emergency 
-                  support. If you are in a crisis, please seek local support services. You are important.
-                </p>
-            </div>
-          </div>
-
-          <!-- Usage Section -->
-          <div class="space-y-6">
-            <div>
-              <h3 class="settings-heading mb-4">Using A New Day</h3>
-
-              <div class="space-y-4 mb-6">
-                <p class="settings-text">
-                  A New Day is a progressive web app, a website that works like a native app.
-                  You can use A New Day in the browser. If you choose to install it, the app
-                  will launch from your home screen, run in fullscreen, and update automatically.
-                  </p>
-                </div>
-
-
-              <div class="space-y-4">
-              <h3 class="settings-heading">FAQ</h3>
-                <div>
-                  <button
-                    type="button"
-                    class="flex w-full items-center justify-between text-left settings-subheading py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded"
-                    on:click={() => toggleFaq(0)}
-                    aria-expanded={expandedFaq === 0}
-                    aria-controls="faq-0"
-                  >
-                    How does the daily reset work?
-                    <svg
-                      class="h-5 w-5 text-brand-600 dark:text-brand-200 transition-transform duration-200"
-                      class:rotate-180={expandedFaq === 0}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                  </button>
-                  {#if expandedFaq === 0}
-                    <p id="faq-0" class="settings-text mt-2">Tasks automatically reset at local midnight. All completed checkboxes are unchecked, giving you a fresh list to start each morning. If the app is open when midnight arrives, tasks will uncheck automatically and you'll see a notification. No manual refresh is needed.</p>
-                  {/if}
-                </div>
-
-                <div>
-                  <button
-                    type="button"
-                    class="flex w-full items-center justify-between text-left settings-subheading py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded"
-                    on:click={() => toggleFaq(1)}
-                    aria-expanded={expandedFaq === 1}
-                    aria-controls="faq-1"
-                  >
-                    What happens to my data when I close the browser?
-                    <svg
-                      class="h-5 w-5 text-brand-600 dark:text-brand-200 transition-transform duration-200"
-                      class:rotate-180={expandedFaq === 1}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                  </button>
-                  {#if expandedFaq === 1}
-                    <p id="faq-1" class="settings-text mt-2">Your data is stored locally in your browser using IndexedDB. It persists between browser sessions and remains private on your device.</p>
-                  {/if}
-                </div>
-
-                <div>
-                  <button
-                    type="button"
-                    class="flex w-full items-center justify-between text-left settings-subheading py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded"
-                    on:click={() => toggleFaq(2)}
-                    aria-expanded={expandedFaq === 2}
-                    aria-controls="faq-2"
-                  >
-                    Can I use this on multiple devices?
-                    <svg
-                      class="h-5 w-5 text-brand-600 dark:text-brand-200 transition-transform duration-200"
-                      class:rotate-180={expandedFaq === 2}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                  </button>
-                  {#if expandedFaq === 2}
-                    <p id="faq-2" class="settings-text mt-2">Data doesn't sync between devices since everything stays local. However, you can export your data from one device and import it on another or deliver it to your healthcare provider.</p>
-                  {/if}
-                </div>
-
-                <div>
-                  <button
-                    type="button"
-                    class="flex w-full items-center justify-between text-left settings-subheading py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded"
-                    on:click={() => toggleFaq(3)}
-                    aria-expanded={expandedFaq === 3}
-                    aria-controls="faq-3"
-                  >
-                    What's the difference between single and multi-list mode?
-                    <svg
-                      class="h-5 w-5 text-brand-600 dark:text-brand-200 transition-transform duration-200"
-                      class:rotate-180={expandedFaq === 3}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                  </button>
-                  {#if expandedFaq === 3}
-                    <p id="faq-3" class="settings-text mt-2">Single mode uses one "Today" list for all tasks. Multi-list mode splits tasks into "Morning," "Anytime," and "Evening" categories. </p>
-                  {/if}
-                </div>
-
-                <div>
-                  <button
-                    type="button"
-                    class="flex w-full items-center justify-between text-left settings-subheading py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded"
-                    on:click={() => toggleFaq(4)}
-                    aria-expanded={expandedFaq === 4}
-                    aria-controls="faq-4"
-                  >
-                    Is my data secure?
-                    <svg
-                      class="h-5 w-5 text-brand-600 dark:text-brand-200 transition-transform duration-200"
-                      class:rotate-180={expandedFaq === 4}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                  </button>
-                  {#if expandedFaq === 4}
-                    <p id="faq-4" class="settings-text mt-2">Yes. Your data never leaves your device, and there's no tracking, no analytics, and no external servers. When exporting, you can optionally encrypt the file.</p>
-                  {/if}
-                </div>
-              </div>
-              
-              <div class="settings-text pt-6 mt-6 border-t text-sm border-brand-200 dark:border-brand-700">
-                <p>
-                  Made with ♥️ by <strong>Studio Kicobi</strong>.
-                </p>
-              </div>
-
-            </div>
-          </div>
-          </div>
         </nav>
 
         {:else}
@@ -338,7 +206,13 @@
           onBack={() => navigateToView('menu')}
           onClose={onClose}
         >
-          {#if activeView === 'appearance'}
+          {#if activeView === 'about'}
+            <AboutContent />
+          {:else if activeView === 'how-do-i'}
+            <HowDoIContent />
+          {:else if activeView === 'feedback'}
+            <FeedbackContent />
+          {:else if activeView === 'appearance'}
             <AppearanceContent {themeMode} {setThemeMode} />
           {:else if activeView === 'list-organization'}
             <ListOrganizationContent {settingsMode} {toggleMode} />
