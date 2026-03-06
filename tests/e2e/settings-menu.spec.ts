@@ -33,7 +33,16 @@ test('Settings drawer displays About content', async ({ page }) => {
   const dialog = page.getByRole('dialog', { name: 'Settings' });
   await expect(dialog).toBeVisible();
 
-  // Verify About content appears below settings menu
-  await expect(dialog.getByRole('heading', { name: 'What is A New Day?' })).toBeVisible();
-  await expect(dialog.getByRole('heading', { name: 'Using A New Day' })).toBeVisible();
+  // Navigate to About sub-view
+  await dialog.getByRole('button', { name: 'About' }).click();
+
+  const aboutDialog = page.getByRole('dialog', { name: 'About' });
+  await expect(aboutDialog.getByRole('heading', { name: 'What is A New Day?' })).toBeVisible();
+
+  // Navigate back, then to How do I? sub-view
+  await aboutDialog.getByRole('button', { name: 'Settings' }).click();
+  await dialog.getByRole('button', { name: 'How do I?' }).click();
+
+  const howDoIDialog = page.getByRole('dialog', { name: 'How do I?' });
+  await expect(howDoIDialog.getByRole('heading', { name: 'Using A New Day' })).toBeVisible();
 });
