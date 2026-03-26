@@ -22,7 +22,7 @@ function clearDatabase() {
 
 beforeEach(async () => {
   await clearDatabase();
-  localStorage.clear();
+  window.localStorage.clear();
 });
 
 afterEach(async () => {
@@ -50,7 +50,7 @@ describe('lib/db', () => {
   });
 
   it('migrates legacy localStorage payloads into IndexedDB schema', async () => {
-    localStorage.setItem(
+    window.localStorage.setItem(
       'todos',
       JSON.stringify([
         { id: 7, description: 'Stretch', done: true },

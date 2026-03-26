@@ -25,7 +25,7 @@ function clearDatabase() {
 beforeEach(async () => {
   __resetStoreForTests();
   await clearDatabase();
-  localStorage.clear();
+  window.localStorage.clear();
 });
 
 describe('stores/state', () => {
