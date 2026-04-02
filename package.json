@@ -63,8 +63,22 @@
   "overrides": {
     "tmp": "^0.2.5",
     "qs": "^6.14.1",
-    "lodash": "^4.17.23",
-    "lodash-es": "^4.17.23",
-    "serialize-javascript": "^7.0.3"
+    "lodash": "^4.18.0",
+    "lodash-es": "^4.18.0",
+    "serialize-javascript": "^7.0.5",
+    "path-to-regexp": "^0.1.13",
+    "yaml": "^1.10.3",
+    "minimatch@3": {
+      "brace-expansion": "^1.1.13"
+    },
+    "minimatch@5": {
+      "brace-expansion": "^2.0.3"
+    },
+    "minimatch@9": {
+      "brace-expansion": "^2.0.3"
+    },
+    "minimatch@10": {
+      "brace-expansion": "^5.0.5"
+    }
   }
 }
