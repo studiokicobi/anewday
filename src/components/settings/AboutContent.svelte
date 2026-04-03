@@ -32,7 +32,7 @@
     </div>
     <div class="text-xs settings-text-container mt-4 border-t border-brand-300 dark:border-brand-600 pt-4">
       <p>
-        ♥︎ Made by <a href="https://studiokicobi.com" class="underline">Studio Kicobi</a>.
+        ♥︎ Made by <a href="https://colinlewis.se" class="underline">Colin Lewis</a>.
       </p>
     </div>
   </div>
