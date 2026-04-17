@@ -15,7 +15,12 @@
       "Bash(npx lighthouse:*)",
       "WebFetch(domain:github.com)",
       "WebSearch",
-      "WebFetch(domain:raw.githubusercontent.com)"
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(npm audit *)",
+      "Bash(npm outdated *)",
+      "Bash(npm ls *)",
+      "Bash(npm update *)",
+      "Bash(npx vite *)"
     ],
     "deny": [],
     "ask": []
