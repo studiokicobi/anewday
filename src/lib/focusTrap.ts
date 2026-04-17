@@ -81,7 +81,7 @@ export function focusTrap(node: HTMLElement, options: FocusTrapOptions = {}) {
 
     const current = document.activeElement as HTMLElement | null;
     const currentIndex = current ? focusable.indexOf(current) : -1;
-    let nextIndex = currentIndex;
+    let nextIndex: number;
 
     if (event.shiftKey) {
       nextIndex = currentIndex <= 0 ? focusable.length - 1 : currentIndex - 1;
