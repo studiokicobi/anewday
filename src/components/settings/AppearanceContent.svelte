@@ -9,10 +9,10 @@
     <p class="settings-description">
       Choose your preferred theme appearance. System follows your device's appearance settings.
     </p>
-    <div class="isolate inline-flex rounded-full shadow-sm" role="group" aria-label="Theme selection">
+    <div class="isolate inline-flex rounded-full shadow-xs" role="group" aria-label="Theme selection">
       <button
         type="button"
-        class="relative inline-flex items-center rounded-l-full px-5 py-2 text-sm font-base border border-brand-300 dark:border-brand-600 focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+        class="relative inline-flex items-center rounded-l-full px-5 py-2 text-sm font-base border border-brand-300 dark:border-brand-600 focus-visible:z-10 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-brand-500"
         class:bg-brand-600={themeMode === 'light'}
         class:dark:bg-brand-300={themeMode === 'light'}
         class:text-brand-100={themeMode === 'light'}
@@ -34,7 +34,7 @@
       </button>
       <button
         type="button"
-        class="relative -ml-px inline-flex items-center px-5 py-2 text-sm font-base border border-brand-300 dark:border-brand-600 focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+        class="relative -ml-px inline-flex items-center px-5 py-2 text-sm font-base border border-brand-300 dark:border-brand-600 focus-visible:z-10 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-brand-500"
         class:bg-brand-600={themeMode === 'dark'}
         class:dark:bg-brand-300={themeMode === 'dark'}
         class:text-brand-100={themeMode === 'dark'}
@@ -56,7 +56,7 @@
       </button>
       <button
         type="button"
-        class="relative -ml-px inline-flex items-center rounded-r-full px-5 py-2 text-sm font-base border border-brand-300 dark:border-brand-600 focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+        class="relative -ml-px inline-flex items-center rounded-r-full px-5 py-2 text-sm font-base border border-brand-300 dark:border-brand-600 focus-visible:z-10 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-brand-500"
         class:bg-brand-600={themeMode === 'system'}
         class:dark:bg-brand-300={themeMode === 'system'}
         class:text-brand-100={themeMode === 'system'}

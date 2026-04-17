@@ -13,7 +13,7 @@
 </script>
 
 <div
-  class="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 px-4"
+  class="fixed inset-0 z-60 flex items-center justify-center bg-black/60 px-4"
   on:pointerdown={handleOverlayPointerDown}
 >
   <div
@@ -32,7 +32,7 @@
   >
     <div class="mb-4" id="reset-dialog-description">
       <div class="mb-3 flex items-center gap-3">
-        <div class="flex-shrink-0">
+        <div class="shrink-0">
           <svg class="h-6 w-6 text-brand-600 dark:text-brand-300" version="1.1" viewBox="0 0 1200 1200" xmlns="http://www.w3.org/2000/svg">
             <path fill="currentColor" d="m600 816c33.141 0 60 26.859 60 60s-26.859 60-60 60-60-26.859-60-60 26.859-60 60-60z"/>
             <path fill="currentColor" d="m600 372c26.531 0 48 21.469 48 48v288c0 26.531-21.469 48-48 48-26.484 0-48-21.469-48-48v-288c0-26.531 21.516-48 48-48z"/>
@@ -51,14 +51,14 @@
       <button
         type="button"
         id="reset-dialog-cancel"
-        class="rounded-full bg-brand-100 dark:bg-brand-700 px-4 py-2 text-sm text-brand-900 dark:text-brand-100 hover:bg-brand-200/50 dark:hover:bg-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+        class="rounded-full bg-brand-100 dark:bg-brand-700 px-4 py-2 text-sm text-brand-900 dark:text-brand-100 hover:bg-brand-200/50 dark:hover:bg-brand-600 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-brand-500"
         on:click={onCancel}
       >
         Cancel
       </button>
       <button
         type="button"
-        class="rounded-full border bg-red-200 dark:bg-red-900 border-red-600 dark:border-red-400 px-4 py-2 text-sm text-red-950 dark:text-red-100 hover:bg-red-50 dark:hover:bg-red-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500"
+        class="rounded-full border bg-red-200 dark:bg-red-900 border-red-600 dark:border-red-400 px-4 py-2 text-sm text-red-950 dark:text-red-100 hover:bg-red-50 dark:hover:bg-red-800 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-red-500"
         on:click={onConfirm}
       >
         Reset all data

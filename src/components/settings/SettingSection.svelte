@@ -11,7 +11,7 @@
     </h2>
     <button
       type="button"
-      class="settings-done-detail text-brand-600 dark:text-brand-300 hover:text-brand-800 dark:hover:text-brand-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded p-1"
+      class="settings-done-detail text-brand-600 dark:text-brand-300 hover:text-brand-800 dark:hover:text-brand-200 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-brand-500 rounded-sm p-1"
       on:click={onClose}
       aria-label="Close"
     >
@@ -23,7 +23,7 @@
   <div class="flex items-center gap-2 text-sm text-brand-600 dark:text-brand-300">
     <button
       type="button"
-      class="breadcrumb-back hover:text-brand-800 dark:hover:text-brand-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded px-1"
+      class="breadcrumb-back hover:text-brand-800 dark:hover:text-brand-300 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-brand-500 rounded-sm px-1"
       on:click={onBack}
     >
       Settings

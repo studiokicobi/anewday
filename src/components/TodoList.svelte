@@ -209,7 +209,7 @@
       role={localItems.length > 0 ? 'list' : undefined}
       aria-label={`${list.name} tasks drop zone`}
       id={`list-dropzone-${list.id}`}
-      class="min-h-[4rem]"
+      class="min-h-16"
       class:drag-over-list={isDragOverList}
       ondragover={handleListDragOver}
       ondragleave={handleListDragLeave}
@@ -218,7 +218,7 @@
       {#if localItems.length === 0}
         <!-- Empty state -->
         <div
-          class="min-h-[4rem] bg-white dark:bg-brand-800 rounded-lg border-2 border-dashed border-brand-200 dark:border-brand-700 flex items-center justify-center text-sm text-brand-500 dark:text-brand-200"
+          class="min-h-16 bg-white dark:bg-brand-800 rounded-lg border-2 border-dashed border-brand-200 dark:border-brand-700 flex items-center justify-center text-sm text-brand-500 dark:text-brand-200"
         >
           No items yet. Add one above.
         </div>

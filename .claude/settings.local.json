@@ -15,7 +15,20 @@
       "Bash(npx lighthouse:*)",
       "WebFetch(domain:github.com)",
       "WebSearch",
-      "WebFetch(domain:raw.githubusercontent.com)"
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(npm audit *)",
+      "Bash(npm outdated *)",
+      "Bash(npm ls *)",
+      "Bash(npm update *)",
+      "Bash(npx vite *)",
+      "Bash(grep -v \":0$\")",
+      "Bash(xargs sed *)",
+      "Bash(find /Users/colin/Sites/anewday/src -name \"*.svelte\" -exec perl -pi -e 's/focus-visible:ring-2\\(?=[^\\\\d]\\)/focus-visible:ring-1/g; s/focus-within:ring-2\\(?=[^\\\\d]\\)/focus-within:ring-1/g' {} \\\\; echo \"---verify---\" grep -rEc \"focus-\\(visible|within\\):ring-2[^0-9]\" /Users/colin/Sites/anewday/src)",
+      "Bash(grep -v ':0$')",
+      "Bash(git diff *)",
+      "Bash(npm view *)",
+      "Bash(npm install *)",
+      "Bash(npm uninstall *)"
     ],
     "deny": [],
     "ask": []
