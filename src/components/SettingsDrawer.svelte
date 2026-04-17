@@ -96,7 +96,7 @@
           <h2 id="settings-title" class="text-2xl font-medium text-brand-900 dark:text-brand-100">Settings</h2>
           <button
             type="button"
-            class="settings-done-menu text-brand-600 dark:text-brand-300 hover:text-brand-800 dark:hover:text-brand-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded p-1"
+            class="settings-done-menu text-brand-600 dark:text-brand-300 hover:text-brand-800 dark:hover:text-brand-200 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-brand-500 rounded-sm p-1"
             on:click={onClose}
             aria-label="Close"
           >
@@ -111,7 +111,7 @@
             <button
               type="button"
               id="settings-first-item"
-              class="settings-menu-item flex w-full items-center justify-between px-6 py-4 border-b border-brand-200 dark:border-brand-700 hover:bg-brand-200/50 dark:hover:bg-brand-700/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-inset"
+              class="settings-menu-item flex w-full items-center justify-between px-6 py-4 border-b border-brand-200 dark:border-brand-700 hover:bg-brand-200/50 dark:hover:bg-brand-700/30 transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-brand-500 focus-visible:ring-inset"
               on:click={() => navigateToView('about')}
             >
               <span class="flex items-center gap-3 text-base text-brand-900 dark:text-brand-100">
@@ -126,7 +126,7 @@
             <!-- How do I? -->
             <button
               type="button"
-              class="settings-menu-item flex w-full items-center justify-between px-6 py-4 border-b border-brand-200 dark:border-brand-700 hover:bg-brand-200/50 dark:hover:bg-brand-700/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-inset"
+              class="settings-menu-item flex w-full items-center justify-between px-6 py-4 border-b border-brand-200 dark:border-brand-700 hover:bg-brand-200/50 dark:hover:bg-brand-700/30 transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-brand-500 focus-visible:ring-inset"
               on:click={() => navigateToView('how-do-i')}
             >
               <span class="flex items-center gap-3 text-base text-brand-900 dark:text-brand-100">
@@ -141,7 +141,7 @@
             <!-- Feedback -->
             <button
               type="button"
-              class="settings-menu-item flex w-full items-center justify-between px-6 py-4 border-b border-brand-200 dark:border-brand-700 hover:bg-brand-200/50 dark:hover:bg-brand-700/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-inset"
+              class="settings-menu-item flex w-full items-center justify-between px-6 py-4 border-b border-brand-200 dark:border-brand-700 hover:bg-brand-200/50 dark:hover:bg-brand-700/30 transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-brand-500 focus-visible:ring-inset"
               on:click={() => navigateToView('feedback')}
             >
               <span class="flex items-center gap-3 text-base text-brand-900 dark:text-brand-100">
@@ -156,7 +156,7 @@
             <!-- Appearance -->
             <button
               type="button"
-              class="settings-menu-item flex w-full items-center justify-between px-6 py-4 border-b border-brand-200 dark:border-brand-700 hover:bg-brand-200/50 dark:hover:bg-brand-700/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-inset"
+              class="settings-menu-item flex w-full items-center justify-between px-6 py-4 border-b border-brand-200 dark:border-brand-700 hover:bg-brand-200/50 dark:hover:bg-brand-700/30 transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-brand-500 focus-visible:ring-inset"
               on:click={() => navigateToView('appearance')}
             >
               <span class="flex items-center gap-3 text-base text-brand-900 dark:text-brand-100">
@@ -171,7 +171,7 @@
             <!-- List organization -->
             <button
               type="button"
-              class="settings-menu-item flex w-full items-center justify-between px-6 py-4 border-b border-brand-200 dark:border-brand-700 hover:bg-brand-200/50 dark:hover:bg-brand-700/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-inset"
+              class="settings-menu-item flex w-full items-center justify-between px-6 py-4 border-b border-brand-200 dark:border-brand-700 hover:bg-brand-200/50 dark:hover:bg-brand-700/30 transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-brand-500 focus-visible:ring-inset"
               on:click={() => navigateToView('list-organization')}
             >
               <span class="flex items-center gap-3 text-base text-brand-900 dark:text-brand-100">
@@ -186,7 +186,7 @@
             <!-- Your data & privacy -->
             <button
               type="button"
-              class="settings-menu-item flex w-full items-center justify-between px-6 py-4 border-b border-brand-200 dark:border-brand-700 hover:bg-brand-200/50 dark:hover:bg-brand-700/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-inset"
+              class="settings-menu-item flex w-full items-center justify-between px-6 py-4 border-b border-brand-200 dark:border-brand-700 hover:bg-brand-200/50 dark:hover:bg-brand-700/30 transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-brand-500 focus-visible:ring-inset"
               on:click={() => navigateToView('your-data')}
             >
               <span class="flex items-center gap-3 text-base text-brand-900 dark:text-brand-100">

@@ -1,14 +1,58 @@
-@font-face {
-  font-family: 'Public Sans';
-  src: url('/fonts/PublicSans-Variable.woff2') format('woff2');
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
+@import 'tailwindcss';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-white: #ffffff;
+  --color-accent-1: #2c303a;
+  --color-accent-2: #2c303a;
+  --color-accent-3: #9ca3af;
+  --color-accent-4: #9ca3af;
+
+  --color-brand-50: #fefefe;
+  --color-brand-100: #eaeaeb;
+  --color-brand-200: #c1c7d2;
+  --color-brand-300: #9ca3af;
+  --color-brand-400: #69768e;
+  --color-brand-500: #545f75;
+  --color-brand-600: #52555d;
+  --color-brand-700: #6b6e75;
+  --color-brand-800: #3a3e48;
+  --color-brand-900: #2c303a;
+  --color-brand-950: #2c303a;
+
+  --font-sans:
+    Public Sans, -apple-system, system-ui, BlinkMacSystemFont, Segoe UI, Roboto,
+    Helvetica Neue, Arial, sans-serif;
 }
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@layer base {
+  @font-face {
+    font-family: 'Public Sans';
+    src: url('/fonts/PublicSans-Variable.woff2') format('woff2');
+    font-weight: 100 900;
+    font-style: normal;
+    font-display: swap;
+  }
+}
 
 :root {
   color-scheme: light;
@@ -19,18 +63,15 @@
 }
 
 body {
-  @apply bg-brand-50 dark:bg-brand-950 text-brand-950 dark:text-brand-100 font-sans antialiased min-h-[100dvh];
+  @apply bg-brand-50 dark:bg-brand-950 text-brand-950 dark:text-brand-100 font-sans antialiased min-h-dvh;
 }
 
 strong {
   @apply font-medium;
 }
 
-a:focus-visible,
-button:focus-visible,
-input:focus-visible,
-select:focus-visible {
-  @apply outline outline-2 outline-offset-2 outline-brand-500;
+:where(a, button, input, select):focus-visible {
+  @apply outline-solid outline-2 outline-offset-2 outline-brand-500;
 }
 
 /* Settings section typography */

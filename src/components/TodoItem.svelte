@@ -445,7 +445,7 @@
     role="group"
     aria-label="Task: {item.title}"
     draggable="true"
-    class="swipe-content group relative flex items-center justify-between gap-3 border-b border-brand-200 dark:border-brand-700 px-3 py-2 transition-colors bg-brand-50 dark:bg-brand-900 hover:bg-brand-100 dark:hover:bg-brand-800 focus-within:ring-2 focus-within:ring-brand-500"
+    class="swipe-content group relative flex items-center justify-between gap-3 border-b border-brand-200 dark:border-brand-700 px-3 py-2 transition-colors bg-brand-50 dark:bg-brand-900 hover:bg-brand-100 dark:hover:bg-brand-800 focus-within:ring-1 focus-within:ring-brand-500"
     class:swiping={isSwiping}
     class:dragging={isDragging}
     class:drag-over={isDragOver}
@@ -481,14 +481,14 @@
         <input
           id={checkboxId}
           type="checkbox"
-          class="col-start-1 row-start-1 m-auto size-4 appearance-none rounded border-0 bg-brand-100 dark:bg-brand-600 checked:bg-brand-900 dark:checked:bg-brand-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-900 dark:focus-visible:outline-brand-300 cursor-pointer pointer-events-auto"
+          class="col-start-1 row-start-1 m-auto size-4 appearance-none rounded-sm border-0 bg-brand-100 dark:bg-brand-600 checked:bg-brand-900 dark:checked:bg-brand-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-900 dark:focus-visible:outline-brand-300 cursor-pointer pointer-events-auto"
           checked={item.completed}
           aria-label={item.title}
           onchange={announceToggle}
           onkeydown={handleCheckboxKeydown}
         />
         <svg viewBox="0 0 20 20" fill="none" class="pointer-events-none col-start-1 row-start-1 size-3 self-center justify-self-center stroke-white">
-          <path d="M5 10L9 14L15 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-[:checked]:opacity-100" />
+          <path d="M5 10L9 14L15 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="opacity-0 group-has-checked:opacity-100" />
         </svg>
       </label>
       <label
@@ -500,7 +500,7 @@
     </div>
     <button
       type="button"
-      class="delete-on-hover inline-flex h-9 w-9 items-center justify-center rounded-full border border-transparent text-xl text-brand-200 dark:text-brand-300 transition-all duration-200 hover:text-brand-400 dark:hover:text-brand-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 pointer-events-auto"
+      class="delete-on-hover inline-flex h-9 w-9 items-center justify-center rounded-full border border-transparent text-xl text-brand-200 dark:text-brand-300 transition-all duration-200 hover:text-brand-400 dark:hover:text-brand-300 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-brand-500 pointer-events-auto"
       aria-label={`Remove ${item.title}`}
       onclick={announceDelete}
       onkeydown={handleDeleteKeydown}

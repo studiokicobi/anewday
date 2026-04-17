@@ -23,7 +23,7 @@
       <div>
         <button
           type="button"
-          class="flex w-full items-center justify-between text-left settings-subheading py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded"
+          class="flex w-full items-center justify-between text-left settings-subheading py-2 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-brand-500 rounded-sm"
           on:click={() => toggleFaq(0)}
           aria-expanded={expandedFaq === 0}
           aria-controls="faq-0"
@@ -47,7 +47,7 @@
       <div>
         <button
           type="button"
-          class="flex w-full items-center justify-between text-left settings-subheading py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded"
+          class="flex w-full items-center justify-between text-left settings-subheading py-2 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-brand-500 rounded-sm"
           on:click={() => toggleFaq(1)}
           aria-expanded={expandedFaq === 1}
           aria-controls="faq-1"
@@ -71,7 +71,7 @@
       <div>
         <button
           type="button"
-          class="flex w-full items-center justify-between text-left settings-subheading py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded"
+          class="flex w-full items-center justify-between text-left settings-subheading py-2 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-brand-500 rounded-sm"
           on:click={() => toggleFaq(2)}
           aria-expanded={expandedFaq === 2}
           aria-controls="faq-2"
@@ -95,7 +95,7 @@
       <div>
         <button
           type="button"
-          class="flex w-full items-center justify-between text-left settings-subheading py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded"
+          class="flex w-full items-center justify-between text-left settings-subheading py-2 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-brand-500 rounded-sm"
           on:click={() => toggleFaq(3)}
           aria-expanded={expandedFaq === 3}
           aria-controls="faq-3"
@@ -119,7 +119,7 @@
       <div>
         <button
           type="button"
-          class="flex w-full items-center justify-between text-left settings-subheading py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 rounded"
+          class="flex w-full items-center justify-between text-left settings-subheading py-2 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-brand-500 rounded-sm"
           on:click={() => toggleFaq(4)}
           aria-expanded={expandedFaq === 4}
           aria-controls="faq-4"

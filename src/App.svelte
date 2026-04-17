@@ -494,11 +494,11 @@
 
 <main
   id="main"
-  class="mx-auto flex min-h-[100dvh] max-w-lg flex-col px-4 pt-6 pb-8"
+  class="mx-auto flex min-h-dvh max-w-lg flex-col px-4 pt-6 pb-8"
   aria-label="Main application"
 >
 
-  <div class="flex-grow flex flex-col gap-6">
+  <div class="grow flex flex-col gap-6">
     <header class="flex flex-col gap-1">
       <h1 class="text-3xl font-semibold tracking-[-0.04em] text-brand-900 dark:text-brand-200">A New Day</h1>
       <p class="text-xs uppercase text-brand-400 dark:text-brand-300 tracking-wide">{getCurrentDate()}</p>
@@ -532,7 +532,7 @@
     <div class="flex items-center gap-2 text-sm ">
       <button
         type="button"
-        class="inline-flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-brand-500 dark:text-brand-300 bg-brand-100 dark:bg-brand-800 hover:bg-brand-200/50 dark:hover:bg-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500"
+        class="inline-flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-brand-500 dark:text-brand-300 bg-brand-100 dark:bg-brand-800 hover:bg-brand-200/50 dark:hover:bg-brand-600 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-brand-500"
         onclick={openSettingsDrawer}
         bind:this={settingsButton}
         aria-haspopup="dialog"
