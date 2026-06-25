@@ -77,6 +77,7 @@ dist/
 # Test results
 test-results/
 playwright-report/
+.artifacts/
 
 # IDE
 .vscode/
