@@ -392,7 +392,7 @@
         {#if showError}
           <div
             id="task-error"
-            class="text-sm text-red-600 dark:text-red-400 px-1"
+            class="text-sm text-red-600 dark:text-red-200 px-1"
             role="alert"
           >
             Please add a task to continue.

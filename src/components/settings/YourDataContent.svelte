@@ -97,7 +97,7 @@
     </div>
 
     {#if importError}
-      <p class="mt-3 text-sm text-red-400 dark:text-red-300" role="alert">{importError}</p>
+      <p class="mt-3 text-sm text-red-700 dark:text-red-200" role="alert">{importError}</p>
     {/if}
   </div>
 
