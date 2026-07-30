@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, untrack } from 'svelte';
   import { flip } from 'svelte/animate';
   import TodoItem from './TodoItem.svelte';
   import type { List, TodoItem as TodoItemType } from '../stores/state';
@@ -34,8 +34,9 @@
     dispatch('delete', event.detail);
   }
 
-  // Local optimistic state to prevent race conditions
-  let localItems = $state(items);
+  // Local optimistic state to prevent race conditions. untrack() makes the
+  // initial-value-only read explicit; the $effect below keeps it in sync.
+  let localItems = $state(untrack(() => items));
 
   // Sync local state when items prop changes
   $effect(() => {

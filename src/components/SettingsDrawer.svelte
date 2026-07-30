@@ -74,8 +74,11 @@
 </script>
 
 {#if showSettings}
+  <!-- Presentational backdrop. Dismissing by clicking outside is a redundant
+       convenience: Escape (via focusTrap) and the Close button both close it. -->
   <div
     class="settings-overlay fixed inset-0 z-50 flex items-end justify-center bg-brand-900/80 dark:bg-black/80"
+    role="presentation"
     on:pointerdown={handleOverlayPointerDown}
   >
     <div
