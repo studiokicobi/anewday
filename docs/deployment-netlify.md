@@ -31,11 +31,11 @@ netlify init
 
 When prompted, use these settings:
 
-| Setting | Value |
-|---------|-------|
-| **Build command** | `npm run build` |
-| **Publish directory** | `dist` |
-| **Base directory** | (leave empty) |
+| Setting               | Value           |
+| --------------------- | --------------- |
+| **Build command**     | `npm run build` |
+| **Publish directory** | `dist`          |
+| **Base directory**    | (leave empty)   |
 
 Or configure in `netlify.toml` (recommended):
 
@@ -58,6 +58,7 @@ Or configure in `netlify.toml` (recommended):
 For this project, **no environment variables are needed** - the app runs entirely client-side.
 
 If you add environment variables later:
+
 - Go to **Site settings** → **Environment variables**
 - Prefix client-side variables with `VITE_` (e.g., `VITE_API_KEY`)
 
@@ -97,6 +98,7 @@ Netlify manages everything automatically:
    - Wait for propagation (up to 48 hours, usually < 1 hour)
 
 Benefits:
+
 - ✅ Automatic SSL certificate
 - ✅ Global CDN
 - ✅ Automatic DNS management
@@ -208,6 +210,7 @@ After deployment:
 ### Automatic Deploys
 
 Every push to `main` branch automatically:
+
 1. Triggers Netlify build
 2. Runs `npm run build`
 3. Deploys to production
@@ -216,6 +219,7 @@ Every push to `main` branch automatically:
 ### Deploy Previews
 
 Pull requests get preview URLs:
+
 - Each PR gets unique URL: `https://deploy-preview-[PR#]--[site].netlify.app`
 - Test changes before merging
 - Automatic cleanup when PR closes
@@ -230,6 +234,7 @@ If something breaks:
 4. Site instantly reverts
 
 Or via CLI:
+
 ```bash
 netlify rollback
 ```
@@ -274,6 +279,7 @@ netlify rollback
 ### Free Alternatives
 
 Since A New Day prioritizes privacy:
+
 - Use **Lighthouse CI** in GitHub Actions
 - Monitor **Core Web Vitals** via Chrome UX Report
 - Check **uptime** with external services (UptimeRobot, etc.)

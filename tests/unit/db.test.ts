@@ -119,8 +119,7 @@ describe('lib/db', () => {
     expect(migratedItems).toHaveLength(2);
     expect(migratedItems[0]?.title).toBe('Stretch');
     const migratedMeta = stores.meta.get('singleton') as
-      | (PersistedState['meta'] & { id: string })
-      | undefined;
+      (PersistedState['meta'] & { id: string }) | undefined;
     expect(migratedMeta?.migrationVersion).toBe(1);
   });
 });

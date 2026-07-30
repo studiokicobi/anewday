@@ -10,7 +10,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'icons/*.png', 'robots.txt'],
       manifest: false, // Use existing manifest.webmanifest
-      injectRegister: null,  // Disable auto-injection, we'll register manually
+      injectRegister: null, // Disable auto-injection, we'll register manually
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,webmanifest}'],
         skipWaiting: true,
