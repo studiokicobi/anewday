@@ -7,6 +7,9 @@
     "resolveJsonModule": true,
     "types": ["svelte", "vite/client", "@types/node"],
     "allowImportingTsExtensions": true,
+    // Required by allowImportingTsExtensions. Nothing is emitted from tsc --
+    // svelte-check type-checks and Vite builds.
+    "noEmit": true,
     "strict": true,
     "noImplicitAny": true,
     "noFallthroughCasesInSwitch": true

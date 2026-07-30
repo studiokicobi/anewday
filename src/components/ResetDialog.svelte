@@ -12,8 +12,11 @@
   }
 </script>
 
+<!-- Presentational backdrop. Dismissing by clicking outside is a redundant
+     convenience: Escape (via focusTrap) and the Cancel button both close it. -->
 <div
   class="fixed inset-0 z-60 flex items-center justify-center bg-black/60 px-4"
+  role="presentation"
   on:pointerdown={handleOverlayPointerDown}
 >
   <div

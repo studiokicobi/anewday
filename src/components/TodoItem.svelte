@@ -26,7 +26,7 @@
     touchdragover: { clientY: number; item: TodoItemType; sourceIndex: number; sourceListId: string };
     touchdragend: { clientY: number; item: TodoItemType; sourceIndex: number; sourceListId: string; cancelled?: boolean };
   }>();
-  const checkboxId = `todo-${item.id}`;
+  const checkboxId = $derived(`todo-${item.id}`);
 
   let isDragging = $state(false);
   let isDragOver = $state(false);
