@@ -65,15 +65,16 @@ async function waitForFocusToSettle(page: Page, quietMs = 150) {
 test('keyboard flow allows submitting and toggling tasks', async ({ page }) => {
   await page.goto('/');
 
-  // The store starts from an in-memory placeholder so the UI is interactive from
-  // the first paint, and initState() then publishes the IndexedDB snapshot with a
-  // store.set() that discards whatever was committed while the load was in
-  // flight. Both the multi-list toggle and the task below are such commits, so
-  // acting before the load lands silently throws them away and the checkbox never
-  // renders. The app focuses the task input once initState() has resolved — wait
-  // for that, the same readiness signal PR #53 used for reset-dst.spec.ts.
-  // Reproduced by deferring loadState()'s reads past the Add: it yields exactly
-  // the "element(s) not found" and 45s-timeout failures CI hits under load.
+  // The app focuses the task input once initState() has resolved, so this starts
+  // the test from a settled page: the load published, the store quiet. Same
+  // readiness signal reset-dst.spec.ts uses.
+  //
+  // It used to do more than that. initState() published the IndexedDB snapshot
+  // with a store.set() that discarded whatever was committed while the load was
+  // still in flight, so the multi-list toggle and the task below were destroyed
+  // and the checkbox never rendered. #54 replaced that with a queue commit()
+  // fills during the load and publishSnapshot() replays, so the mutations now
+  // survive on their own and this wait no longer guards against losing them.
   const taskInput = page.getByPlaceholder('Today I will...');
   await expect(taskInput).toBeFocused({ timeout: 15_000 });
 
