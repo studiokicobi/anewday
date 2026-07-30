@@ -46,8 +46,14 @@ function resolveElement(ref?: string | HTMLElement | null, container?: ParentNod
   return null;
 }
 
-export function focusTrap(node: HTMLElement, options: FocusTrapOptions = {}) {
+export function focusTrap(node: HTMLElement, initialOptions: FocusTrapOptions = {}) {
   const doc = node.ownerDocument;
+  // Options are re-supplied through update(). Prefer passing `returnFocus` as a
+  // bare value over a `() => prop` getter: a getter hides the prop read inside a
+  // closure the compiler cannot see, so Svelte has no reason to keep that prop
+  // current, and the trap then restores focus to a stale initial value (usually
+  // null) when it unmounts.
+  let options = initialOptions;
   let previousFocus: HTMLElement | null =
     typeof document !== 'undefined' && document.activeElement instanceof HTMLElement
       ? document.activeElement
@@ -104,6 +110,9 @@ export function focusTrap(node: HTMLElement, options: FocusTrapOptions = {}) {
   node.addEventListener('keydown', handleKeydown);
 
   return {
+    update(nextOptions: FocusTrapOptions = {}) {
+      options = nextOptions;
+    },
     destroy() {
       cancelAnimationFrame(raf);
       node.removeEventListener('keydown', handleKeydown);
@@ -140,7 +149,7 @@ export function focusTrap(node: HTMLElement, options: FocusTrapOptions = {}) {
       // focus then falls to <body> with nothing to catch it -- which leaves any
       // surviving trap underneath inert, since Escape is bound to its node
       // rather than to document. Re-resolve and retry once the DOM settles;
-      // returnFocus is a live getter, so it yields the replacement element.
+      // update() keeps `options` current, so this yields the replacement element.
       let retries = 2;
       const verify = () => {
         if (retries-- <= 0) return;

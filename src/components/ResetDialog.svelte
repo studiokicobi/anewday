@@ -29,7 +29,7 @@
     tabindex="-1"
     use:focusTrap={{
       initialFocus: '#reset-dialog-cancel',
-      returnFocus: () => returnFocusElement,
+      returnFocus: returnFocusElement,
       onEscape: onCancel
     }}
   >
