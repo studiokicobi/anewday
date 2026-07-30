@@ -30,6 +30,13 @@ function isFocusable(element: HTMLElement) {
   return element.offsetWidth > 0 || element.offsetHeight > 0 || element === document.activeElement;
 }
 
+// Focus only restores to an element that is still in the document and still
+// focusable. Calling focus() on a detached or hidden element does not fail
+// loudly -- it drops focus to <body>.
+function canRestoreFocusTo(element: HTMLElement | null): boolean {
+  return !!element && element.isConnected && isFocusable(element);
+}
+
 function resolveElement(ref?: string | HTMLElement | null, container?: ParentNode) {
   if (!ref) return null;
   if (ref instanceof HTMLElement) return ref;
@@ -40,6 +47,7 @@ function resolveElement(ref?: string | HTMLElement | null, container?: ParentNod
 }
 
 export function focusTrap(node: HTMLElement, options: FocusTrapOptions = {}) {
+  const doc = node.ownerDocument;
   let previousFocus: HTMLElement | null =
     typeof document !== 'undefined' && document.activeElement instanceof HTMLElement
       ? document.activeElement
@@ -104,22 +112,44 @@ export function focusTrap(node: HTMLElement, options: FocusTrapOptions = {}) {
         node.removeAttribute('tabindex');
       }
 
-      let focusTarget: HTMLElement | null = null;
-      if (typeof options.returnFocus === 'function') {
-        focusTarget = options.returnFocus();
-      } else if (options.returnFocus) {
-        const resolved = resolveElement(
-          options.returnFocus as string | HTMLElement,
-          node.ownerDocument?.documentElement ?? undefined
-        );
-        focusTarget = resolved;
-      }
+      const resolveReturnTarget = () => {
+        let target: HTMLElement | null = null;
+        if (typeof options.returnFocus === 'function') {
+          target = options.returnFocus();
+        } else if (options.returnFocus) {
+          target = resolveElement(
+            options.returnFocus as string | HTMLElement,
+            node.ownerDocument?.documentElement ?? undefined
+          );
+        }
+        return canRestoreFocusTo(target) ? target : previousFocus;
+      };
 
-      if (!focusTarget) {
-        focusTarget = previousFocus;
-      }
+      const restore = () => {
+        const target = resolveReturnTarget();
+        if (canRestoreFocusTo(target)) {
+          target!.focus({ preventScroll: true });
+          return true;
+        }
+        return false;
+      };
 
-      focusTarget?.focus({ preventScroll: true });
+      restore();
+
+      // The element we just focused may be re-rendered away moments later, and
+      // focus then falls to <body> with nothing to catch it -- which leaves any
+      // surviving trap underneath inert, since Escape is bound to its node
+      // rather than to document. Re-resolve and retry once the DOM settles;
+      // returnFocus is a live getter, so it yields the replacement element.
+      let retries = 2;
+      const verify = () => {
+        if (retries-- <= 0) return;
+        const active = doc?.activeElement;
+        if (active && active !== doc?.body) return;
+        if (!restore()) return;
+        requestAnimationFrame(verify);
+      };
+      requestAnimationFrame(verify);
     },
   };
 }
