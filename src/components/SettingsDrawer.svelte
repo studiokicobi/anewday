@@ -31,16 +31,17 @@
     activeView = 'menu';
   }
 
-  // Focus first menu item when drawer opens, restore focus when closing
+  // Focus the first menu item when the drawer opens. Closing is not handled
+  // here: focusTrap's destroy() already returns focus to `returnFocusElement`
+  // synchronously as the dialog unmounts. The deferred restoration that used to
+  // live here ran a second, redundant focus() 50ms later, and because the
+  // condition was only "not open", it also fired on mount — stealing focus from
+  // whatever the user was typing into ~50ms after first paint.
   $: if (showSettings && activeView === 'menu') {
     setTimeout(() => {
       const firstItem = document.getElementById('settings-first-item');
       firstItem?.focus();
     }, 100);
-  } else if (!showSettings && returnFocusElement) {
-    setTimeout(() => {
-      returnFocusElement?.focus();
-    }, 50);
   }
 
   function navigateToView(view: typeof activeView) {
@@ -88,7 +89,7 @@
       aria-modal="true"
       aria-labelledby="settings-title"
       use:focusTrap={{
-        returnFocus: () => returnFocusElement,
+        returnFocus: returnFocusElement,
         onEscape: onClose
       }}
     >
