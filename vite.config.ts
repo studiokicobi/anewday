@@ -67,7 +67,10 @@ export default defineConfig({
       reporter: ['text', 'html'],
       provider: 'v8',
     },
-    exclude: ['tests/e2e/**', 'tests/a11y/**', 'node_modules/**'],
+    // '.claude/**' skips agent worktrees, which are full checkouts nested
+    // inside the repo; without it their specs are collected twice and the
+    // Playwright ones fail under Vitest.
+    exclude: ['tests/e2e/**', 'tests/a11y/**', 'node_modules/**', '.claude/**'],
   },
   build: {
     // Optimize chunk size and tree-shaking
