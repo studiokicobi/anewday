@@ -8,6 +8,8 @@
   export let selectedList: string;
   export let onSubmit: () => Promise<void>;
   export let taskInput: HTMLInputElement | null = null;
+  /** Reason the last submission failed, surfaced next to the field that caused it. */
+  export let submitError = '';
 
   let showDropdown = false;
   let embeddedListTrigger: HTMLButtonElement | null = null;
@@ -254,6 +256,12 @@
     await onSubmit();
     // Restore focus to Add button for better keyboard navigation flow
     await tick();
+    // Keep focus on the field when the submission failed, so the reason is
+    // announced and the text is still there to correct.
+    if (submitError) {
+      taskInput?.focus();
+      return;
+    }
     addButton?.focus();
   }
 
@@ -262,10 +270,15 @@
     if (showError && description.trim()) {
       showError = false;
     }
+    submitError = '';
   }
 
   // Get the selected list name for display
   $: selectedListName = lists.find(list => list.id === selectedList)?.name || 'Select List';
+
+  // The empty-field warning and a failed submission share one error region: they
+  // cannot both apply, since an empty field never reaches onSubmit().
+  $: errorMessage = showError ? 'Please add a task to continue.' : submitError;
 </script>
 
 <section class="">
@@ -285,9 +298,9 @@
             name="task"
             class="w-full rounded-lg bg-brand-100 dark:bg-brand-700 hover:bg-brand-100 dark:hover:bg-brand-700 px-3 py-2 text-base text-brand-900 dark:text-brand-100 placeholder:text-brand-500 dark:placeholder:text-brand-200 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-brand-500"
             class:pr-24={lists.length > 1}
-            class:ring-2={showError}
-            class:ring-red-500={showError}
-            class:dark:ring-red-400={showError}
+            class:ring-2={errorMessage}
+            class:ring-red-500={errorMessage}
+            class:dark:ring-red-400={errorMessage}
             type="text"
             bind:value={description}
             bind:this={taskInput}
@@ -298,8 +311,8 @@
             autocomplete="off"
             placeholder="Today I will..."
             aria-label="Add an item to your daily checklist"
-            aria-invalid={showError}
-            aria-describedby={showError ? 'task-error' : undefined}
+            aria-invalid={Boolean(errorMessage)}
+            aria-describedby={errorMessage ? 'task-error' : undefined}
           />
 
           <!-- Embedded list selector (shown when multiple lists exist) -->
@@ -389,13 +402,13 @@
         </div>
 
         <!-- Error message -->
-        {#if showError}
+        {#if errorMessage}
           <div
             id="task-error"
             class="text-sm text-red-600 dark:text-red-200 px-1"
             role="alert"
           >
-            Please add a task to continue.
+            {errorMessage}
           </div>
         {/if}
       </div>
