@@ -27,7 +27,12 @@
   let selectedList = $state('');
   let encryption = $state(false);
   let passphrase = $state('');
+  // Errors surface where the action that caused them lives. importError covers
+  // the settings drawer's own actions — import, export, reset — plus the
+  // migration report, all of which are read from the drawer. A failed Add has
+  // no business there, so it gets its own state and renders against the field.
   let importError = $state('');
+  let addError = $state('');
   let showResetConfirm = $state(false);
   let themeMode = $state<'light' | 'dark' | 'system'>('system');
   let showSettingsDrawer = $state(false);
@@ -133,11 +138,14 @@
   });
 
   async function handleSubmit() {
+    addError = '';
     try {
       await addItem(description, selectedList);
       description = '';
     } catch (error) {
-      importError = (error as Error).message;
+      // Keep what was typed: the text is the thing worth saving, and it is the
+      // user's only way to retry without retyping.
+      addError = (error as Error).message || 'Could not add that task.';
     }
   }
 
@@ -510,6 +518,7 @@
       {lists}
       bind:selectedList
       bind:taskInput
+      bind:submitError={addError}
       onSubmit={handleSubmit}
     />
 
