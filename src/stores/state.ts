@@ -110,7 +110,10 @@ export async function initState() {
     store.set(normalizeLists(resetIfNeeded(createInitialState())));
     migration = { changed: false, error: (error as Error).message };
   }
-  await requestPersistence();
+  // Fire-and-forget: the result is unused, and in Firefox the promise never settles
+  // (it waits on a storage permission prompt), which would leave the midnight timer
+  // unscheduled and initState() pending forever.
+  void requestPersistence();
   refreshMidnightTimer();
   return { migration };
 }

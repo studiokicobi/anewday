@@ -25,10 +25,23 @@ test('resets across local midnight and after sleep/wake', async ({ page }) => {
   });
 
   await page.goto('/');
-  await page.fill('input[name="task"]', 'DST check');
-  await page.click('button:has-text("Add")');
-  // Click the checkbox directly using its aria-label, force to bypass SVG overlay
+
+  // The app loads persisted state from IndexedDB asynchronously and overwrites the
+  // store when that finishes, so anything added before then is silently discarded.
+  // It focuses the task input once that load has resolved — wait for it, otherwise
+  // the task below races the load and disappears (flaky on webkit under CI load).
+  const taskInput = page.getByLabel('Add an item to your daily checklist');
+  await expect(taskInput).toBeFocused({ timeout: 15_000 });
+
+  await taskInput.fill('DST check');
+  await page.getByRole('button', { name: 'Add' }).click();
+
   const checkbox = page.getByRole('checkbox', { name: 'DST check' });
+  await expect(checkbox).toBeVisible();
+  // `section[aria-live] * { pointer-events: auto !important }` in app.css defeats the
+  // checkmark SVG's own pointer-events-none, so the SVG wins the hit test at the
+  // checkbox's centre. Real clicks still toggle it (the SVG sits inside the <label>),
+  // but Playwright's actionability check rejects it — hence force.
   await checkbox.click({ force: true });
   await expect(checkbox).toBeChecked();
 
