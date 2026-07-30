@@ -53,6 +53,56 @@ let db: IDBDatabase | null = null;
 let cancelMidnight: (() => void) | null = null;
 const hasIndexedDB = typeof indexedDB !== 'undefined';
 
+type Mutator = (state: PersistedState) => PersistedState;
+
+// The store is interactive from the first paint, so a task can be added before
+// initState() has finished reading IndexedDB. In that window the store still
+// holds the empty placeholder state: persisting a mutation derived from it would
+// erase the data being loaded, and publishing the loaded snapshot would erase
+// the mutation. Mutations made while `loaded` is false are therefore queued and
+// replayed onto the loaded snapshot instead of written straight through.
+let loaded = true;
+let pendingMutations: Mutator[] = [];
+let loadedSignal: Promise<void> = Promise.resolve();
+let releaseLoaded: (() => void) | null = null;
+
+function beginLoad() {
+  releaseLoaded?.();
+  loaded = false;
+  pendingMutations = [];
+  loadedSignal = new Promise((resolve) => {
+    releaseLoaded = resolve;
+  });
+}
+
+function finishLoad() {
+  releaseLoaded?.();
+  releaseLoaded = null;
+}
+
+/**
+ * Publishes the persisted snapshot, replaying anything the user changed while
+ * the load was in flight. Deliberately synchronous — nothing may run between
+ * draining the queue and clearing the flag, or a mutation would slip through
+ * unqueued and unpersisted.
+ */
+function publishSnapshot(base: PersistedState): PersistedState {
+  if (loaded) {
+    return get(store);
+  }
+  const next = pendingMutations.reduce(
+    (state, mutate) => normalizeLists(mutate(state)),
+    normalizeLists(resetIfNeeded(base))
+  );
+  pendingMutations = [];
+  loaded = true;
+  store.set(next);
+  return next;
+}
+
+/** Resolves once the persisted snapshot has been published and written back. */
+const whenLoaded = () => (loaded ? Promise.resolve() : loadedSignal);
+
 async function database(): Promise<IDBDatabase | null> {
   if (!hasIndexedDB) {
     return null;
@@ -94,21 +144,25 @@ function refreshMidnightTimer() {
 }
 
 export async function initState() {
+  beginLoad();
   let migration: MigrationResult = MIGRATION_FALLBACK;
   try {
     const dbInstance = await database();
     if (dbInstance) {
       migration = await migrateFromLocalStorage(dbInstance);
       const persisted = await loadState(dbInstance);
-      const normalized = normalizeLists(resetIfNeeded(persisted ?? createInitialState()));
-      store.set(normalized);
-      await persist(normalized);
+      await persist(publishSnapshot(persisted ?? createInitialState()));
     } else {
-      store.set(normalizeLists(resetIfNeeded(createInitialState())));
+      publishSnapshot(createInitialState());
     }
   } catch (error) {
-    store.set(normalizeLists(resetIfNeeded(createInitialState())));
+    // No persist on this path on purpose: the load failed, so we do not know
+    // what IndexedDB already holds and writing the placeholder over it would
+    // destroy it.
+    publishSnapshot(createInitialState());
     migration = { changed: false, error: (error as Error).message };
+  } finally {
+    finishLoad();
   }
   // Fire-and-forget: the result is unused, and in Firefox the promise never settles
   // (it waits on a storage permission prompt), which would leave the midnight timer
@@ -119,6 +173,7 @@ export async function initState() {
 }
 
 export async function checkForReset(source: 'midnight' | 'visibility' = 'visibility') {
+  await whenLoaded();
   const current = get(store);
   const next = resetIfNeeded(current);
   if (next === current) {
@@ -135,11 +190,31 @@ export async function checkForReset(source: 'midnight' | 'visibility' = 'visibil
   return true;
 }
 
-async function commit(mutator: (state: PersistedState) => PersistedState) {
+async function commit(mutator: Mutator) {
   const updated = normalizeLists(mutator(get(store)));
   store.set(updated);
+
+  if (!loaded) {
+    // Show the change straight away, but let publishSnapshot() replay it onto
+    // the real snapshot instead of persisting this partial one.
+    pendingMutations.push(mutator);
+    await whenLoaded();
+    return get(store);
+  }
+
   await persist(updated);
   return updated;
+}
+
+/**
+ * For mutations that carry an explicit item list rather than deriving one from
+ * the state they are given — replaying those onto the loaded snapshot would drop
+ * the items they never saw. Waiting costs nothing in practice: the drag handles
+ * they come from only exist once items are on screen.
+ */
+async function commitAfterLoad(mutator: Mutator) {
+  await whenLoaded();
+  return commit(mutator);
 }
 
 export async function addItem(title: string, listId?: string) {
@@ -213,7 +288,7 @@ export async function restoreItem(item: TodoItem) {
 }
 
 export async function updateItemsOrder(listId: string, newItems: TodoItem[]) {
-  await commit((state) => {
+  await commitAfterLoad((state) => {
     const otherItems = state.items.filter((item) => item.listId !== listId);
     const reorderedItems = newItems.map((item, index) => ({
       ...item,
@@ -233,7 +308,7 @@ export async function moveItemBetweenLists(
   sourceItems: TodoItem[],
   targetItems: TodoItem[]
 ) {
-  await commit((state) => {
+  await commitAfterLoad((state) => {
     const otherItems = state.items.filter(
       (item) => item.listId !== sourceListId && item.listId !== targetListId
     );
@@ -258,6 +333,7 @@ export async function moveItemBetweenLists(
 }
 
 export async function exportState(passphrase?: string) {
+  await whenLoaded();
   const payload = JSON.stringify(get(store));
   if (passphrase && passphrase.trim()) {
     return { encrypted: true as const, data: await encryptExport(payload, passphrase) };
@@ -266,6 +342,7 @@ export async function exportState(passphrase?: string) {
 }
 
 export async function importState(raw: string, passphrase?: string) {
+  await whenLoaded();
   const decoded = passphrase && passphrase.trim() ? await decryptExport(raw, passphrase) : raw;
   const parsed = JSON.parse(decoded) as PersistedState;
   if (!parsed?.meta || !Array.isArray(parsed.items) || !Array.isArray(parsed.lists)) {
@@ -341,6 +418,10 @@ function ensureMultiLists(lists: PersistedState['lists']) {
 }
 
 export async function resetAllData() {
+  // Wait for any in-flight load, otherwise it would write the data we just
+  // cleared straight back into IndexedDB.
+  await whenLoaded();
+
   // Clear the database
   const dbInstance = await database();
   if (dbInstance) {
@@ -369,6 +450,9 @@ export async function resetAllData() {
 }
 
 export function __resetStoreForTests() {
+  finishLoad();
+  loaded = true;
+  pendingMutations = [];
   cancelMidnight?.();
   cancelMidnight = null;
   if (db) {

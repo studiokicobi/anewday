@@ -13,6 +13,48 @@ import {
 } from '../../src/stores/state';
 import { dateKey } from '../../src/lib/reset';
 
+/**
+ * Holds back the delivery of `getAll` results so a mutation can be landed after
+ * loadState() has read IndexedDB but before initState() publishes the snapshot.
+ * `getAll` is only used by loadState(); saveState() uses put/clear and the
+ * legacy migration uses get, so those still run at full speed.
+ */
+function gateStateLoad() {
+  const original = IDBObjectStore.prototype.getAll;
+  let markRead: () => void;
+  const read = new Promise<void>((resolve) => {
+    markRead = resolve;
+  });
+  let release: () => void;
+  const gate = new Promise<void>((resolve) => {
+    release = resolve;
+  });
+
+  IDBObjectStore.prototype.getAll = function (this: IDBObjectStore, ...args: unknown[]) {
+    const request = (original as (...a: unknown[]) => IDBRequest).apply(this, args);
+    let handler: ((event: Event) => void) | null = null;
+    Object.defineProperty(request, 'onsuccess', {
+      configurable: true,
+      get: () => handler,
+      set: (fn: (event: Event) => void) => {
+        handler = (event: Event) => {
+          markRead();
+          void gate.then(() => fn.call(request, event));
+        };
+      },
+    });
+    return request;
+  } as typeof original;
+
+  return {
+    read,
+    release: () => release(),
+    restore: () => {
+      IDBObjectStore.prototype.getAll = original;
+    },
+  };
+}
+
 function clearDatabase() {
   return new Promise<void>((resolve) => {
     const request = indexedDB.deleteDatabase('anewday');
@@ -57,6 +99,62 @@ describe('stores/state', () => {
     const state = await importState(data, 'passphrase');
     expect(state.items.length).toBe(1);
     expect(state.items[0]?.title).toBe('Journal');
+  });
+
+  it('keeps tasks added while the initial load is still in flight', async () => {
+    // Seed IndexedDB as if a previous session had left a task behind.
+    await initState();
+    await addItem('Saved earlier');
+    __resetStoreForTests();
+
+    // The form is interactive before initState() resolves, so a task can be
+    // submitted while loadState() is still reading IndexedDB.
+    const initialising = initState();
+    const added = await addItem('Typed while loading');
+    await initialising;
+
+    expect(added.title).toBe('Typed while loading');
+    expect(get(appState).items.map((item) => item.title)).toEqual([
+      'Saved earlier',
+      'Typed while loading',
+    ]);
+
+    // ...and it reached IndexedDB, not just the store.
+    __resetStoreForTests();
+    await initState();
+    expect(get(appState).items.map((item) => item.title)).toEqual([
+      'Saved earlier',
+      'Typed while loading',
+    ]);
+  });
+
+  it('keeps tasks added after the load has read IndexedDB but before it publishes', async () => {
+    await initState();
+    await addItem('Saved earlier');
+    __resetStoreForTests();
+
+    const load = gateStateLoad();
+    try {
+      const initialising = initState();
+      await load.read;
+      const added = addItem('Typed while loading');
+      load.release();
+      await Promise.all([initialising, added]);
+    } finally {
+      load.restore();
+    }
+
+    expect(get(appState).items.map((item) => item.title)).toEqual([
+      'Saved earlier',
+      'Typed while loading',
+    ]);
+
+    __resetStoreForTests();
+    await initState();
+    expect(get(appState).items.map((item) => item.title)).toEqual([
+      'Saved earlier',
+      'Typed while loading',
+    ]);
   });
 
   it('switches between single and multi list modes safely', async () => {
