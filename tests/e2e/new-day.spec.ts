@@ -24,12 +24,14 @@ test.beforeEach(async ({ page }) => {
 test('completes items and auto-resets after simulated midnight', async ({ page }) => {
   await page.goto('/', { waitUntil: 'networkidle' });
 
-  // Wait for app to be fully loaded (especially important for Firefox/IndexedDB)
-  await page.waitForLoadState('domcontentloaded');
-  const taskLabel = 'Add an item to your daily checklist';
-  await page.waitForSelector(`[aria-label="${taskLabel}"]`, { timeout: 15000 });
+  // The app loads persisted state from IndexedDB asynchronously and publishes it
+  // over the store when that finishes. The task input exists from the first paint,
+  // so its presence says nothing about readiness; the app focuses it once that
+  // load has resolved, so wait for that instead.
+  const taskInput = page.getByLabel('Add an item to your daily checklist');
+  await expect(taskInput).toBeFocused({ timeout: 15_000 });
 
-  await page.getByLabel(taskLabel).fill('Stretch');
+  await taskInput.fill('Stretch');
   await page.getByRole('button', { name: 'Add' }).click();
   // Click the label instead of checkbox - works around drag handle zone interference
   await page.getByText('Stretch').click({ force: true });
