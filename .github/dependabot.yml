@@ -1,0 +1,50 @@
+version: 2
+
+updates:
+  # Build, test and lint tooling. Everything here is a devDependency except
+  # svelte and @tailwindplus/elements, so routine bumps are grouped into a
+  # single PR rather than arriving one per package.
+  #
+  # `applies-to: version-updates` keeps these groups off Dependabot's security
+  # PRs — those stay ungrouped so a single fix can land on its own.
+  - package-ecosystem: npm
+    directory: '/'
+    schedule:
+      interval: weekly
+      day: thursday
+      time: '06:00'
+      timezone: Europe/Stockholm
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: chore
+      include: scope
+    groups:
+      dev-dependencies:
+        applies-to: version-updates
+        dependency-type: development
+        update-types:
+          - minor
+          - patch
+      dev-dependencies-major:
+        applies-to: version-updates
+        dependency-type: development
+        update-types:
+          - major
+
+  # Workflow actions. CodeQL already scans these with its `actions` query pack;
+  # this keeps the pinned major tags current.
+  - package-ecosystem: github-actions
+    directory: '/'
+    schedule:
+      interval: weekly
+      day: thursday
+      time: '06:00'
+      timezone: Europe/Stockholm
+    commit-message:
+      prefix: chore
+      include: scope
+    groups:
+      github-actions:
+        applies-to: version-updates
+        patterns:
+          - '*'
