@@ -17,19 +17,21 @@ Version: 1
 **Key Path:** `id`
 
 **Structure:**
+
 ```typescript
 interface TodoItem {
-  id: string;              // UUID v4
-  listId: string;          // Reference to list ID
-  title: string;           // Task description
-  completed: boolean;      // Checkbox state
-  position: number;        // Display order (0-based index)
+  id: string; // UUID v4
+  listId: string; // Reference to list ID
+  title: string; // Task description
+  completed: boolean; // Checkbox state
+  position: number; // Display order (0-based index)
 }
 ```
 
 **Indexes:** None
 
 **Example:**
+
 ```json
 {
   "id": "123e4567-e89b-12d3-a456-426614174000",
@@ -45,18 +47,21 @@ interface TodoItem {
 **Key Path:** `id`
 
 **Structure:**
+
 ```typescript
 interface List {
-  id: string;              // List identifier
-  name: string;            // Display name
+  id: string; // List identifier
+  name: string; // Display name
 }
 ```
 
 **Default Lists:**
+
 - Single-list mode: `{ id: 'today', name: 'Today' }`
 - Multi-list mode: Custom user-defined lists
 
 **Example:**
+
 ```json
 {
   "id": "today",
@@ -69,10 +74,11 @@ interface List {
 **Key Path:** `id`
 
 **Structure:**
+
 ```typescript
 interface Meta {
-  id: 'singleton';         // Always 'singleton' (single record)
-  lastResetKey: string;    // Date key for midnight reset (YYYY-MM-DD)
+  id: 'singleton'; // Always 'singleton' (single record)
+  lastResetKey: string; // Date key for midnight reset (YYYY-MM-DD)
   settings: {
     mode: 'single' | 'multi';
   };
@@ -81,6 +87,7 @@ interface Meta {
 ```
 
 **Example:**
+
 ```json
 {
   "id": "singleton",
@@ -119,6 +126,7 @@ interface PersistedState {
 ```
 
 **Exported Types:**
+
 - `List` - Type alias for list objects
 - `TodoItem` - Type alias for item objects
 
@@ -197,6 +205,7 @@ Uses AES-GCM encryption:
 ```
 
 **Encryption Details:**
+
 - Algorithm: AES-GCM
 - Key derivation: PBKDF2 with 150,000 iterations
 - IV: 12 bytes, randomly generated
@@ -254,19 +263,21 @@ newWorker.postMessage({ type: 'SKIP_WAITING' });
 When adding fields to existing data structures:
 
 1. **Add optional field:**
+
    ```typescript
    interface Task {
      // ...existing fields
-     newField?: string;  // Optional for backward compatibility
+     newField?: string; // Optional for backward compatibility
    }
    ```
 
 2. **Provide default during read:**
+
    ```typescript
    const tasks = await getAllTasks();
-   return tasks.map(task => ({
+   return tasks.map((task) => ({
      ...task,
-     newField: task.newField ?? 'default-value'
+     newField: task.newField ?? 'default-value',
    }));
    ```
 
@@ -302,7 +313,7 @@ function createTestTask(overrides?: Partial<Task>): Task {
     completed: false,
     order: 0,
     createdAt: Date.now(),
-    ...overrides
+    ...overrides,
   };
 }
 ```
@@ -334,18 +345,18 @@ const newTask: Task = {
   text: userInput,
   completed: false,
   order: tasks.length,
-  createdAt: Date.now()
+  createdAt: Date.now(),
 };
 
-tasks = [...tasks, newTask];  // Triggers $effect → IndexedDB
+tasks = [...tasks, newTask]; // Triggers $effect → IndexedDB
 ```
 
 ### Toggling Completion
 
 ```typescript
-const index = tasks.findIndex(t => t.id === taskId);
+const index = tasks.findIndex((t) => t.id === taskId);
 tasks[index].completed = !tasks[index].completed;
-tasks = [...tasks];  // Trigger reactivity
+tasks = [...tasks]; // Trigger reactivity
 ```
 
 ### Reordering via Drag & Drop
@@ -355,12 +366,12 @@ function handleReorder(listId: string, newOrder: Task[]) {
   // Update order property
   const reordered = newOrder.map((task, index) => ({
     ...task,
-    order: index
+    order: index,
   }));
 
   // Update tasks array
   tasks = tasks
-    .filter(t => t.listId !== listId)
+    .filter((t) => t.listId !== listId)
     .concat(reordered)
     .sort((a, b) => a.order - b.order);
 }

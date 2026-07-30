@@ -4,3 +4,7 @@ coverage/
 test-results/
 node_modules/
 
+# Agent worktrees are full checkouts nested inside the repo; formatting them
+# would rewrite files in another session's working tree.
+.claude/
+

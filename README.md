@@ -6,7 +6,6 @@ It is designed to support those recovering from mental health challenges, when t
 
 The app does not track progress or ask to share results on social media. It does not judge you. Its one function is to focus on this moment, today. A New Day is a quiet tool for people rebuilding routines.
 
-
 ## Getting started
 
 ```bash
@@ -63,6 +62,7 @@ Additional local testing tips live in `docs/local-testing.md`.
 See `docs/deployment-netlify.md` for complete Netlify deployment guide with custom domain setup.
 
 **Quick start:**
+
 ```bash
 # Connect repo to Netlify, then auto-deploys on push to main
 # Build: npm run build

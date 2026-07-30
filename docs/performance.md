@@ -8,17 +8,18 @@ A New Day maintains a Lighthouse performance score of **97/100** with a bundle s
 
 ### Current Scores (v2.0.0)
 
-| Metric | Value | Score | Weight |
-|--------|-------|-------|---------|
-| **First Contentful Paint (FCP)** | 1.4-2.1s | 0.81-0.98 | 10% |
-| **Largest Contentful Paint (LCP)** | 2.3s | 0.94 | 25% |
-| **Total Blocking Time (TBT)** | 0ms | 1.00 | 30% |
-| **Cumulative Layout Shift (CLS)** | 0 | 1.00 | 25% |
-| **Speed Index (SI)** | 1.4-2.1s | 0.99-1.00 | 10% |
+| Metric                             | Value    | Score     | Weight |
+| ---------------------------------- | -------- | --------- | ------ |
+| **First Contentful Paint (FCP)**   | 1.4-2.1s | 0.81-0.98 | 10%    |
+| **Largest Contentful Paint (LCP)** | 2.3s     | 0.94      | 25%    |
+| **Total Blocking Time (TBT)**      | 0ms      | 1.00      | 30%    |
+| **Cumulative Layout Shift (CLS)**  | 0        | 1.00      | 25%    |
+| **Speed Index (SI)**               | 1.4-2.1s | 0.99-1.00 | 10%    |
 
 **Overall Performance Score:** 97/100
 
 ### Score Calculation
+
 ```
 Performance = (FCP × 10%) + (SI × 10%) + (LCP × 25%) + (TBT × 30%) + (CLS × 25%)
            ≈ (0.90 × 10) + (1.0 × 10) + (0.94 × 25) + (1.0 × 30) + (1.0 × 25)
@@ -47,7 +48,7 @@ The 222 KB JavaScript bundle includes:
 
 2. **@tailwindplus/elements** (~84 KB)
    - UI component library
-   - *Note: Tested removal (38% size reduction) but FCP regressed from 1.4s → 2.1s*
+   - _Note: Tested removal (38% size reduction) but FCP regressed from 1.4s → 2.1s_
    - Decision: Keep for performance stability
 
 3. **Application Code** (~80 KB)
@@ -65,6 +66,7 @@ The 222 KB JavaScript bundle includes:
 ### Bundle Optimization Attempts
 
 **Tested:** Removing @tailwindplus/elements
+
 - **Result:** 138 KB bundle (46.94 KB gzipped) - 38% reduction
 - **Issue:** FCP regressed from 1.4s to 2.1s
 - **Decision:** Reverted - bundle size reduction not worth performance degradation
@@ -79,14 +81,35 @@ The 222 KB JavaScript bundle includes:
 
 ```html
 <style>
-  body{margin:0;padding:0;font-family:'Work Sans',...;background-color:#f5f3f2}
-  @media (prefers-color-scheme:dark){body{background-color:#1f1a18}}
-  h1{margin:0;font-size:1.875rem;line-height:2.25rem;font-weight:500;letter-spacing:-0.04em;color:#18181B}
-  @media (prefers-color-scheme:dark){h1{color:#c1b5b0}}
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Work Sans', ...;
+    background-color: #f5f3f2;
+  }
+  @media (prefers-color-scheme: dark) {
+    body {
+      background-color: #1f1a18;
+    }
+  }
+  h1 {
+    margin: 0;
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    color: #18181b;
+  }
+  @media (prefers-color-scheme: dark) {
+    h1 {
+      color: #c1b5b0;
+    }
+  }
 </style>
 ```
 
 **Impact:**
+
 - Eliminates render-blocking CSS for LCP element
 - Reduces potential LCP delay by ~1,810ms (80% of render time)
 - Adds 0.5 KB to HTML size (acceptable trade-off)
@@ -98,13 +121,26 @@ The 222 KB JavaScript bundle includes:
 **Solution:** Preload critical fonts with `fetchpriority="high"`
 
 ```html
-<link rel="preload" href="/fonts/WorkSans-Regular.woff2"
-      as="font" type="font/woff2" crossorigin fetchpriority="high" />
-<link rel="preload" href="/fonts/WorkSans-Medium.woff2"
-      as="font" type="font/woff2" crossorigin fetchpriority="high" />
+<link
+  rel="preload"
+  href="/fonts/WorkSans-Regular.woff2"
+  as="font"
+  type="font/woff2"
+  crossorigin
+  fetchpriority="high"
+/>
+<link
+  rel="preload"
+  href="/fonts/WorkSans-Medium.woff2"
+  as="font"
+  type="font/woff2"
+  crossorigin
+  fetchpriority="high"
+/>
 ```
 
 **Impact:**
+
 - Fonts load before other resources
 - Reduces FOUT (Flash of Unstyled Text)
 - Combined with `font-display: swap` in CSS
@@ -130,6 +166,7 @@ build: {
 ```
 
 **Rationale:**
+
 - **No Code Splitting:** Single bundle loads faster than multiple chunks for small apps
 - **ES2020 Target:** Smaller output, no legacy browser polyfills needed
 - **esbuild Minifier:** Fast build times, excellent compression
@@ -137,6 +174,7 @@ build: {
 ### 4. Service Worker Strategy
 
 **Configuration:**
+
 ```typescript
 VitePWA({
   registerType: 'autoUpdate',
@@ -145,10 +183,11 @@ VitePWA({
     skipWaiting: true,
     clientsClaim: true,
   },
-})
+});
 ```
 
 **Trade-offs:**
+
 - **Larger initial cache:** All assets precached (~489 KB)
 - **Benefit:** Instant offline functionality
 - **Decision:** Worth it for PWA offline-first experience
@@ -168,6 +207,7 @@ VitePWA({
 **Issue:** Lighthouse reports 95 KB "unused JavaScript"
 
 **Analysis:**
+
 - Svelte runtime: Required for reactivity
 - Component code: Loaded on-demand (Svelte's lazy evaluation)
 - Not truly "unused" - just not executed during initial paint
@@ -179,6 +219,7 @@ VitePWA({
 **Issue:** 80% of LCP time spent in rendering phase
 
 **Causes:**
+
 - DOM construction
 - Style calculation
 - Layout computation
@@ -196,6 +237,7 @@ Achieving a consistent 100 Lighthouse score would require:
 4. **Server-side rendering** (adds complexity, not needed for PWA)
 
 **Trade-offs Assessment:**
+
 - Current score (97) represents excellent real-world performance
 - Further optimizations would sacrifice maintainability or UX
 - Lighthouse scores vary ±3 points due to environmental factors
@@ -226,6 +268,7 @@ open dist/stats.html
 ```
 
 The visualizer shows:
+
 - Module sizes (parsed, gzipped, brotli)
 - Dependency tree
 - Code redundancy analysis
@@ -233,6 +276,7 @@ The visualizer shows:
 ### Monitoring Performance Regressions
 
 **Before committing:**
+
 ```bash
 npm run build
 # Check bundle sizes in output
@@ -240,21 +284,22 @@ npm run build
 ```
 
 **Red flags:**
+
 - Bundle size increase >10% without feature additions
 - Lighthouse score drops below 95
 - FCP/LCP increasing significantly
 
 ## Performance Budget
 
-| Metric | Target | Current | Status |
-|--------|--------|---------|--------|
-| JS Bundle | <250 KB | 222 KB | ✅ |
-| CSS Bundle | <50 KB | 31 KB | ✅ |
-| Lighthouse Score | >95 | 97 | ✅ |
-| FCP | <2.5s | 1.4-2.1s | ✅ |
-| LCP | <2.5s | 2.3s | ✅ |
-| TBT | <300ms | 0ms | ✅ |
-| CLS | <0.1 | 0 | ✅ |
+| Metric           | Target  | Current  | Status |
+| ---------------- | ------- | -------- | ------ |
+| JS Bundle        | <250 KB | 222 KB   | ✅     |
+| CSS Bundle       | <50 KB  | 31 KB    | ✅     |
+| Lighthouse Score | >95     | 97       | ✅     |
+| FCP              | <2.5s   | 1.4-2.1s | ✅     |
+| LCP              | <2.5s   | 2.3s     | ✅     |
+| TBT              | <300ms  | 0ms      | ✅     |
+| CLS              | <0.1    | 0        | ✅     |
 
 ## Key Decisions & Rationale
 
@@ -263,6 +308,7 @@ npm run build
 **Decision:** Single bundle
 
 **Reasoning:**
+
 - App is small (222 KB total)
 - Users load entire app on first visit anyway
 - Eliminates HTTP roundtrip overhead for chunks
@@ -274,6 +320,7 @@ npm run build
 **Decision:** Keep despite 84 KB cost
 
 **Reasoning:**
+
 - Removal caused FCP regression (1.4s → 2.1s)
 - Likely provides critical initialization for UI components
 - Bundle size reduction doesn't matter if performance degrades
@@ -284,6 +331,7 @@ npm run build
 **Decision:** Modern browsers only
 
 **Reasoning:**
+
 - Smaller bundle size (no polyfills)
 - Faster execution (native features)
 - IndexedDB + Service Workers require modern browsers anyway
@@ -292,11 +340,13 @@ npm run build
 ## Monitoring & Alerts
 
 **Manual checks:**
+
 - Run Lighthouse before major releases
 - Check bundle size after dependency updates
 - Test on slow 3G network periodically
 
 **Future:** Consider Lighthouse CI in GitHub Actions
+
 - Automated performance regression detection
 - Comment on PRs with performance impact
 

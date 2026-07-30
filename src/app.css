@@ -22,8 +22,8 @@
   --color-brand-950: #2c303a;
 
   --font-sans:
-    Public Sans, -apple-system, system-ui, BlinkMacSystemFont, Segoe UI, Roboto,
-    Helvetica Neue, Arial, sans-serif;
+    Public Sans, -apple-system, system-ui, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue,
+    Arial, sans-serif;
 }
 
 /*
@@ -133,10 +133,9 @@ dd {
 }
 
 dd::before {
-  content: counter(step-counter) ". ";
+  content: counter(step-counter) '. ';
   @apply mr-1;
 }
-
 
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -156,18 +155,18 @@ dd::before {
 }
 
 [aria-dropeffect]:focus-visible {
-  outline: 2px solid #2C303A !important;
+  outline: 2px solid #2c303a !important;
   outline-offset: 2px;
 }
 
 @media (prefers-color-scheme: dark) {
   [aria-dropeffect]:focus-visible {
-    outline: 2px solid #9CA3AF !important;
+    outline: 2px solid #9ca3af !important;
   }
 }
 
 .dark [aria-dropeffect]:focus-visible {
-  outline: 2px solid #9CA3AF !important;
+  outline: 2px solid #9ca3af !important;
 }
 
 /* Remove any focus/active borders on draggable containers */
@@ -184,18 +183,18 @@ section[aria-live]:focus-within {
 
 /* Custom focus color for draggable items - only show for keyboard navigation */
 section[aria-live] > div > div:focus-visible {
-  outline: 2px solid #2C303A !important;
+  outline: 2px solid #2c303a !important;
   outline-offset: 2px;
 }
 
 @media (prefers-color-scheme: dark) {
   section[aria-live] > div > div:focus-visible {
-    outline: 2px solid #9CA3AF !important;
+    outline: 2px solid #9ca3af !important;
   }
 }
 
 .dark section[aria-live] > div > div:focus-visible {
-  outline: 2px solid #9CA3AF !important;
+  outline: 2px solid #9ca3af !important;
 }
 
 /* Ensure all content works within drag handle zones, only dragHandle initiates drag */
@@ -203,7 +202,7 @@ section[aria-live] * {
   pointer-events: auto !important;
 }
 
-section[aria-live] input[type="checkbox"],
+section[aria-live] input[type='checkbox'],
 section[aria-live] label {
   cursor: pointer !important;
 }

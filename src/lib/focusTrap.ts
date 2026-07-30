@@ -7,7 +7,7 @@ const FOCUSABLE_SELECTORS = [
   'textarea:not([disabled])',
   'details summary',
   '[contenteditable]:not([contenteditable="false"])',
-  '[tabindex]:not([tabindex="-1"])'
+  '[tabindex]:not([tabindex="-1"])',
 ].join(',');
 
 interface FocusTrapOptions {
@@ -120,7 +120,7 @@ export function focusTrap(node: HTMLElement, options: FocusTrapOptions = {}) {
       }
 
       focusTarget?.focus({ preventScroll: true });
-    }
+    },
   };
 }
 

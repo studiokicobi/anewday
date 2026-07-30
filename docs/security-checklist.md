@@ -31,19 +31,19 @@ A New Day is a privacy-first PWA with no backend, no user accounts, and no exter
 **Threats we explicitly do NOT address:**
 
 1. **Backend attacks** (SQL injection, authentication bypass, etc.)
-   - *Reason:* No backend exists
+   - _Reason:_ No backend exists
 
 2. **API rate limiting / DoS**
-   - *Reason:* Client-side only, no shared resources
+   - _Reason:_ Client-side only, no shared resources
 
 3. **Session hijacking / token theft**
-   - *Reason:* No authentication system
+   - _Reason:_ No authentication system
 
 4. **Phishing / social engineering**
-   - *Reason:* No user accounts or credentials
+   - _Reason:_ No user accounts or credentials
 
 5. **Physical access attacks**
-   - *Reason:* If attacker has device access, browser data is compromised regardless
+   - _Reason:_ If attacker has device access, browser data is compromised regardless
 
 ## Implemented Protections
 
@@ -52,6 +52,7 @@ A New Day is a privacy-first PWA with no backend, no user accounts, and no exter
 **Location:** `vite.config.ts` (dev), Netlify headers (production)
 
 **Development CSP:**
+
 ```
 default-src 'self';
 script-src 'self' 'strict-dynamic' 'nonce-anewday' 'unsafe-inline';
@@ -64,6 +65,7 @@ form-action 'self'
 ```
 
 **Production CSP:**
+
 ```
 default-src 'self';
 script-src 'self' 'strict-dynamic' 'nonce-anewday';
@@ -76,15 +78,18 @@ form-action 'self'
 ```
 
 **Key Differences:**
+
 - Dev allows `'unsafe-inline'` for Vite HMR (Hot Module Replacement)
 - Production removes all inline script/style permissions except nonces
 
 **Why 'strict-dynamic':**
+
 - Allows dynamically loaded scripts from nonce-verified sources
 - Required for modern JS modules and dynamic imports
 - More secure than listing every domain
 
 **Nonce Implementation:**
+
 ```typescript
 // vite.config.ts
 transformIndexHtml(html) {
@@ -99,6 +104,7 @@ transformIndexHtml(html) {
 ### 2. No External Dependencies at Runtime
 
 **Verification:**
+
 ```bash
 # Check production build for external requests
 grep -r "http" dist/assets/*.js
@@ -106,6 +112,7 @@ grep -r "http" dist/assets/*.js
 ```
 
 **Enforced by:**
+
 - CSP `connect-src 'self'` blocks external fetch/XHR
 - No third-party scripts (analytics, ads, CDNs)
 - Fonts self-hosted in `/public/fonts/`
@@ -115,6 +122,7 @@ grep -r "http" dist/assets/*.js
 ### 3. Optional Data Encryption (AES-GCM)
 
 **Algorithm Details:**
+
 - **Cipher:** AES-GCM (Galois/Counter Mode)
 - **Key Size:** 256 bits
 - **IV:** 12 bytes (96 bits), randomly generated per export
@@ -124,6 +132,7 @@ grep -r "http" dist/assets/*.js
   - Hash: SHA-256
 
 **Implementation:**
+
 ```typescript
 // Simplified example
 async function encryptData(data: string, passphrase: string) {
@@ -140,11 +149,13 @@ async function encryptData(data: string, passphrase: string) {
 ```
 
 **Why AES-GCM:**
+
 - Authenticated encryption (prevents tampering)
 - Fast in browsers (hardware acceleration)
 - Well-studied and standardized
 
 **Why Optional:**
+
 - Most users don't need encryption for task lists
 - Adds complexity to export/import flow
 - User can choose based on sensitivity
@@ -156,6 +167,7 @@ async function encryptData(data: string, passphrase: string) {
 **Approach:** Render as text, never as HTML
 
 **Example:**
+
 ```svelte
 <!-- SAFE: Text content is automatically escaped -->
 <p>{task.text}</p>
@@ -165,11 +177,13 @@ async function encryptData(data: string, passphrase: string) {
 ```
 
 **Validation:**
+
 - Max task length: ~1000 characters (enforced in UI)
 - No server-side validation (no server)
 - IndexedDB accepts any JSON-serializable data
 
 **XSS Risk Assessment:**
+
 - **Low:** Svelte escapes all text by default
 - **Only risk:** Using `{@html}` directive (never used in codebase)
 
@@ -180,11 +194,13 @@ async function encryptData(data: string, passphrase: string) {
 **Scope:** `/` (entire origin)
 
 **Cache Strategy:**
+
 - Precache all assets on install
 - Network-first for HTML
 - Cache-first for assets
 
 **Update Mechanism:**
+
 ```typescript
 registration.addEventListener('updatefound', () => {
   const newWorker = registration.installing;
@@ -196,6 +212,7 @@ registration.addEventListener('updatefound', () => {
 ```
 
 **Security Considerations:**
+
 - **No remote code execution:** Service worker only caches local assets
 - **No proxy attacks:** Service worker doesn't modify responses
 - **Automatic updates:** Prevents users from running old, vulnerable code
@@ -207,25 +224,29 @@ registration.addEventListener('updatefound', () => {
 **Current Status:** 0 vulnerabilities
 
 **Monitoring:**
+
 - GitHub Dependabot alerts
 - Manual `npm audit` before releases
 
 **Update Policy:**
+
 - Security patches: Apply immediately
 - Minor versions: Test, then update
 - Major versions: Careful migration (e.g., Svelte 4 → 5)
 
 **Recent Fixes (v2.0.0):**
+
 - `glob` (HIGH): Command injection via bracket expression
 - `js-yaml` (MEDIUM): Prototype pollution
 - `esbuild` (MEDIUM): CORS misconfiguration
 - `tmp` (LOW): Symlink directory traversal
 
 **Overrides:**
+
 ```json
 {
   "overrides": {
-    "tmp": "^0.2.5"  // Force secure version
+    "tmp": "^0.2.5" // Force secure version
   }
 }
 ```
@@ -233,14 +254,17 @@ registration.addEventListener('updatefound', () => {
 ### 7. IndexedDB Security
 
 **Access Control:**
+
 - Same-origin policy: Only `anewday.app` can access database
 - No cross-origin sharing
 
 **Encryption:**
+
 - Data stored unencrypted in IndexedDB
 - User can encrypt exports if needed
 
 **Backup/Export:**
+
 - User-initiated only (no automatic cloud sync)
 - Downloaded to user's device
 
@@ -253,10 +277,12 @@ registration.addEventListener('updatefound', () => {
 **Attack:** User creates task with `<script>alert('XSS')</script>`
 
 **Mitigation:**
+
 - Svelte automatically escapes text content
 - Rendered as literal string, not executed
 
 **Test:**
+
 ```typescript
 const task = { text: '<script>alert("XSS")</script>' };
 // Renders as: &lt;script&gt;alert("XSS")&lt;/script&gt;
@@ -267,11 +293,13 @@ const task = { text: '<script>alert("XSS")</script>' };
 **Attack:** npm package injects malicious code
 
 **Mitigation:**
+
 - CSP blocks external requests
 - Regular dependency audits
 - Lock file pins exact versions
 
 **Recovery:**
+
 - Identify compromised package with `npm audit`
 - Update or replace package
 - Rebuild and redeploy
@@ -281,10 +309,12 @@ const task = { text: '<script>alert("XSS")</script>' };
 **Attack:** Malicious extension reads IndexedDB
 
 **Mitigation:**
+
 - Users can enable encrypted exports
 - Extension permissions required for storage access
 
 **Limitation:**
+
 - Cannot prevent extensions with storage permissions
 - This is a browser-level concern, not app-level
 
@@ -293,6 +323,7 @@ const task = { text: '<script>alert("XSS")</script>' };
 **Attack:** Network attacker modifies served files
 
 **Mitigation:**
+
 - HTTPS enforced (Netlify auto-redirects)
 - Service worker verifies asset integrity
 - Subresource Integrity (SRI) for CDN assets (none used)
@@ -304,6 +335,7 @@ const task = { text: '<script>alert("XSS")</script>' };
 ### 1. Server-Side Validation
 
 **Why not:**
+
 - No server exists
 - Client-side validation sufficient for user convenience
 - Malicious users can only harm their own data
@@ -313,6 +345,7 @@ const task = { text: '<script>alert("XSS")</script>' };
 ### 2. Rate Limiting
 
 **Why not:**
+
 - No shared resources to protect
 - Users can only affect their own data
 - IndexedDB has browser-imposed limits
@@ -322,6 +355,7 @@ const task = { text: '<script>alert("XSS")</script>' };
 ### 3. Authentication / Authorization
 
 **Why not:**
+
 - No user accounts
 - No shared data
 - Privacy-first: anonymous by design
@@ -331,6 +365,7 @@ const task = { text: '<script>alert("XSS")</script>' };
 ### 4. CORS Configuration
 
 **Why not:**
+
 - No API endpoints
 - All resources served from same origin
 - CSP handles cross-origin restrictions
@@ -340,6 +375,7 @@ const task = { text: '<script>alert("XSS")</script>' };
 ### 5. Database Encryption at Rest
 
 **Why not:**
+
 - IndexedDB already isolated per origin
 - Users can encrypt exports if needed
 - Would significantly complicate implementation
@@ -349,6 +385,7 @@ const task = { text: '<script>alert("XSS")</script>' };
 ### 6. Content Security Policy Reporting
 
 **Why not:**
+
 - No server to receive reports
 - console.error sufficient for development
 
@@ -363,24 +400,28 @@ const task = { text: '<script>alert("XSS")</script>' };
 **Expected:** No errors in production build
 
 **Red Flags:**
+
 - "Refused to load script from 'external.com'"
 - "Refused to execute inline script"
 
 ### Dependency Vulnerabilities
 
 **Test:**
+
 ```bash
 npm audit
 # Expected: 0 vulnerabilities
 ```
 
 **Automation:**
+
 - GitHub Dependabot (automatic PR creation)
 - Manual check before releases
 
 ### XSS Prevention
 
 **Test:**
+
 ```typescript
 // tests/e2e/security.spec.ts
 test('task text with HTML is escaped', async ({ page }) => {
@@ -410,6 +451,7 @@ test('task text with HTML is escaped', async ({ page }) => {
 **Response Time:** Best effort (personal project)
 
 **Disclosure Policy:**
+
 - Report privately first (GitHub Security Advisory)
 - Allow time for fix before public disclosure
 - Credit provided in release notes
@@ -417,14 +459,13 @@ test('task text with HTML is escaped', async ({ page }) => {
 ## Security Assumptions
 
 **We assume:**
+
 1. User's browser is not compromised
 2. User's device is physically secure
 3. User's network uses HTTPS (enforced by Netlify)
 4. User trusts browser extensions they install
 
-**We do NOT assume:**
-5. User's data is private from local access
-6. Browser storage is encrypted at rest
+**We do NOT assume:** 5. User's data is private from local access 6. Browser storage is encrypted at rest
 
 ## References
 

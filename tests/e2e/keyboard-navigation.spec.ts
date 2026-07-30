@@ -3,11 +3,15 @@ import { test, expect, type Page } from '@playwright/test';
 async function enableMultiListMode(page: Page) {
   const settingsTrigger = page.locator('[data-settings-trigger]');
   await settingsTrigger.click();
-  const settingsDialog = page.locator('[aria-modal="true"]').filter({ has: page.locator('#settings-title') });
+  const settingsDialog = page
+    .locator('[aria-modal="true"]')
+    .filter({ has: page.locator('#settings-title') });
   await expect(settingsDialog).toBeVisible({ timeout: 10000 });
 
   await settingsDialog.getByRole('button', { name: 'List organization' }).click();
-  await settingsDialog.getByRole('heading', { name: 'List organization' }).waitFor({ state: 'visible', timeout: 10000 });
+  await settingsDialog
+    .getByRole('heading', { name: 'List organization' })
+    .waitFor({ state: 'visible', timeout: 10000 });
   const toggle = settingsDialog.locator('button[role="switch"]').first();
   if ((await toggle.getAttribute('aria-checked')) !== 'true') {
     await toggle.click();

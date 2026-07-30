@@ -34,8 +34,8 @@ describe('crypto', () => {
   });
 
   it('throws user-facing error for JSON with wrong field types', async () => {
-    await expect(
-      decryptExport(JSON.stringify({ s: 1, i: 2, d: 3 }), 'any')
-    ).rejects.toThrow('Invalid file or passphrase.');
+    await expect(decryptExport(JSON.stringify({ s: 1, i: 2, d: 3 }), 'any')).rejects.toThrow(
+      'Invalid file or passphrase.'
+    );
   });
 });
