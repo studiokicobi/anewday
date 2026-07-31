@@ -11,6 +11,12 @@ export default defineConfig({
     baseURL: 'http://127.0.0.1:4173',
     viewport: { width: 1280, height: 720 },
     timezoneId: 'America/New_York',
+    // The WebKit failures this suite hits only ever appear on CI, so a local
+    // repro is not available to debug from. Keep a trace and a screenshot of
+    // whatever did fail; both are written only on failure and cost nothing on a
+    // green run.
+    trace: 'retain-on-failure',
+    screenshot: 'only-on-failure',
   },
   projects: [
     {
