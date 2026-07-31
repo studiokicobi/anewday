@@ -110,6 +110,67 @@ async function addTask(page: Page, title: string) {
   await page.getByRole('button', { name: 'Add' }).click();
 }
 
+/** Freezes Date behind an offset the test advances with __advanceDay(). */
+async function mockClock(page: Page) {
+  await page.addInitScript(() => {
+    const OriginalDate = Date;
+    let offset = 0;
+    function MockDate(this: unknown, ...args: unknown[]) {
+      if (args.length > 0) {
+        return new (OriginalDate as unknown as new (...a: unknown[]) => Date)(...args);
+      }
+      return new OriginalDate(OriginalDate.now() + offset);
+    }
+    MockDate.UTC = OriginalDate.UTC;
+    MockDate.parse = OriginalDate.parse;
+    MockDate.now = () => OriginalDate.now() + offset;
+    MockDate.prototype = OriginalDate.prototype;
+    Object.defineProperty(window, 'Date', { value: MockDate });
+    (window as unknown as { __advanceDay: () => void }).__advanceDay = () => {
+      offset += 24 * 60 * 60 * 1000;
+    };
+  });
+}
+
+const tick = async (page: Page, name: string) => {
+  const checkbox = page.getByRole('checkbox', { name });
+  await expect(checkbox).toBeVisible();
+  // app.css forces pointer-events onto the checkmark SVG, so it wins the hit
+  // test at the checkbox's centre; a real click still toggles it.
+  await checkbox.click({ force: true });
+  await expect(checkbox).toBeChecked();
+};
+
+test('clears a task ticked off before a midnight the load spanned', async ({ page }) => {
+  await mockClock(page);
+
+  // First visit, at full speed: leave a completed task behind, stamped today.
+  await page.goto('/', { waitUntil: 'networkidle' });
+  await addTask(page, 'Saved earlier');
+  await tick(page, 'Saved earlier');
+  await expect.poll(() => persistedTitles(page)).toEqual(['Saved earlier']);
+
+  // Second visit, with the load pinned open partway through.
+  await holdInitialLoad(page);
+  await page.reload();
+  await waitForHeldLoad(page);
+
+  // Still the same day: the user adds a task and ticks it off.
+  await addTask(page, 'Typed while loading');
+  await tick(page, 'Typed while loading');
+
+  // Midnight passes before loadState() gets to publish.
+  await page.evaluate(() => (window as unknown as { __advanceDay: () => void }).__advanceDay());
+  await releaseHeldLoad(page);
+
+  // Both ticks belong to yesterday, so the new day has to clear them — the
+  // replayed one included. Publishing the reset before the replay would bring
+  // the queued tick back on the wrong side of midnight.
+  await expect(page.getByRole('checkbox', { name: 'Saved earlier' })).not.toBeChecked();
+  await expect(page.getByRole('checkbox', { name: 'Typed while loading' })).not.toBeChecked();
+  await expect.poll(() => persistedTitles(page)).toEqual(['Saved earlier', 'Typed while loading']);
+});
+
 test('keeps a task added while the initial load is still in flight', async ({ page }) => {
   // First visit, at full speed: leave a task behind the way a previous session would.
   await page.goto('/', { waitUntil: 'networkidle' });

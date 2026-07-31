@@ -62,7 +62,9 @@ type Mutator = (state: PersistedState) => PersistedState;
 // the mutation. Mutations made while `loaded` is false are therefore queued and
 // replayed onto the loaded snapshot instead of written straight through.
 let loaded = true;
-let pendingMutations: Mutator[] = [];
+// Each queued mutation carries the moment it was made, because the load can span
+// a local midnight and the daily reset has to land in the right place among them.
+let pendingMutations: Array<{ mutate: Mutator; at: Date }> = [];
 let loadedSignal: Promise<void> = Promise.resolve();
 let releaseLoaded: (() => void) | null = null;
 
@@ -81,19 +83,37 @@ function finishLoad() {
 }
 
 /**
+ * Brings the daily reset forward to `at` so a mutation made then is replayed
+ * against the day it actually happened on. Only ever moves forward: a clock that
+ * jumps backwards mid-load must not undo a reset the state already carries.
+ */
+function resetUpTo(state: PersistedState, at: Date): PersistedState {
+  return dateKey(at) > state.meta.lastResetKey ? resetIfNeeded(state, at) : state;
+}
+
+/**
  * Publishes the persisted snapshot, replaying anything the user changed while
  * the load was in flight. Deliberately synchronous — nothing may run between
  * draining the queue and clearing the flag, or a mutation would slip through
  * unqueued and unpersisted.
+ *
+ * The replay is in time order with the reset interleaved, not run up front: a
+ * load can span local midnight, and resetting the base before replaying would
+ * put every queued mutation on the far side of that boundary. A task ticked off
+ * at 23:59 would come back ticked on the new day, and because the reset had
+ * already stamped the new key the visibility check that follows would find
+ * nothing to do and say nothing about it.
  */
 function publishSnapshot(base: PersistedState): PersistedState {
   if (loaded) {
     return get(store);
   }
-  const next = pendingMutations.reduce(
-    (state, mutate) => normalizeLists(mutate(state)),
-    normalizeLists(resetIfNeeded(base))
+  const replayed = pendingMutations.reduce(
+    (state, { mutate, at }) => normalizeLists(mutate(resetUpTo(state, at))),
+    normalizeLists(base)
   );
+  // A rollover between the last mutation and now still has to land.
+  const next = normalizeLists(resetIfNeeded(replayed));
   pendingMutations = [];
   loaded = true;
   store.set(next);
@@ -196,8 +216,9 @@ async function commit(mutator: Mutator) {
 
   if (!loaded) {
     // Show the change straight away, but let publishSnapshot() replay it onto
-    // the real snapshot instead of persisting this partial one.
-    pendingMutations.push(mutator);
+    // the real snapshot instead of persisting this partial one. The timestamp is
+    // taken here, not at replay time, so the reset lands on the right side of it.
+    pendingMutations.push({ mutate: mutator, at: new Date() });
     await whenLoaded();
     return get(store);
   }
