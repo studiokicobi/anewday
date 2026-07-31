@@ -31,36 +31,6 @@ async function enableMultiListMode(page: Page) {
   await expect(settingsTrigger).toBeFocused();
 }
 
-// AddTaskForm makes more than one deferred focus move after a submit: one after
-// tick(), and the dropdown's restore path sits behind a further 10ms timer.
-// Waiting for a single handoff is not enough — a later one lands between
-// press()'s internal focus() and its keydown, so Space reaches the Add button
-// and the checkbox never toggles. Wait for focus to stop moving instead, which
-// holds however many moves the form makes.
-async function waitForFocusToSettle(page: Page, quietMs = 150) {
-  await page.evaluate(() => {
-    const w = window as unknown as { __lastFocusChange?: number; __focusHooked?: boolean };
-    w.__lastFocusChange = performance.now();
-    if (!w.__focusHooked) {
-      w.__focusHooked = true;
-      document.addEventListener(
-        'focusin',
-        () => {
-          w.__lastFocusChange = performance.now();
-        },
-        true
-      );
-    }
-  });
-  await page.waitForFunction(
-    (ms) =>
-      performance.now() -
-        ((window as unknown as { __lastFocusChange: number }).__lastFocusChange ?? 0) >=
-      ms,
-    quietMs
-  );
-}
-
 // Ensures core keyboard interactions (type → submit → toggle) work without relying on pointer input.
 test('keyboard flow allows submitting and toggling tasks', async ({ page }) => {
   await page.goto('/');
@@ -92,11 +62,6 @@ test('keyboard flow allows submitting and toggling tasks', async ({ page }) => {
   await expect(taskInput).toHaveValue('Keyboard navigation task');
 
   await page.getByRole('button', { name: 'Add' }).click();
-
-  // Let the form finish its post-submit focus choreography before touching the
-  // checkbox; see waitForFocusToSettle above for why a single handoff is not a
-  // sufficient signal.
-  await waitForFocusToSettle(page);
 
   // No sleep before this: toBeVisible already waits for the row to render, and
   // the 200ms flip the list runs only animates items that move, not the one just

@@ -253,15 +253,28 @@
     }
 
     showError = false;
+    // onSubmit() awaits an IndexedDB write, so the focus calls below land tens of
+    // milliseconds after the submit — well after the user can have moved on. Only
+    // restore focus if it is still where the submit left it; otherwise we would
+    // yank it back out of whatever they moved to, which is the same steal the
+    // settings drawer was doing before #63.
+    const focusedAtSubmit = document.activeElement;
     await onSubmit();
-    // Restore focus to Add button for better keyboard navigation flow
     await tick();
+    const focusMovedSince =
+      document.activeElement !== focusedAtSubmit && document.activeElement !== document.body;
+    if (focusMovedSince) {
+      return;
+    }
     // Keep focus on the field when the submission failed, so the reason is
     // announced and the text is still there to correct.
     if (submitError) {
       taskInput?.focus();
       return;
     }
+    // Otherwise hand focus to Add, so a keyboard user can submit again without
+    // reaching for the pointer. Safari does not focus a button on click, so this
+    // is doing real work even when the submit came from clicking Add.
     addButton?.focus();
   }
 
