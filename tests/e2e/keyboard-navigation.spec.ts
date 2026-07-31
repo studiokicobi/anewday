@@ -50,13 +50,12 @@ test('keyboard flow allows submitting and toggling tasks', async ({ page }) => {
 
   await enableMultiListMode(page);
 
-  // Closing the drawer also hands focus back, and that handoff is deferred.
-  // Typing into the field while it is still in flight is how CI produced the
-  // other failure this test has shown — "element(s) not found" on the checkbox
-  // ten seconds later, because Add submitted an empty field and no row was ever
-  // created. Settle first, then assert the value actually landed, so a lost
-  // input fails here with an obvious message instead of as a phantom missing row.
-  await waitForFocusToSettle(page);
+  // A focus move landing mid-fill used to leave Add submitting an empty field,
+  // which surfaced ten seconds later as "element(s) not found" on the checkbox,
+  // far from its cause. Both deferred moves that could do that are gone now —
+  // the drawer's close handoff in #63, the form's post-submit restore in #67 —
+  // so this asserts the value rather than waiting for anything. If an input is
+  // ever lost again it fails here, with an obvious message.
   await taskInput.focus();
   await taskInput.fill('Keyboard navigation task');
   await expect(taskInput).toHaveValue('Keyboard navigation task');
