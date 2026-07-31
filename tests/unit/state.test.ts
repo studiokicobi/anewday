@@ -1,5 +1,5 @@
 import 'fake-indexeddb/auto';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { get } from 'svelte/store';
 import {
   initState,
@@ -155,6 +155,76 @@ describe('stores/state', () => {
       'Saved earlier',
       'Typed while loading',
     ]);
+  });
+
+  it('resets edits made before a midnight the load spanned', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    try {
+      vi.setSystemTime(new Date(2026, 2, 1, 23, 59, 50));
+      await initState();
+      __resetStoreForTests();
+
+      const load = gateStateLoad();
+      try {
+        const initialising = initState();
+        await load.read;
+
+        // Still the 1st: the user adds a task and ticks it off. commit() only
+        // resolves once the load lands, so these stay unawaited — the store is
+        // updated synchronously before either promise suspends.
+        const adding = addItem('Stretch');
+        const toggling = toggleItem(get(appState).items[0]!.id);
+        expect(get(appState).items[0]?.completed).toBe(true);
+
+        // Midnight passes before loadState() gets to publish.
+        vi.setSystemTime(new Date(2026, 2, 2, 0, 0, 5));
+
+        load.release();
+        await Promise.all([initialising, adding, toggling]);
+      } finally {
+        load.restore();
+      }
+
+      const state = get(appState);
+      expect(state.meta.lastResetKey).toBe('2026-03-02');
+      expect(state.items.map((item) => item.title)).toEqual(['Stretch']);
+      // The tick happened on the 1st, so the 2nd's reset has to clear it.
+      expect(state.items[0]?.completed).toBe(false);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('keeps edits made after a midnight the load spanned', async () => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    try {
+      vi.setSystemTime(new Date(2026, 2, 1, 23, 59, 50));
+      await initState();
+      __resetStoreForTests();
+
+      const load = gateStateLoad();
+      try {
+        const initialising = initState();
+        await load.read;
+
+        // Midnight passes first, then the user ticks something off.
+        vi.setSystemTime(new Date(2026, 2, 2, 0, 0, 5));
+        const adding = addItem('Stretch');
+        const toggling = toggleItem(get(appState).items[0]!.id);
+
+        load.release();
+        await Promise.all([initialising, adding, toggling]);
+      } finally {
+        load.restore();
+      }
+
+      const state = get(appState);
+      expect(state.meta.lastResetKey).toBe('2026-03-02');
+      // This tick belongs to the 2nd, so it has to survive.
+      expect(state.items[0]?.completed).toBe(true);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it('switches between single and multi list modes safely', async () => {
