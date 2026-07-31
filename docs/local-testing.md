@@ -57,6 +57,7 @@ shows up as `page.goto: net::ERR_CONNECTION_REFUSED` and reads as a test
 failure rather than as a collision.
 
 - CI has a single checkout, so it keeps 4173.
-- `PLAYWRIGHT_PORT=4999 npm run test:e2e` pins a port when you need a known one.
+- `PREVIEW_PORT=4999 npm run test:e2e` pins a port when you need a known one (the
+  same variable applies to `npm run lighthouse`). `PLAYWRIGHT_PORT` still works.
 - A clash with an unrelated local service fails loudly with "port already in
   use" instead of quietly testing against whatever answered.

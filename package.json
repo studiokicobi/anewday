@@ -16,7 +16,7 @@
     "build:analyze": "vite build && vite-bundle-visualizer --open false",
     "check:budgets": "npm run build && lhci autorun --config=.lighthouserc.json",
     "lhci": "lhci autorun",
-    "lighthouse": "npm run build && (npm run preview & echo $! > .preview.pid) && wait-on http://localhost:4173 && npx lighthouse http://localhost:4173 --view --chrome-flags='--headless=new' --output=json --output=html --output-path=./.lighthouse; kill $(cat .preview.pid 2>/dev/null) 2>/dev/null || true; rm -f .preview.pid",
+    "lighthouse": "npm run build && node ./scripts/lighthouse.js",
     "lint": "eslint \"src/**/*.{ts,svelte}\" \"tests/**/*.ts\"",
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
