@@ -248,10 +248,22 @@ Achieving a consistent 100 Lighthouse score would require:
 ### Running Lighthouse
 
 ```bash
-# Start preview server
-npm run build && npm run preview
+npm run lighthouse
+```
 
-# In another terminal, run Lighthouse
+That builds, starts a preview on a port belonging to this checkout, runs
+Lighthouse against it, and shuts the server down again. It refuses to run if
+anything else already holds the port, rather than profiling whatever answered —
+see [local-testing.md](local-testing.md) for the port scheme and `PREVIEW_PORT`.
+
+To drive Lighthouse yourself, start the preview on a port you have chosen so it
+cannot drift onto another checkout's server:
+
+```bash
+npm run build
+npm run preview -- --port 4173 --strictPort
+
+# In another terminal
 npx lighthouse http://localhost:4173 \
   --only-categories=performance \
   --output=json,html \
