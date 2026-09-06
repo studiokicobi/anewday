@@ -14,6 +14,7 @@ import { spawn } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { previewPort } from './preview-port.js';
+import { createPreviewReadyMatcher } from './preview-readiness.js';
 import { assertLighthouseReport } from './lighthouse-assertions.js';
 
 const port = previewPort();
@@ -90,12 +91,12 @@ function waitForReady(child) {
       READY_TIMEOUT_MS
     );
 
-    const ready = new RegExp(`http://127\\.0\\.0\\.1:${port}/?`);
     const watch = (stream, echo) => {
+      const isReady = createPreviewReadyMatcher(port);
       stream?.on('data', (chunk) => {
         const text = String(chunk);
         echo.write(text);
-        if (ready.test(text)) {
+        if (isReady(text)) {
           finish(resolve, undefined);
         }
       });
