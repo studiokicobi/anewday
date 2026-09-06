@@ -1,7 +1,7 @@
 // Runs Lighthouse against a preview server this script owns.
 //
 // Previously this was a shell one-liner in package.json that started
-// `vite preview` with no --port and then pointed wait-on and lighthouse at a
+// `vite preview` with no --port and then pointed several processes at a
 // hardcoded 4173. Two ways that went wrong once more than one checkout existed:
 // vite silently moves to 4174+ when its default port is taken, so the report
 // could be generated against another checkout's build, or the script could hang
@@ -11,7 +11,11 @@
 // clash fails loudly rather than drifting, and the server is torn down on every
 // exit path.
 import { spawn } from 'node:child_process';
+import { readFile } from 'node:fs/promises';
+import { fileURLToPath } from 'node:url';
 import { previewPort } from './preview-port.js';
+import { createPreviewReadyMatcher } from './preview-readiness.js';
+import { assertLighthouseReport } from './lighthouse-assertions.js';
 
 const port = previewPort();
 const url = `http://127.0.0.1:${port}`;
@@ -20,11 +24,40 @@ const READY_TIMEOUT_MS = 30_000;
 /** @type {import('node:child_process').ChildProcess | null} */
 let preview = null;
 
-function stopPreview() {
-  if (preview && preview.exitCode === null && preview.signalCode === null) {
-    preview.kill('SIGTERM');
+function signalProcessGroup(child, signal) {
+  if (!child.pid || child.exitCode !== null || child.signalCode !== null) return;
+  try {
+    if (process.platform === 'win32') {
+      child.kill(signal);
+    } else {
+      process.kill(-child.pid, signal);
+    }
+  } catch (error) {
+    if (error?.code !== 'ESRCH') throw error;
   }
+}
+
+async function stopPreview() {
+  const child = preview;
   preview = null;
+  if (!child || child.exitCode !== null || child.signalCode !== null) return;
+
+  const closed = new Promise((resolve) => {
+    if (child.exitCode !== null || child.signalCode !== null) {
+      resolve(undefined);
+    } else {
+      child.once('close', resolve);
+    }
+  });
+  signalProcessGroup(child, 'SIGTERM');
+  const timedOut = await Promise.race([
+    closed.then(() => false),
+    new Promise((resolve) => setTimeout(() => resolve(true), 3_000)),
+  ]);
+  if (timedOut) {
+    signalProcessGroup(child, 'SIGKILL');
+    await closed;
+  }
 }
 
 function run(command, args, options = {}) {
@@ -58,12 +91,12 @@ function waitForReady(child) {
       READY_TIMEOUT_MS
     );
 
-    const ready = new RegExp(`http://127\\.0\\.0\\.1:${port}/?`);
     const watch = (stream, echo) => {
+      const isReady = createPreviewReadyMatcher(port);
       stream?.on('data', (chunk) => {
         const text = String(chunk);
         echo.write(text);
-        if (ready.test(text)) {
+        if (isReady(text)) {
           finish(resolve, undefined);
         }
       });
@@ -93,42 +126,49 @@ function exitCodeOf(child) {
 
 async function main() {
   console.log(`Starting preview on ${url}`);
-  // --strictPort: fail rather than drift to another port and profile whatever
-  // else happens to be answering.
+  const viteCli = fileURLToPath(new URL('../node_modules/vite/bin/vite.js', import.meta.url));
   preview = run(
-    'npx',
-    ['vite', 'preview', '--host', '127.0.0.1', '--port', String(port), '--strictPort'],
-    { stdio: ['ignore', 'pipe', 'pipe'] }
+    process.execPath,
+    [viteCli, 'preview', '--host', '127.0.0.1', '--port', String(port), '--strictPort'],
+    { stdio: ['ignore', 'pipe', 'pipe'], detached: process.platform !== 'win32' }
   );
 
   await waitForReady(preview);
 
-  const lighthouse = run('npx', [
-    'lighthouse',
+  const lighthouseCli = fileURLToPath(
+    new URL('../node_modules/lighthouse/cli/index.js', import.meta.url)
+  );
+  const lighthouse = run(process.execPath, [
+    lighthouseCli,
     url,
-    '--view',
     '--chrome-flags=--headless=new',
+    '--quiet',
     '--output=json',
-    '--output=html',
-    '--output-path=./.lighthouse',
+    '--output-path=./.lighthouse.report.json',
   ]);
 
-  return exitCodeOf(lighthouse);
+  const code = await exitCodeOf(lighthouse);
+  if (code !== 0) return code;
+
+  const report = JSON.parse(await readFile('./.lighthouse.report.json', 'utf8'));
+  const budgets = JSON.parse(await readFile('./budgets.json', 'utf8'));
+  assertLighthouseReport(report, budgets);
+  console.log('Lighthouse category and resource budget assertions passed.');
+  return 0;
 }
 
 for (const signal of ['SIGINT', 'SIGTERM']) {
   process.on(signal, () => {
-    stopPreview();
-    process.exit(1);
+    void stopPreview().finally(() => process.exit(1));
   });
 }
 
 try {
   const code = await main();
-  stopPreview();
+  await stopPreview();
   process.exit(code);
 } catch (error) {
   console.error(error instanceof Error ? error.message : error);
-  stopPreview();
+  await stopPreview();
   process.exit(1);
 }

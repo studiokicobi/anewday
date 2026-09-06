@@ -7,31 +7,37 @@ jobs:
   build-test-audit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
-          node-version: 22
+          node-version-file: '.nvmrc'
           cache: 'npm'
       - run: npm ci
+      - run: npm run audit:dependencies
       - run: npm run format
       - run: npm run lint
       - run: npm run check
       - run: npm run build
       - run: npm run test:unit
       - run: npx playwright install --with-deps
-      - run: npm run test:e2e
+      - run: npx playwright test tests/e2e tests/a11y
       # Traces and screenshots are only written when a test fails. They are the
       # only way to debug the WebKit failures this suite hits, which have never
       # reproduced outside CI.
       - name: Upload Playwright failure artifacts
         if: failure()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: playwright-failures
           path: test-results/**
           retention-days: 14
           if-no-files-found: ignore
       - run: npm run lhci
-      - name: Upload LHCI report
-        uses: actions/upload-artifact@v7
-        with: { name: lhci-report, path: '.lighthouseci/*' }
+      - name: Upload Lighthouse report
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: lighthouse-report
+          path: '.lighthouse.report.json'
+          include-hidden-files: true
+          if-no-files-found: ignore

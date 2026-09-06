@@ -1,9 +1,8 @@
 version: 2
 
 updates:
-  # Build, test and lint tooling. Everything here is a devDependency except
-  # svelte and @tailwindplus/elements, so routine bumps are grouped into a
-  # single PR rather than arriving one per package.
+  # Build, test and lint tooling. Routine development dependency bumps are
+  # grouped into a single PR rather than arriving one per package.
   #
   # `applies-to: version-updates` keeps these groups off Dependabot's security
   # PRs — those stay ungrouped so a single fix can land on its own.
@@ -15,6 +14,13 @@ updates:
       time: '06:00'
       timezone: Europe/Stockholm
     open-pull-requests-limit: 5
+    ignore:
+      # Svelte Check and typescript-eslint do not support TypeScript 7 yet.
+      - dependency-name: typescript
+        versions: ['>=7 <8']
+      # Match the Node 22 runtime used by .nvmrc, CI and Netlify.
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
     commit-message:
       prefix: chore
       include: scope
@@ -31,8 +37,8 @@ updates:
         update-types:
           - major
 
-  # Workflow actions. CodeQL already scans these with its `actions` query pack;
-  # this keeps the pinned major tags current.
+  # Workflow actions. Dependabot advances the immutable commit pins while the
+  # workflow comments retain the corresponding release version for readers.
   - package-ecosystem: github-actions
     directory: '/'
     schedule:
