@@ -1,0 +1,58 @@
+name: Dependabot auto-merge
+
+on:
+  pull_request_target:
+    branches: [main]
+    types: [opened, reopened, synchronize, ready_for_review]
+
+permissions: {}
+
+concurrency:
+  group: dependabot-automerge-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  enable-auto-merge:
+    if: >-
+      github.repository == 'kicobi/anewday' &&
+      github.event.pull_request.user.login == 'dependabot[bot]' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      !github.event.pull_request.draft
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      # This privileged workflow only reads verified metadata. Never check out
+      # or execute code from the pull request with pull_request_target.
+      - name: Read verified Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@25dd0e34f4fe68f24cc83900b1fe3fe149efef98 # v3.1.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      # The action reports the highest semver change in grouped updates.
+      # Security fixes qualify under the same patch/minor policy.
+      - name: Enable auto-merge for npm patch and minor updates
+        if: >-
+          steps.metadata.outputs.package-ecosystem == 'npm_and_yarn' &&
+          (steps.metadata.outputs.update-type == 'version-update:semver-patch' ||
+           steps.metadata.outputs.update-type == 'version-update:semver-minor')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          UPDATES: ${{ steps.metadata.outputs.updated-dependencies-json }}
+        # GitHub enforces main's required checks and up-to-date branch rule.
+        run: |
+          # Reject a group if any dependency has missing or unsupported metadata.
+          if ! jq -e 'length > 0 and all(.[];
+            .packageEcosystem == "npm_and_yarn" and
+            (.updateType == "version-update:semver-patch" or
+             .updateType == "version-update:semver-minor")
+          )' <<< "$UPDATES" > /dev/null; then
+            echo "This update requires manual review."
+            exit 0
+          fi
+          gh pr merge "$PR_URL" --auto --squash --match-head-commit "$PR_HEAD_SHA"
