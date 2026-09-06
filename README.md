@@ -13,7 +13,7 @@ npm install
 npm run dev
 ```
 
-Node 20 is recommended (`.nvmrc` provided).
+Node 22.23.2 is recommended (`.nvmrc` provided).
 
 Visit http://localhost:5173 to use the checklist. To test the production build (including service worker):
 
